@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: org.json:json:20160212:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.json/json/bundles/json-20160212.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.json/json/srcs/json-20160212-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

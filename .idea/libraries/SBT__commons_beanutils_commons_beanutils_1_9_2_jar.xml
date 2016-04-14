@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: commons-beanutils:commons-beanutils:1.9.2:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/commons-beanutils/commons-beanutils/jars/commons-beanutils-1.9.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/commons-beanutils/commons-beanutils/srcs/commons-beanutils-1.9.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

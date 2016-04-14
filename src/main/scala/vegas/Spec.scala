@@ -2,6 +2,7 @@ package vegas
 
 import argonaut._, Argonaut._
 
+
 case class Spec(description: Option[String] = None, data: Option[Data] = None, mark: Mark,
                 transform: Option[Transform] = None, encoding: Option[Encoding] = None,
                 config: Option[Config] = None)
@@ -39,7 +40,10 @@ case class Config(t: String)
 
 trait Encoders {
 
-  def stringifyValues(v: Map[String, Any]) = v.map { case(k,v) => (k, v.toString) }
+  val noNullSpaces2 = PrettyParams.spaces2.copy(dropNullKeys = true)
+  val noNulls = PrettyParams.nospace.copy(dropNullKeys = true)
+
+  private def stringifyValues(v: Map[String, Any]) = v.map { case(k,v) => (k, v.toString) }
 
   implicit def SpecEncoder: EncodeJson[Spec] =
     jencode6L((s: Spec) => (s.description, s.data, s.mark.name, s.transform, s.encoding, s.config))("description", "data", "mark", "transform", "encoding", "config")
