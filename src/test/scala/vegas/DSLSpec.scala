@@ -48,6 +48,7 @@ class DSLSpec extends BaseSpec with Fixtures {
       .encodeY("country", NOMINAL)
       .mark(BAR)
 
+    println(specBuilder.displayHTML())
     specBuilder.displayHTML() shouldBe a [String]
   }
 
