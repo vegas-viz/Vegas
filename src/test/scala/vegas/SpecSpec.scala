@@ -15,14 +15,14 @@ class SpecSpec extends BaseSpec {
 
   def fixture = {
 
-    val data = Data(Option(Map("population" -> "318000000", "country" -> "USA")))
+    val data = Data(Option(Array(Map("population" -> "318000000", "country" -> "USA"))))
     val formula = Formula("f1", "f1 * 2")
     val transform = Transform(Option(Array(formula)))
     val xcd = ChannelDef(Option("f1"), Option(QUANTITATIVE))
     val ycd = ChannelDef(Option("f2"), Option(NOMINAL))
     val encoding = Encoding(Option(xcd), Option(ycd))
     val config = Config("t")
-    val mySpec = Spec(Option("myChart"), None, BAR, None, Option(encoding), None)
+    val mySpec = Spec(Option("myChart"), Option(data), Option(BAR), Option(transform), Option(encoding), None)
 
     new { val spec = mySpec }
 
@@ -45,13 +45,19 @@ class SpecSpec extends BaseSpec {
     }
   }
 
-  "A Spec" should "produce valid JSON" in {
+  "A Spec" should "encode to JSON" in {
     val spec = fixture.spec
-    checkSchema(spec.asJson, "/vega_lite_schema.json")
+    spec.asJson shouldBe a [Json]
   }
 
-  it should "" in {
+  it should "validate to the vegaLite schema" in {
+    val spec = fixture.spec
+    noException should be thrownBy checkSchema(spec.asJson, "/vega_lite_schema.json")
+  }
 
+  it should "print JSON with no nulls included" in {
+    val spec = fixture.spec
+    spec.asJson.pretty(vegas.noNulls) should not include ("null")
   }
 
 }

@@ -1,13 +1,14 @@
 package vegas
 
+import java.net.URL
+
 import argonaut._, Argonaut._
 
-
-case class Spec(description: Option[String] = None, data: Option[Data] = None, mark: Mark,
+case class Spec(description: Option[String] = None, data: Option[Data] = None, mark: Option[Mark] = None,
                 transform: Option[Transform] = None, encoding: Option[Encoding] = None,
                 config: Option[Config] = None)
 
-case class Data(values: Option[Map[String, Any]] = None, url: Option[String] = None,
+case class Data(values: Option[Seq[Map[String, Any]]] = None, url: Option[URL] = None,
                 formatType: Option[FormatType] = None)
 
 sealed trait FormatType { def name: String }
@@ -25,7 +26,7 @@ case object AREA extends Mark { val name = "area" }
 case object POINT extends Mark { val name = "point" }
 case object TEXT extends Mark { val name = "text" }
 
-case class Transform(calculate: Option[Array[Formula]] = None, filterNull: Option[Boolean] = None, filter: Option[String] = None)
+case class Transform(calculate: Option[Seq[Formula]] = None, filterNull: Option[Boolean] = None, filter: Option[String] = None)
 case class Formula(field: String, expr: String)
 
 case class Encoding(x: Option[ChannelDef] = None, y: Option[ChannelDef] = None, color: Option[ChannelDef] = None)
@@ -43,13 +44,13 @@ trait Encoders {
   val noNullSpaces2 = PrettyParams.spaces2.copy(dropNullKeys = true)
   val noNulls = PrettyParams.nospace.copy(dropNullKeys = true)
 
-  private def stringifyValues(v: Map[String, Any]) = v.map { case(k,v) => (k, v.toString) }
+  private def stringifyValues(v: Seq[Map[String, Any]]) = v.map { _.map { case(k,v) => (k, v.toString) } }
 
   implicit def SpecEncoder: EncodeJson[Spec] =
-    jencode6L((s: Spec) => (s.description, s.data, s.mark.name, s.transform, s.encoding, s.config))("description", "data", "mark", "transform", "encoding", "config")
+    jencode6L((s: Spec) => (s.description, s.data, s.mark.map(_.name), s.transform, s.encoding, s.config))("description", "data", "mark", "transform", "encoding", "config")
 
   implicit def DataEncoder: EncodeJson[Data] =
-    jencode3L((d: Data) => (d.values.map(stringifyValues), d.url, d.formatType.map(_.name)))("values", "url", "formatType")
+    jencode3L((d: Data) => (d.values.map(stringifyValues), d.url.map(_.toExternalForm), d.formatType.map(_.name)))("values", "url", "formatType")
 
   implicit def TransformEncoder: EncodeJson[Transform] =
     jencode3L((t: Transform) => (t.calculate, t.filterNull, t.filter))("calculate", "filterNull", "filter")
@@ -61,7 +62,7 @@ trait Encoders {
     jencode3L((e: Encoding) => (e.x, e.y, e.color))("x", "y", "color")
 
   implicit def ChannelDefEncoder: EncodeJson[ChannelDef] =
-    jencode3L((cd: ChannelDef) => (cd.field, cd.dataType.map(_.name), cd.value))("field", "dataType", "value")
+    jencode3L((cd: ChannelDef) => (cd.field, cd.dataType.map(_.name), cd.value))("field", "type", "value")
 
   implicit def ConfigEncoder: EncodeJson[Config] =
     jencode1L((c: Config) => (c.t))("t")

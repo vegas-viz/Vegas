@@ -21,17 +21,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="SBT: com.github.julien-truffaut:monocle-core_2.11:1.1.0:jar" level="project" />
-    <orderEntry type="library" name="SBT: com.github.julien-truffaut:monocle-macro_2.11:1.1.0:jar" level="project" />
     <orderEntry type="library" name="SBT: io.argonaut:argonaut_2.11:6.1:jar" level="project" />
     <orderEntry type="library" name="SBT: org.scala-lang:scala-library:2.11.8:jar" level="project" />
-    <orderEntry type="library" name="SBT: org.scala-lang:scala-reflect:2.11.6:jar" level="project" />
-    <orderEntry type="library" scope="TEST" name="SBT: org.scala-lang:scala-reflect:2.11.7:jar" level="project" />
-    <orderEntry type="library" name="SBT: org.scala-lang.modules:scala-parser-combinators_2.11:1.0.2:jar" level="project" />
-    <orderEntry type="library" name="SBT: org.scala-lang.modules:scala-xml_2.11:1.0.2:jar" level="project" />
     <orderEntry type="library" scope="TEST" name="SBT: org.scalactic:scalactic_2.11:2.2.6:jar" level="project" />
     <orderEntry type="library" scope="TEST" name="SBT: org.scalatest:scalatest_2.11:2.2.6:jar" level="project" />
-    <orderEntry type="library" name="SBT: org.scalaz:scalaz-core_2.11:7.1.1:jar" level="project" />
     <orderEntry type="library" scope="TEST" name="SBT: com.google.guava:guava:19.0:jar" level="project" />
     <orderEntry type="library" scope="TEST" name="SBT: commons-beanutils:commons-beanutils:1.9.2:jar" level="project" />
     <orderEntry type="library" scope="TEST" name="SBT: commons-collections:commons-collections:3.2.2:jar" level="project" />
@@ -40,5 +33,14 @@
     <orderEntry type="library" scope="TEST" name="SBT: commons-validator:commons-validator:1.5.0:jar" level="project" />
     <orderEntry type="library" scope="TEST" name="SBT: org.everit.json:org.everit.json.schema:1.2.0:jar" level="project" />
     <orderEntry type="library" scope="TEST" name="SBT: org.json:json:20160212:jar" level="project" />
+    <orderEntry type="library" name="SBT: com.chuusai:shapeless_2.11:2.0.0:jar" level="project" />
+    <orderEntry type="library" name="SBT: com.github.julien-truffaut:monocle-core_2.11:1.1.0:jar" level="project" />
+    <orderEntry type="library" name="SBT: com.github.julien-truffaut:monocle-generic_2.11:1.1.0:jar" level="project" />
+    <orderEntry type="library" name="SBT: com.github.julien-truffaut:monocle-macro_2.11:1.1.0:jar" level="project" />
+    <orderEntry type="library" name="SBT: org.scala-lang:scala-reflect:2.11.6:jar" level="project" />
+    <orderEntry type="library" scope="TEST" name="SBT: org.scala-lang:scala-reflect:2.11.7:jar" level="project" />
+    <orderEntry type="library" name="SBT: org.scala-lang.modules:scala-parser-combinators_2.11:1.0.2:jar" level="project" />
+    <orderEntry type="library" name="SBT: org.scala-lang.modules:scala-xml_2.11:1.0.2:jar" level="project" />
+    <orderEntry type="library" name="SBT: org.scalaz:scalaz-core_2.11:7.1.1:jar" level="project" />
   </component>
 </module>
