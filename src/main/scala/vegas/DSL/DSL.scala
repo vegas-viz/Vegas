@@ -1,8 +1,10 @@
-package vegas
+package vegas.DSL
 
 import java.net.URL
+
 import monocle.macros.GenLens
-import argonaut._, Argonaut._
+import monocle.Prism
+import vegas.spec._
 
 /**
   * @author Aish Fenton.
@@ -11,12 +13,20 @@ object Vegas {
 
   def apply(description: String) = SpecBuilder(Spec(description=Some(description)))
 
+  // Util used for composing Lens with options (and returning a default)
+  def _orElse[T](fn: => T) = Prism[Option[T], T]{ o:Option[T] => o.orElse(Some(fn)) }(Some.apply)
+
 }
+
+
 
 /**
   * @author Aish Fenton.
   */
-case class SpecBuilder(spec: Spec) extends HTMLDisplay {
+case class SpecBuilder(spec: Spec) {
+
+  // Util used for composing Lens with options (and returning a default)
+  import Vegas._orElse
 
   val _spec = GenLens[SpecBuilder](_.spec)
   val _data = GenLens[Spec](_.data)
@@ -36,6 +46,7 @@ case class SpecBuilder(spec: Spec) extends HTMLDisplay {
     (_spec composeLens _data).set(Some(data))(this)
   }
 
+  // Use reflection to grab values from value objects within Array
   def addData(values: Array[Any]) = ???
 
   def addData(url: URL, formatType: FormatType) = {
@@ -72,46 +83,3 @@ case class SpecBuilder(spec: Spec) extends HTMLDisplay {
 
 }
 
-trait HTMLDisplay {
-  self: SpecBuilder =>
-
-  val HTMLHeader =
-    """
-      | <html>
-      |   <head>
-      |     <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
-      |     <script src="//vega.github.io/vega/vega.js" charset="utf-8"></script>
-      |     <script src="//vega.github.io/vega-lite/vega-lite.js" charset="utf-8"></script>
-      |     <script src="//vega.github.io/vega-editor/vendor/vega-embed.js" charset="utf-8"></script>
-      |   </head>
-      |   <body>
-    """.stripMargin
-
-  def HTMLSection(name: String, spec: String) =
-    s"""
-      | <script>
-      |   var embedSpec = {
-      |     mode: "vega-lite",
-      |     spec: $spec
-      |   }
-      |   vg.embed("#$name", embedSpec, function(error, result) {});
-      | </script>
-      | <div id='$name'></div>
-    """.stripMargin
-
-  val HTMLFooter =
-    """
-      |  </body>
-      |</html>
-    """.stripMargin
-
-  def asJson(pretty: Boolean = false) = {
-    val json = self.spec.asJson
-    if (pretty) json.pretty(vegas.noNullSpaces2) else json.pretty(vegas.noNulls)
-  }
-
-  def displayHTML(divName: String = "viz") = {
-    HTMLHeader + HTMLSection(divName, asJson(false)) + HTMLFooter
-  }
-
-}

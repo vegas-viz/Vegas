@@ -1,12 +1,22 @@
-package vegas
+package vegas.spec
 
 import java.net.URL
 
-import argonaut._, Argonaut._
+import argonaut.Argonaut._
+import argonaut._
 
 case class Spec(description: Option[String] = None, data: Option[Data] = None, mark: Option[Mark] = None,
                 transform: Option[Transform] = None, encoding: Option[Encoding] = None,
-                config: Option[Config] = None)
+                config: Option[Config] = None) {
+
+  def toJson(pretty: Boolean = false) = {
+    import Encoders._
+
+    val j = this.asJson
+    if (pretty) j.pretty(Encoders.noNullSpaces2) else j.pretty(Encoders.noNulls)
+  }
+
+}
 
 case class Data(values: Option[Seq[Map[String, Any]]] = None, url: Option[URL] = None,
                 formatType: Option[FormatType] = None)
@@ -39,7 +49,7 @@ case object NOMINAL extends DataType { val name = "nominal" }
 
 case class Config(t: String)
 
-trait Encoders {
+object Encoders {
 
   val noNullSpaces2 = PrettyParams.spaces2.copy(dropNullKeys = true)
   val noNulls = PrettyParams.nospace.copy(dropNullKeys = true)

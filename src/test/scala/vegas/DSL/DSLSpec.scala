@@ -1,14 +1,16 @@
-package vegas
+package vegas.DSL
 
 import monocle.macros.GenLens
-import monocle.macros.{GenIso, GenPrism}
+import vegas.spec.{BAR, NOMINAL, QUANTITATIVE}
+import vegas.{BaseSpec, Fixtures}
 
 /**
   * @author Aish Fenton.
   */
 class DSLSpec extends BaseSpec with Fixtures {
-
   "_orElse, when composing a Lens and a Prism" should "reach modify case classes with optional values immutably" in {
+    import Vegas._orElse
+
     case class Person(address: Option[Address])
     case class Address(street: Option[String])
 
@@ -37,19 +39,5 @@ class DSLSpec extends BaseSpec with Fixtures {
     specBuilder.spec should equal (spec)
   }
 
-  it should "produce displayHTML (not necessary valid HTML)" in {
-    val data = rawData.popData
-    val spec = specs.popBarSpec
-
-    val specBuilder = Vegas("Country Pop")
-      .addData(data)
-      .addTransformCalculation("pop_millions", "datum.population / 1000000")
-      .encodeX("pop_millions", QUANTITATIVE)
-      .encodeY("country", NOMINAL)
-      .mark(BAR)
-
-    println(specBuilder.displayHTML())
-    specBuilder.displayHTML() shouldBe a [String]
-  }
 
 }

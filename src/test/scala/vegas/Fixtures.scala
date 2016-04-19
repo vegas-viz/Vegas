@@ -1,5 +1,7 @@
 package vegas
 
+import vegas.spec._
+
 /**
   * @author Aish Fenton.
   */
