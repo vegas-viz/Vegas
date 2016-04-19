@@ -30,7 +30,7 @@ class DSLSpec extends BaseSpec with Fixtures {
     val spec = specs.popBarSpec
 
     val specBuilder = Vegas("Country Pop")
-      .addData(data)
+      .loadData(data)
       .addTransformCalculation("pop_millions", "datum.population / 1000000")
       .encodeX("pop_millions", QUANTITATIVE)
       .encodeY("country", NOMINAL)

@@ -1,17 +1,16 @@
 package vegas.render
 
-import vegas.DSL.Vegas
-import vegas.spec.{QUANTITATIVE, NOMINAL, BAR}
-import vegas.{ BaseSpec, Fixtures }
+import vegas._
+import vegas.spec.{BAR, NOMINAL, QUANTITATIVE}
+import vegas.{Fixtures, BaseSpec}
 
 /**
   * @author Aish Fenton.
   */
-class StaticHTMLRendererSpec extends BaseSpec with Fixtures {
+class DynamicHTMLRendererSpec extends BaseSpec with Fixtures {
+  import DynamicHTMLRenderer._
 
-  import StaticHTMLRenderer._
-
-  "StaticHTMLRenderer.HTMLPage" should "produce an HTML page" in {
+  "DynamicTMLRenderer.HTMLSection" should "produce an HTML page" in {
     val data = rawData.popData
     val spec = specs.popBarSpec
 
@@ -22,7 +21,8 @@ class StaticHTMLRendererSpec extends BaseSpec with Fixtures {
       .encodeY("country", NOMINAL)
       .mark(BAR)
 
-    val html = specBuilder.HTMLPage()
+    val html = specBuilder.HTMLSection()
+    println(html)
     html shouldBe a [String]
     html should startWith("<html>")
     html should include(specBuilder.spec.toJson())

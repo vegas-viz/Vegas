@@ -8,21 +8,23 @@ import vegas.spec.Spec
   */
 case class StaticHTMLRenderer(spec: Spec) extends BaseHTMLRenderer {
 
-  val HTMLHeader =
+  def HTMLImports(additionalImports: String*) = (JSImports ++ additionalImports).map { s => "<script src=\"" + s + "\" charset=\"utf-8\"></script>" }
+
+  def HTMLHeader(additionalImports: String*) =
     s"""
        |<html>
        |  <head>
-       |    ${ this.jsImports.map { s => "<script src=\"" + s + "\" charset=\"utf-8\"></script>" }}
+       |    ${ HTMLImports(additionalImports:_*) }
        |  </head>
        |  <body>
     """.stripMargin
 
-  def HTMLSection(name: String, spec: String) =
+  def HTMLChart(name: String, spec: Spec, pretty: Boolean = false) =
     s"""
        | <script>
        |   var embedSpec = {
        |     mode: "vega-lite",
-       |     spec: $spec
+       |     spec: ${spec.toJson(pretty)}
        |   }
        |   vg.embed("#$name", embedSpec, function(error, result) {});
        | </script>
@@ -35,8 +37,8 @@ case class StaticHTMLRenderer(spec: Spec) extends BaseHTMLRenderer {
       |</html>
     """.stripMargin
 
-  def pageHTML(pretty: Boolean = false) = {
-    HTMLHeader.trim + HTMLSection("vis", spec.toJson(pretty)) + HTMLFooter.trim
+  def HTMLPage(pretty: Boolean = false) = {
+    HTMLHeader().trim + HTMLChart("vis", spec, pretty) + HTMLFooter.trim
   }
 
 }

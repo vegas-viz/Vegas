@@ -8,35 +8,40 @@ import vegas.spec.Spec
   */
 case class DynamicHTMLRenderer(spec: Spec) extends BaseHTMLRenderer {
 
-  val HTMLHeader =
-    s"""
-       | <html>
-       |   <head>
-       |   ${ this.jsImports.map { s => "<script src=\"" + s + "\" charset=\"utf-8\"></script>" }}
-       |   </head>
-       |   <body>
-    """.stripMargin
+  val JQueryImport = """<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>"""
 
-  def HTMLSection(name: String, spec: String) =
+  def HTMLImports = {
+    val loadScripts = "$.getScript(\"" + JSImports.head + "\")" + JSImports.tail.map { i => ".then(function() { return $.getScript(\"" + i + "\") })" }.mkString("")
+    s"""
+      | <script>
+      |   $$.ajaxSetup({
+      |     cache: true
+      |   });
+      |   window['vegas'] = ${loadScripts}
+      | </script>
+    """.stripMargin
+  }
+
+  def HTMLChart(name: String, spec: Spec, pretty: Boolean = false) =
     s"""
        | <script>
        |   var embedSpec = {
        |     mode: "vega-lite",
-       |     spec: $spec
+       |     spec: ${spec.toJson(pretty)}
        |   }
-       |   vg.embed("#$name", embedSpec, function(error, result) {});
+       |   window['vegas'].then( function() { vg.embed("#$name", embedSpec, function(error, result) {}) } );
        | </script>
        | <div id='$name'></div>
     """.stripMargin
 
-  val HTMLFooter =
-    """
-      |  </body>
-      |</html>
-    """.stripMargin
-
-  def displayHTML(pretty: Boolean = false) = {
-    HTMLHeader + HTMLSection("vis", spec.toJson(pretty)) + HTMLFooter
+  /*
+   * Complete HTML including all required script imports. This is the easiest method to use, but will result in all JS
+   * scripts being re-imported for every chart, which will be quite ineffecient if there are many charts on your page.
+   * If is recommended that you use .HTMLImports once, then HTMLChart for each chart
+   */
+  def HTMLSection(includeJQuery: Boolean = false, pretty: Boolean = false) = {
+    val cell = HTMLImports + HTMLChart("vis", spec, pretty)
+    if (includeJQuery) JQueryImport + cell else cell
   }
 
 }

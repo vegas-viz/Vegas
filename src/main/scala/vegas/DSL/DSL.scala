@@ -41,15 +41,15 @@ case class SpecBuilder(spec: Spec) {
   val _x = GenLens[Encoding](_.x)
   val _y = GenLens[Encoding](_.y)
 
-  def addData(values: Seq[Map[String, Any]]): SpecBuilder = {
+  def loadData(values: Seq[Map[String, Any]]): SpecBuilder = {
     val data = Data(Option(values))
     (_spec composeLens _data).set(Some(data))(this)
   }
 
   // Use reflection to grab values from value objects within Array
-  def addData(values: Array[Any]) = ???
+  def loadData(values: Array[Any]) = ???
 
-  def addData(url: URL, formatType: FormatType) = {
+  def loadData(url: URL, formatType: FormatType) = {
     val data = Data(None, Option(url), Option(formatType))
     (_spec composeLens _data).set(Some(data))(this)
   }

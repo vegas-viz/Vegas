@@ -7,7 +7,7 @@ import vegas.spec.Spec
   */
 trait BaseHTMLRenderer {
 
-  def jsImports = Array(
+  def JSImports = List(
     "//d3js.org/d3.v3.min.js",
     "//vega.github.io/vega/vega.js",
     "//vega.github.io/vega-lite/vega-lite.js",
