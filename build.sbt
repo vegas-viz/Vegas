@@ -4,6 +4,8 @@ version := "1.0"
 
 scalaVersion := "2.11.8"
 
+scalacOptions += "-target:jvm-1.7"
+
 libraryDependencies ++= Seq(
   "io.argonaut" %% "argonaut" % "6.1",
   "com.github.julien-truffaut"  %%  "monocle-core"    % "1.1.0",
