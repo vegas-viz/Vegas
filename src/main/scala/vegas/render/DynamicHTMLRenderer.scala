@@ -22,7 +22,7 @@ case class DynamicHTMLRenderer(spec: Spec) extends BaseHTMLRenderer {
     """.stripMargin
   }
 
-  def HTMLChart(name: String, spec: Spec, pretty: Boolean = false) =
+  def HTMLChart(name: String, pretty: Boolean = false) =
     s"""
        | <script>
        |   var embedSpec = {
@@ -40,7 +40,7 @@ case class DynamicHTMLRenderer(spec: Spec) extends BaseHTMLRenderer {
    * If is recommended that you use .HTMLImports once, then HTMLChart for each chart
    */
   def HTMLSection(includeJQuery: Boolean = false, pretty: Boolean = false) = {
-    val cell = HTMLImports + HTMLChart("vis", spec, pretty)
+    val cell = HTMLImports + HTMLChart("vis", pretty)
     if (includeJQuery) JQueryImport + cell else cell
   }
 

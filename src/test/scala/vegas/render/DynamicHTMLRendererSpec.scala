@@ -10,23 +10,39 @@ import vegas.{Fixtures, BaseSpec}
 class DynamicHTMLRendererSpec extends BaseSpec with Fixtures {
   import DynamicHTMLRenderer._
 
-  "DynamicTMLRenderer.HTMLSection" should "produce an HTML page" in {
-    val data = rawData.popData
-    val spec = specs.popBarSpec
+  val data = rawData.popData
+  val spec = specs.popBarSpec
+  val specBuilder = Vegas("Country Pop")
+    .loadData(data)
+    .addTransformCalculation("pop_millions", "datum.population / 1000000")
+    .encodeX("pop_millions", QUANTITATIVE)
+    .encodeY("country", NOMINAL)
+    .mark(BAR)
 
-    val specBuilder = Vegas("Country Pop")
-      .loadData(data)
-      .addTransformCalculation("pop_millions", "datum.population / 1000000")
-      .encodeX("pop_millions", QUANTITATIVE)
-      .encodeY("country", NOMINAL)
-      .mark(BAR)
+  "DynamicHTMLRenderer.HTMLImports" should "produce a HTML script element containing the Vega js imports" in {
+    val html = specBuilder.HTMLImports
 
-    val html = specBuilder.HTMLSection()
-    println(html)
     html shouldBe a [String]
-    html should startWith("<html>")
-    html should include(specBuilder.spec.toJson())
-    html should endWith("</html>")
+    html.trim should startWith ("<script>")
+    specBuilder.JSImports.foreach { url => html should include (url) }
+    html.trim should endWith ("</script>")
+  }
+
+  "DynamicHTMLRenderer.HTMLChart" should "produce a HTML script element containing the Spec json" in {
+    val html = specBuilder.HTMLChart("test")
+
+    html shouldBe a [String]
+    html.trim should startWith ("<script>")
+    html should include (spec.toJson())
+    html.trim should include ("</script>")
+  }
+
+  it should "use the given chart name" in {
+    val name = "myChart"
+    val html = specBuilder.HTMLChart(name)
+
+    html should include ("embed(\"#" + name)
+    html should include ("id='" + name)
   }
 
 }
