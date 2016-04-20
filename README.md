@@ -1,4 +1,5 @@
 # README
+![TravisCI](https://travis-ci.org/aishfenton/Vegas.svg?branch=master)
 
 Vegas is a DSL for Scala and Spark to produce [Vega-Lite](https://vega.github.io/vega-lite/) charts and visualizations.
 
