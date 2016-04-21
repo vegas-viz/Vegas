@@ -14,6 +14,11 @@ trait BaseHTMLRenderer {
     "//vega.github.io/vega-editor/vendor/vega-embed.js"
   )
 
+  def defaultName = {
+    val uuid = java.util.UUID.randomUUID.toString
+    spec.description.getOrElse(uuid).replaceAll(" ", "-").toLowerCase()
+  }
+
   def spec: Spec
 
 }

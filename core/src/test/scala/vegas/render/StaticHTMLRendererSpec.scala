@@ -1,7 +1,6 @@
 package vegas.render
 
-import vegas.DSL.Vegas
-import vegas.spec.{QUANTITATIVE, NOMINAL, BAR}
+import vegas._
 import vegas.{ BaseSpec, Fixtures }
 
 /**

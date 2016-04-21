@@ -1,7 +1,6 @@
 package vegas.render
 
 import vegas._
-import vegas.spec.{BAR, NOMINAL, QUANTITATIVE}
 import vegas.{Fixtures, BaseSpec}
 
 /**

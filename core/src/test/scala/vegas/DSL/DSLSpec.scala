@@ -1,7 +1,7 @@
 package vegas.DSL
 
 import monocle.macros.GenLens
-import vegas.spec.{BAR, NOMINAL, QUANTITATIVE}
+import vegas._
 import vegas.{BaseSpec, Fixtures}
 
 /**

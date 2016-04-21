@@ -19,7 +19,7 @@ case class StaticHTMLRenderer(spec: Spec) extends BaseHTMLRenderer {
        |  <body>
     """.stripMargin
 
-  def HTMLChart(name: String, pretty: Boolean = false) =
+  def HTMLChart(name: String = this.defaultName, pretty: Boolean = false) =
     s"""
        | <script>
        |   var embedSpec = {
@@ -38,7 +38,7 @@ case class StaticHTMLRenderer(spec: Spec) extends BaseHTMLRenderer {
     """.stripMargin
 
   def HTMLPage(pretty: Boolean = false) = {
-    HTMLHeader().trim + HTMLChart("vis", pretty) + HTMLFooter.trim
+    HTMLHeader().trim + HTMLChart(pretty=pretty) + HTMLFooter.trim
   }
 
 }
