@@ -3,7 +3,7 @@
 
 Vegas is a DSL for Scala and Spark to produce [Vega-Lite](https://vega.github.io/vega-lite/) charts and visualizations.
 
-## Example
+## Quick start
 
 ```scala
 import vegas._
