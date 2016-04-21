@@ -11,7 +11,7 @@ import vegas.spec._
   */
 object Vegas {
 
-  def apply(description: String) = SpecBuilder(Spec(description=Some(description)))
+  def apply(description: String = "") = SpecBuilder(Spec(description=Some(description)))
 
   // Util used for composing Lens with options (and returning a default)
   def _orElse[T](fn: => T) = Prism[Option[T], T]{ o:Option[T] => o.orElse(Some(fn)) }(Some.apply)
@@ -28,18 +28,18 @@ case class SpecBuilder(spec: Spec) {
   // Util used for composing Lens with options (and returning a default)
   import Vegas._orElse
 
-  val _spec = GenLens[SpecBuilder](_.spec)
-  val _data = GenLens[Spec](_.data)
-  val _mark = GenLens[Spec](_.mark)
-  val _transform = GenLens[Spec](_.transform)
+  private val _spec = GenLens[SpecBuilder](_.spec)
+  private val _data = GenLens[Spec](_.data)
+  private val _mark = GenLens[Spec](_.mark)
+  private val _transform = GenLens[Spec](_.transform)
 
-  val _calculate = GenLens[Transform](_.calculate)
-  val _filterNull = GenLens[Transform](_.filterNull)
-  val _filter = GenLens[Transform](_.filter)
+  private val _calculate = GenLens[Transform](_.calculate)
+  private val _filterNull = GenLens[Transform](_.filterNull)
+  private val _filter = GenLens[Transform](_.filter)
 
-  val _encoding = GenLens[Spec](_.encoding)
-  val _x = GenLens[Encoding](_.x)
-  val _y = GenLens[Encoding](_.y)
+  private val _encoding = GenLens[Spec](_.encoding)
+  private val _x = GenLens[Encoding](_.x)
+  private val _y = GenLens[Encoding](_.y)
 
   def loadData(values: Seq[Map[String, Any]]): SpecBuilder = {
     val data = Data(Option(values))
