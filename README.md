@@ -18,10 +18,3 @@ val chart = Vegas("Country Pop").
   HTMLPage()
 
 ```
-
-To display this chart call *chart.displayHTML* to produce HTML ready to be embedded within favorite notebook.
-```scala
-val html = chart.displayHTML
-```
-
-
