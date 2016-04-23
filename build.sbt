@@ -31,21 +31,7 @@ lazy val spark = project.
   settings(commonSettings: _*).
   settings(noPublishSettings)
 
-//lazy val docs = project.
-//  dependsOn(vegas).
-//  settings(commonSettings: _*).
-//  settings(noPublishSettings: _*).
-//  settings(scalatex.SbtPlugin.projectSettings: _*).
-//  settings( )
-
-lazy val docs = scalatex.ScalatexReadme(
-  projectId = "docs",
-  wd = file(""),
-  url = "TODO",
-  source = "docs"
-).dependsOn(vegas)
-
 lazy val root = (project in file(".")).
-  aggregate(vegas, docs)
+  aggregate(vegas, spark)
 
 

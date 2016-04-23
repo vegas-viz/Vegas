@@ -20,7 +20,7 @@ class StaticHTMLRendererSpec extends BaseSpec with Fixtures {
     .mark(BAR)
 
   "StaticHTMLRenderer.HTMLPage" should "produce an HTML page" in {
-    val html = specBuilder.HTMLPage()
+    val html = specBuilder.pageHTML()
     html shouldBe a [String]
     html should startWith("<html>")
     html should include(specBuilder.spec.toJson())
@@ -28,7 +28,7 @@ class StaticHTMLRendererSpec extends BaseSpec with Fixtures {
   }
 
   "StaticHTMLRenderer.HTMLChart" should "produce a HTML script element containing the Spec json" in {
-    val html = specBuilder.HTMLChart("test")
+    val html = specBuilder.chartHTML("test")
 
     html shouldBe a [String]
     html.trim should startWith ("<script>")
@@ -38,7 +38,7 @@ class StaticHTMLRendererSpec extends BaseSpec with Fixtures {
 
   it should "use the given chart name" in {
     val name = "myChart"
-    val html = specBuilder.HTMLChart(name)
+    val html = specBuilder.chartHTML(name)
 
     html should include ("embed(\"#" + name)
     html should include ("id='" + name)

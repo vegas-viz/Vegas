@@ -8,18 +8,18 @@ import vegas.spec.Spec
   */
 case class StaticHTMLRenderer(spec: Spec) extends BaseHTMLRenderer {
 
-  def HTMLImports(additionalImports: String*) = (JSImports ++ additionalImports).map { s => "<script src=\"" + s + "\" charset=\"utf-8\"></script>" }
+  def importsHTML(additionalImports: String*) = (JSImports.values ++ additionalImports).map { s => "<script src=\"" + s + "\" charset=\"utf-8\"></script>" }.mkString("\n")
 
-  def HTMLHeader(additionalImports: String*) =
+  def headerHTML(additionalImports: String*) =
     s"""
        |<html>
        |  <head>
-       |    ${ HTMLImports(additionalImports:_*) }
+       |    ${ importsHTML(additionalImports:_*) }
        |  </head>
        |  <body>
     """.stripMargin
 
-  def HTMLChart(name: String = this.defaultName, pretty: Boolean = false) =
+  def chartHTML(name: String = this.defaultName, pretty: Boolean = false) =
     s"""
        | <script>
        |   var embedSpec = {
@@ -31,15 +31,21 @@ case class StaticHTMLRenderer(spec: Spec) extends BaseHTMLRenderer {
        | <div id='$name'></div>
     """.stripMargin
 
-  val HTMLFooter =
+  val footerHTML =
     """
       |  </body>
       |</html>
     """.stripMargin
 
-  def HTMLPage(pretty: Boolean = false) = {
-    HTMLHeader().trim + HTMLChart(pretty=pretty) + HTMLFooter.trim
+  def pageHTML(pretty: Boolean = false) = {
+    headerHTML().trim + chartHTML(pretty=pretty) + footerHTML.trim
   }
+
+  def frameHTML(pretty: Boolean = false) =
+    s"""
+       |<iframe sandbox="allow-scripts" style="border: none; width: 100%" srcdoc="${xml.Utility.escape(pageHTML(pretty))}"></iframe>
+     """.stripMargin
+
 
 }
 

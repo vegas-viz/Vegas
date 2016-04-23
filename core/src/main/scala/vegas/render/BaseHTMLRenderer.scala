@@ -7,11 +7,11 @@ import vegas.spec.Spec
   */
 trait BaseHTMLRenderer {
 
-  def JSImports = List(
-    "//d3js.org/d3.v3.min.js",
-    "//vega.github.io/vega/vega.js",
-    "//vega.github.io/vega-lite/vega-lite.js",
-    "//vega.github.io/vega-editor/vendor/vega-embed.js"
+  def JSImports = Map(
+    "d3" -> "//d3js.org/d3.v3.min.js",
+    "vg" -> "//vega.github.io/vega/vega.js",
+    "vl" -> "//vega.github.io/vega-lite/vega-lite.js",
+    "vg_embed" -> "//vega.github.io/vega-editor/vendor/vega-embed.js"
   )
 
   def defaultName = {
