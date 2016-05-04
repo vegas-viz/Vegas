@@ -75,4 +75,7 @@ lazy val root = (project in file(".")).
   aggregate(vegas, spark).
   settings(noPublishSettings: _*)
 
+// Clears screen between refreshes in continuous mode
+maxErrors := 5
+triggeredMessage := Watched.clearWhenTriggered
 

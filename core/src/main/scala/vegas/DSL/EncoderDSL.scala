@@ -1,7 +1,6 @@
 package vegas.DSL
 
 import monocle.macros.GenLens
-import monocle.Prism
 import vegas.spec._
 
 /**

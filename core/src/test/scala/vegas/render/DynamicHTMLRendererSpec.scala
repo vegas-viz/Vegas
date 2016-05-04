@@ -12,7 +12,7 @@ class DynamicHTMLRendererSpec extends BaseSpec with Fixtures {
   val data = rawData.popData
   val spec = specs.popBarSpec
   val specBuilder = Vegas("Country Pop")
-    .withData(data)
+    .withData(data: _*)
     .addTransformCalculation("pop_millions", "datum.population / 1000000")
     .encodeX("pop_millions", Quantitative)
     .encodeY("country", Nominal)

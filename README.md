@@ -11,11 +11,10 @@ import vegas._
 import vegas.render.StaticHTMLRenderer._
 
 val chart = Vegas("Country Pop").
-  loadData(Array(Map( "population" -> 318000000, "country" -> "USA" ))).
-  addTransformCalculation("pop_in_millions", "datum.population / 1000000").
-  encodeX("pop_in_millions", QUANTITATIVE).
+  withData(Array("USA", 318000), Array("UK", 64000000)).
+  encodeX("population", QUANTITATIVE).
   encodeY("country", NOMINAL).
   mark(BAR).
-  show
+  pageHTML
 
 ```
