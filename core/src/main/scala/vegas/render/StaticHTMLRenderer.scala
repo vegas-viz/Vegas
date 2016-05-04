@@ -59,7 +59,7 @@ case class StaticHTMLRenderer(spec: Spec) extends BaseHTMLRenderer {
       |        if (k <= 3) { setTimeout(function() { resizeIFrame(el, k+1) }, 1000) };
       |      }
       |    }
-      |    resizeIFrame($$('#${frameName}').get(0), 1);
+      |    $$().ready( function() { resizeIFrame($$('#${frameName}').get(0), 1); });
       |  </script>
     """.stripMargin
     }
