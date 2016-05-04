@@ -13,11 +13,11 @@ class StaticHTMLRendererSpec extends BaseSpec with Fixtures {
   val spec = specs.popBarSpec
 
   val specBuilder = Vegas("Country Pop")
-    .loadData(data)
+    .withData(data)
     .addTransformCalculation("pop_millions", "datum.population / 1000000")
-    .encodeX("pop_millions", QUANTITATIVE)
-    .encodeY("country", NOMINAL)
-    .mark(BAR)
+    .encodeX("pop_millions", Quantitative)
+    .encodeY("country", Nominal)
+    .mark(Bar)
 
   "StaticHTMLRenderer.HTMLPage" should "produce an HTML page" in {
     val html = specBuilder.pageHTML()
@@ -43,4 +43,12 @@ class StaticHTMLRendererSpec extends BaseSpec with Fixtures {
     html should include ("embed(\"#" + name)
     html should include ("id='" + name)
   }
+
+  it should "have a default chart name that starts with a letter, and contains no spaces" in {
+    val html = specBuilder.chartHTML()
+    val name = "<div id='([^']*)'".r.findFirstMatchIn(html).get.group(1)
+
+    name should fullyMatch regex """[a-zA-Z][a-zA-z\d-]*"""
+  }
+
 }

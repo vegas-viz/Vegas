@@ -7,7 +7,7 @@ import vegas.spec.Spec
   */
 trait BaseHTMLRenderer {
 
-  def JSImports = Map(
+  def JSImports = collection.immutable.ListMap(
     "d3" -> "//d3js.org/d3.v3.min.js",
     "vg" -> "//vega.github.io/vega/vega.js",
     "vl" -> "//vega.github.io/vega-lite/vega-lite.js",
@@ -15,10 +15,11 @@ trait BaseHTMLRenderer {
   )
 
   def defaultName = {
-    val uuid = java.util.UUID.randomUUID.toString
-    spec.description.getOrElse(uuid).replaceAll(" ", "-").toLowerCase()
+    "vegas-" + java.util.UUID.randomUUID.toString
   }
 
   def spec: Spec
+
+  def show(implicit fn: String => Unit)
 
 }

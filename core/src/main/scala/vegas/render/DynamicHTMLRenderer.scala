@@ -70,6 +70,8 @@ case class DynamicHTMLRenderer(spec: Spec) extends BaseHTMLRenderer {
     if (includeJQuery) JQueryImport + cell else cell
   }
 
+  def show(implicit fn: String => Unit) = fn(sectionHTML())
+
 }
 
 object DynamicHTMLRenderer {

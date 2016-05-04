@@ -1,9 +1,44 @@
 
 lazy val commonSettings = Seq(
-  organization := "netflix",
+  organization := "com.github.aishfenton",
   version := "0.1.0",
   scalaVersion := "2.11.8",
-  scalacOptions += "-target:jvm-1.7"
+  scalacOptions += "-target:jvm-1.7",
+  crossScalaVersions := Seq("2.10.6", "2.11.8"),
+  homepage := Some(url("https://github.com/aishfenton/Vegas")),
+  licenses := Seq("MIT License" -> url("http://www.opensource.org/licenses/MIT")),
+
+  publishMavenStyle := true,
+  publishTo := {
+    val nexus = "https://oss.sonatype.org/"
+    if (isSnapshot.value)
+      Some("snapshots" at nexus + "content/repositories/snapshots")
+    else
+      Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+  },
+  publishArtifact in Test := false,
+  pomIncludeRepository := { _ => false },
+  pomExtra := (
+    <scm>
+      <url>git@github.com:aishfenton/Vegas.git</url>
+      <connection>scm:git:git@github.com:aishfenton/Vegas.git</connection>
+    </scm>
+    <developers>
+      <developer>
+        <id>aishfenton</id>
+        <name>Aish Fenton</name>
+      </developer>
+      <developer>
+        <id>datamusing</id>
+        <name>Sudeep Das</name>
+      </developer>
+      <developer>
+        <id>dbtsai</id>
+        <name>DB Tsai</name>
+      </developer>
+    </developers>
+  )
+
 )
 
 lazy val noPublishSettings = Seq(
@@ -18,7 +53,8 @@ lazy val vegas = project.in(file("core")).
   settings(
     libraryDependencies ++= Seq(
       "io.argonaut" %% "argonaut" % "6.1",
-      "com.github.julien-truffaut"  %%  "monocle-core"    % "1.1.0",
+      "com.github.julien-truffaut" %% "monocle-macro" % "1.1.0",
+      "com.github.julien-truffaut"  %%  "monocle-core" % "1.1.0",
       "org.scalactic" %% "scalactic" % "2.2.6" % "test",
       "org.scalatest" %% "scalatest" % "2.2.6" % "test",
       "org.everit.json" % "org.everit.json.schema" % "1.2.0" % "test"
@@ -29,9 +65,14 @@ lazy val spark = project.
   settings(moduleName := "vegas-spark").
   dependsOn(vegas).
   settings(commonSettings: _*).
-  settings(noPublishSettings)
+  settings(
+    libraryDependencies ++= Seq(
+      "org.apache.spark" % "spark-sql_2.11" % "[1.5,)" % "provided"
+    )
+  )
 
 lazy val root = (project in file(".")).
-  aggregate(vegas, spark)
+  aggregate(vegas, spark).
+  settings(noPublishSettings: _*)
 
 

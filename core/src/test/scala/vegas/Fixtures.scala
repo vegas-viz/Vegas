@@ -26,14 +26,14 @@ trait Fixtures {
       encoding = Some(Encoding(
         x = Some(ChannelDef(
           field = Some("pop_millions"),
-          dataType = Some(QUANTITATIVE)
+          dataType = Some(Quantitative)
         )),
         y = Some(ChannelDef(
           field = Some("country"),
-          dataType = Some(NOMINAL)
+          dataType = Some(Nominal)
         ))
       )),
-      mark = Some(BAR)
+      mark = Some(Bar)
     )
   }
 
