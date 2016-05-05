@@ -6,7 +6,7 @@ import vegas.spec.{ ChannelDef, Encoding, Scale, Axis, Aggregate }
 /**
   * @author Aish Fenton.
   */
-class EncoderDSLSpec extends BaseSpec with Fixtures {
+class EncoderDSLSpec extends BaseSpec {
 
   "Encoder Trait" should "encode x and y fields, and possibly aggregate" in {
     val specBuilder = Vegas()
@@ -62,12 +62,13 @@ class EncoderDSLSpec extends BaseSpec with Fixtures {
     ))
   }
 
-  it should "set axis parameters for x and y" in {
+  it should "set axis parameters" in {
     val specBuilder = Vegas()
       .axisX(title = "title x", titleOffset = 1, titleMaxLength = 2, characterWidth = 3)
       .axisY(title = "title y")
 
     specBuilder.spec.encoding.get.x.get.axis.get should equal (Axis(
+      hide = None,
       title = Some("title x"),
       titleOffset = Some(1),
       titleMaxLength = Some(2),

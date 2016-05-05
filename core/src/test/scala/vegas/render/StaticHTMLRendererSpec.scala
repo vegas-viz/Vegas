@@ -1,16 +1,15 @@
 package vegas.render
 
 import vegas._
-import vegas.{ BaseSpec, Fixtures }
+import vegas.BaseSpec
 
 /**
   * @author Aish Fenton.
   */
-class StaticHTMLRendererSpec extends BaseSpec with Fixtures {
+class StaticHTMLRendererSpec extends BaseSpec {
   import StaticHTMLRenderer._
 
-  val data = rawData.popData
-  val spec = specs.popBarSpec
+  val data = Seq( Map("population" -> 318000000, "country" -> "USA"), Map("population" -> 64000000, "country" -> "UK") )
 
   val specBuilder = Vegas("Country Pop")
     .withData(data: _*)
@@ -32,7 +31,7 @@ class StaticHTMLRendererSpec extends BaseSpec with Fixtures {
 
     html shouldBe a [String]
     html.trim should startWith ("<script>")
-    html should include (spec.toJson())
+    html should include (specBuilder.spec.toJson())
     html.trim should include ("</script>")
   }
 

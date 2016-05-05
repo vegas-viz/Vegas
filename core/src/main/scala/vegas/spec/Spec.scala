@@ -70,7 +70,7 @@ case object ModeSkew extends Aggregate { val name = "modeskew" }
 case object Min extends Aggregate { val name = "min" }
 case object Max extends Aggregate { val name = "max" }
 
-case class Axis(title: Option[String] = None, titleOffset: Option[Int] = None, titleMaxLength: Option[Int] = None, characterWidth: Option[Int] = None)
+case class Axis(hide: Option[Boolean] = None, title: Option[String] = None, titleOffset: Option[Int] = None, titleMaxLength: Option[Int] = None, characterWidth: Option[Int] = None)
 
 case class Scale(scaleType: Option[ScaleType] = None, bandSize: Option[Int] = None)
 
@@ -113,8 +113,15 @@ object Encoders {
     jencode6L((cd: ChannelDef) => (cd.field, cd.dataType.map(_.name), cd.value, cd.aggregate.map(_.name),
       cd.axis, cd.scale))("field", "type", "value", "aggregate", "axis", "scale")
 
-  implicit def AxisEncoder: EncodeJson[Axis] =
-    jencode4L((a: Axis) => (a.title, a.titleOffset, a.titleMaxLength, a.characterWidth))("title", "titleOffset", "titleMaxLength", "characterWidth")
+  implicit def AxisEncoder: EncodeJson[Axis] = EncodeJson((a: Axis) => if (a.hide.getOrElse(false)) {
+    jFalse
+  } else {
+    ("title" := a.title) ->:
+      ("titleOffset" := a.titleOffset) ->:
+      ("titleMaxLength" := a.titleMaxLength) ->:
+      ("characterWidth" := a.characterWidth) ->:
+      jEmptyObject
+  })
 
   implicit def ScaleEncoder: EncodeJson[Scale] =
     jencode2L((s: Scale) => (s.scaleType.map(_.name), s.bandSize))("type", "bandSize")

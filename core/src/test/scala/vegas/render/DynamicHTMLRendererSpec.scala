@@ -1,16 +1,16 @@
 package vegas.render
 
 import vegas._
-import vegas.{Fixtures, BaseSpec}
+import vegas.BaseSpec
 
 /**
   * @author Aish Fenton.
   */
-class DynamicHTMLRendererSpec extends BaseSpec with Fixtures {
+class DynamicHTMLRendererSpec extends BaseSpec {
   import DynamicHTMLRenderer._
 
-  val data = rawData.popData
-  val spec = specs.popBarSpec
+  val data = Seq( Map("population" -> 318000000, "country" -> "USA"), Map("population" -> 64000000, "country" -> "UK") )
+
   val specBuilder = Vegas("Country Pop")
     .withData(data: _*)
     .addTransformCalculation("pop_millions", "datum.population / 1000000")
@@ -32,7 +32,7 @@ class DynamicHTMLRendererSpec extends BaseSpec with Fixtures {
 
     html shouldBe a [String]
     html.trim should startWith ("<script>")
-    html should include (spec.toJson())
+    html should include (specBuilder.spec.toJson())
     html.trim should include ("</script>")
   }
 

@@ -52,15 +52,15 @@ trait EncoderDSL {
     (_spec composeLens _encoding composePrism _orElse(Encoding()) composeLens _size).set(Some(cd))(this)
   }
 
-  def axisX(title: OptArg[String] = NoArg, titleOffset: OptArg[Int] = NoArg, titleMaxLength: OptArg[Int] = NoArg, characterWidth: OptArg[Int] = NoArg) = {
-    val axis = Axis(title, titleOffset, titleMaxLength, characterWidth)
+  def axisX(hide: OptArg[Boolean] = NoArg, title: OptArg[String] = NoArg, titleOffset: OptArg[Int] = NoArg, titleMaxLength: OptArg[Int] = NoArg, characterWidth: OptArg[Int] = NoArg) = {
+    val axis = Axis(hide, title, titleOffset, titleMaxLength, characterWidth)
 
     (_spec composeLens _encoding composePrism _orElse(Encoding()) composeLens _x composePrism _orElse(ChannelDef())
       composeLens _axis).set(Some(axis))(this)
   }
 
-  def axisY(title: OptArg[String] = NoArg, titleOffset: OptArg[Int] = NoArg, titleMaxLength: OptArg[Int] = NoArg, characterWidth: OptArg[Int] = NoArg) = {
-    val axis = Axis(title, titleOffset, titleMaxLength, characterWidth)
+  def axisY(hide: OptArg[Boolean] = NoArg, title: OptArg[String] = NoArg, titleOffset: OptArg[Int] = NoArg, titleMaxLength: OptArg[Int] = NoArg, characterWidth: OptArg[Int] = NoArg) = {
+    val axis = Axis(hide, title, titleOffset, titleMaxLength, characterWidth)
 
     (_spec composeLens _encoding composePrism _orElse(Encoding()) composeLens _y composePrism _orElse(ChannelDef())
       composeLens _axis).set(Some(axis))(this)

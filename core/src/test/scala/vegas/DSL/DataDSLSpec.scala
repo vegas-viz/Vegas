@@ -6,7 +6,7 @@ import vegas.spec.{Data}
 /**
   * @author Aish Fenton.
   */
-class DataDSLSpec extends BaseSpec with Fixtures {
+class DataDSLSpec extends BaseSpec {
 
   case class Ex(a: Int, b: String)
 
