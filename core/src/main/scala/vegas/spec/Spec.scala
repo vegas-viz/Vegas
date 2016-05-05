@@ -39,7 +39,8 @@ case object Text extends Mark { val name = "text" }
 case class Transform(calculate: Option[Seq[Formula]] = None, filterNull: Option[Boolean] = None, filter: Option[String] = None)
 case class Formula(field: String, expr: String)
 
-case class Encoding(x: Option[ChannelDef] = None, y: Option[ChannelDef] = None, color: Option[ChannelDef] = None)
+case class Encoding(x: Option[ChannelDef] = None, y: Option[ChannelDef] = None, color: Option[ChannelDef] = None,
+                    column: Option[ChannelDef] = None, row: Option[ChannelDef] = None, size: Option[ChannelDef] = None)
 
 case class ChannelDef(field: Option[String] = None, dataType: Option[DataType] = None, value: Option[String] = None,
                       aggregate: Option[Aggregate] = None, axis: Option[Axis] = None, scale: Option[Scale] = None)
@@ -106,7 +107,7 @@ object Encoders {
     jencode2L((f: Formula) => (f.field, f.expr))("field", "expr")
 
   implicit def EncodingEncoder: EncodeJson[Encoding] =
-    jencode3L((e: Encoding) => (e.x, e.y, e.color))("x", "y", "color")
+    jencode6L((e: Encoding) => (e.x, e.y, e.color, e.column, e.row, e.size))("x", "y", "color", "column", "row", "size")
 
   implicit def ChannelDefEncoder: EncodeJson[ChannelDef] =
     jencode6L((cd: ChannelDef) => (cd.field, cd.dataType.map(_.name), cd.value, cd.aggregate.map(_.name),

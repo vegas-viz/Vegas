@@ -8,10 +8,10 @@ import vegas.spec.{ ChannelDef, Encoding, Scale, Axis, Aggregate }
   */
 class EncoderDSLSpec extends BaseSpec with Fixtures {
 
-  "Encoder Trait" should "encode x and y fields" in {
+  "Encoder Trait" should "encode x and y fields, and possibly aggregate" in {
     val specBuilder = Vegas()
       .encodeX("population", Quantitative)
-      .encodeY("country", Nominal)
+      .encodeY("country", Nominal, aggregate=Mean)
 
     specBuilder.spec.encoding.get should equal (Encoding(
       x=Some(ChannelDef(
@@ -20,18 +20,46 @@ class EncoderDSLSpec extends BaseSpec with Fixtures {
       )),
       y=Some(ChannelDef(
         field = Some("country"),
+        dataType = Some(Nominal),
+        aggregate = Some(Mean)
+      ))
+    ))
+  }
+
+  it should "encode column and row, and possibly aggregate" in {
+    val specBuilder = Vegas()
+      .encodeColumn("population", Quantitative, Sum)
+      .encodeRow("country", Nominal)
+
+    specBuilder.spec.encoding.get should equal (Encoding(
+      column=Some(ChannelDef(
+        field = Some("population"),
+        dataType = Some(Quantitative),
+        aggregate = Some(Sum)
+      )),
+      row=Some(ChannelDef(
+        field = Some("country"),
         dataType = Some(Nominal)
       ))
     ))
   }
 
-  it should "set aggregate params for x and y" in {
+  it should "encode color and size, and possibly aggregate" in {
     val specBuilder = Vegas()
-      .aggregateX(Mean)
-      .aggregateY(Sum)
+      .encodeColor("country", Nominal, aggregate=Median)
+      .encodeSize("population", Quantitative)
 
-    specBuilder.spec.encoding.get.x.get.aggregate.get should equal(Mean)
-    specBuilder.spec.encoding.get.y.get.aggregate.get should equal(Sum)
+    specBuilder.spec.encoding.get should equal (Encoding(
+      color=Some(ChannelDef(
+        field = Some("country"),
+        dataType = Some(Nominal),
+        aggregate = Some(Median)
+      )),
+      size=Some(ChannelDef(
+        field = Some("population"),
+        dataType = Some(Quantitative)
+      ))
+    ))
   }
 
   it should "set axis parameters for x and y" in {
