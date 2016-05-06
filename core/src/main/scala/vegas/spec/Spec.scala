@@ -70,9 +70,18 @@ case object ModeSkew extends Aggregate { val name = "modeskew" }
 case object Min extends Aggregate { val name = "min" }
 case object Max extends Aggregate { val name = "max" }
 
-case class Axis(hide: Option[Boolean] = None, title: Option[String] = None, titleOffset: Option[Int] = None, titleMaxLength: Option[Int] = None, characterWidth: Option[Int] = None)
+case class Axis(hide: Option[Boolean] = None, title: Option[String] = None, titleOffset: Option[Int] = None,
+                titleMaxLength: Option[Int] = None, characterWidth: Option[Int] = None, orient: Option[Orient] = None,
+                axisWidth: Option[Int] = None, offset: Option[Int] = None, grid: Option[Boolean] = None)
 
-case class Scale(scaleType: Option[ScaleType] = None, bandSize: Option[Int] = None)
+sealed trait Orient { def name: String }
+case object Bottom extends Orient { val name = "bottom" }
+case object Top extends Orient { val name = "top" }
+case object Left extends Orient { val name = "left" }
+case object Right extends Orient { val name = "right" }
+
+case class Scale(scaleType: Option[ScaleType] = None, bandSize: Option[Int] = None, padding: Option[Int] = None,
+                 range: Option[Seq[String]] = None, rangePreset: Option[RangePreset] = None)
 
 sealed trait ScaleType { def name: String }
 case object Linear extends ScaleType { val name = "linear" }
@@ -85,7 +94,13 @@ case object Threshold extends ScaleType { val name = "threshold" }
 case object Time extends ScaleType { val name = "time" }
 case object OrdinalS extends ScaleType { val name = "ordinal" }
 
-case class Config(t: String)
+sealed trait RangePreset { def name: String }
+case object Category10 extends RangePreset { val name = "category10" }
+case object Category20 extends RangePreset { val name = "category20" }
+case object Category20b extends RangePreset { val name = "category20b" }
+case object Category20c extends RangePreset { val name = "category20c" }
+
+case class Config(todo: String)
 
 object Encoders {
 
@@ -120,14 +135,25 @@ object Encoders {
       ("titleOffset" := a.titleOffset) ->:
       ("titleMaxLength" := a.titleMaxLength) ->:
       ("characterWidth" := a.characterWidth) ->:
+      ("orient" := a.orient.map(_.name)) ->:
+      ("axisWidth" := a.axisWidth) ->:
+      ("offset" := a.offset) ->:
+      ("grid" := a.grid) ->:
       jEmptyObject
   })
 
-  implicit def ScaleEncoder: EncodeJson[Scale] =
-    jencode2L((s: Scale) => (s.scaleType.map(_.name), s.bandSize))("type", "bandSize")
+  implicit def ScaleEncoder: EncodeJson[Scale] = EncodeJson((s: Scale) => {
+    val rangeJson = if (s.rangePreset.isDefined) ("range" := s.rangePreset.map(_.name)) else ("range" := s.range)
+
+    ("type" := s.scaleType.map(_.name)) ->:
+      ("bandSize" := s.bandSize) ->:
+      ("padding" := s.padding) ->:
+      rangeJson  ->:
+      jEmptyObject
+  })
 
   implicit def ConfigEncoder: EncodeJson[Config] =
-    jencode1L((c: Config) => (c.t))("t")
+    jencode1L((c: Config) => (c.todo))("todo")
 
 }
 

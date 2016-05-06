@@ -54,4 +54,15 @@ package object vegas {
   val Time = spec.Time
   val OrdinalS = spec.OrdinalS
 
+  val Bottom = spec.Bottom
+  val Top = spec.Top
+  val Left = spec.Left
+  val Right = spec.Right
+
+  val Category10 = spec.Category10
+  val Category20 = spec.Category20
+  val Category20b = spec.Category20b
+  val Category20c = spec.Category20c
+
+
 }

@@ -64,7 +64,8 @@ class EncoderDSLSpec extends BaseSpec {
 
   it should "set axis parameters" in {
     val specBuilder = Vegas()
-      .axisX(title = "title x", titleOffset = 1, titleMaxLength = 2, characterWidth = 3)
+      .axisX(title = "title x", titleOffset=1, titleMaxLength=2, characterWidth=3, orient=Top, axisWidth=1,
+             offset= -8, grid=false)
       .axisY(title = "title y")
 
     specBuilder.spec.encoding.get.x.get.axis.get should equal (Axis(
@@ -72,21 +73,40 @@ class EncoderDSLSpec extends BaseSpec {
       title = Some("title x"),
       titleOffset = Some(1),
       titleMaxLength = Some(2),
-      characterWidth = Some(3)
+      characterWidth = Some(3),
+      orient = Some(Top),
+      axisWidth = Some(1),
+      offset = Some(-8),
+      grid = Some(false)
     ))
     specBuilder.spec.encoding.get.y.get.axis.get should equal (Axis(title = Some("title y")))
   }
 
-  it should "set scale parameters for x and y" in {
+  it should "thrown an exception if Axis is set to wrong orientation" in {
+    an [IllegalArgumentException] should be thrownBy { Vegas().axisX(orient = Right) }
+    an [IllegalArgumentException] should be thrownBy { Vegas().axisY(orient = Bottom) }
+  }
+
+  it should "set scale parameters" in {
     val specBuilder = Vegas()
-      .scaleX(scaleType = Log, bandSize = 1)
+      .scaleX(scaleType = Log, bandSize=1, padding=5)
       .scaleY(scaleType = Time)
+      .scaleRow(scaleType = Time)
+      .scaleColumn(scaleType = Time)
+      .scaleColor(range=Seq("a"), rangePreset=Category10)
 
     specBuilder.spec.encoding.get.x.get.scale.get should equal (Scale(
       scaleType = Some(Log),
-      bandSize = Some(1)
+      bandSize = Some(1),
+      padding = Some(5)
     ))
     specBuilder.spec.encoding.get.y.get.scale.get should equal (Scale(scaleType = Some(Time)))
+    specBuilder.spec.encoding.get.column.get.scale.get should equal (Scale(scaleType = Some(Time)))
+    specBuilder.spec.encoding.get.row.get.scale.get should equal (Scale(scaleType = Some(Time)))
+    specBuilder.spec.encoding.get.color.get.scale.get should equal (Scale(
+      range = Some(Seq("a")),
+      rangePreset = Some(Category10)
+    ))
   }
 
 }

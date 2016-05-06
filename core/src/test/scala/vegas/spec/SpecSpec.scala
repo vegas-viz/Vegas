@@ -37,7 +37,11 @@ class SpecSpec extends BaseSpec {
       y = Some(ChannelDef(
         field = Some("country"),
         dataType = Some(Nominal),
-        axis = Some(Axis(title = Some("title")))
+        axis = Some(Axis(orient=Some(Left), axisWidth=Some(1), offset=Some(10))),
+        scale = Some(Scale(padding = Some(5)))
+      )),
+      color = Some(ChannelDef(
+        scale = Some(Scale(rangePreset = Some(Category20)))
       ))
     )),
     mark = Some(Bar)
@@ -98,5 +102,22 @@ class SpecSpec extends BaseSpec {
 
   }
 
+  it should "encode scale.rangePreset as range, overriding any existing range param" in {
+    val axisSpec = Spec(
+      description = Some("Country Pop"),
+      encoding = Some(Encoding(
+        x = Some(ChannelDef(
+          scale = Some(Scale(range = Some(Seq("a", "b")), rangePreset = Some(Category10)))
+        )),
+        y = Some(ChannelDef(
+          scale = Some(Scale(range = Some(Seq("a", "b"))))
+        ))
+      ))
+    )
+
+    val json = axisSpec.asJson
+    (json.acursor --\ "encoding" --\ "x" --\ "scale" --\ "range").focus should equal(Some( jString("category10") ))
+    (json.acursor --\ "encoding" --\ "y" --\ "scale" --\ "range").focus should equal(Some( Json.array(jString("a"), jString("b")) ))
+  }
 }
 
