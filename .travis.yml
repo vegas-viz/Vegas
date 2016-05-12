@@ -4,8 +4,8 @@ scala:
    - 2.11.7
    - 2.11.8
 
-jdk:
-  - oraclejdk8
+#jdk:
+#  - oraclejdk8
 
 script:
   - sbt clean coverage test
@@ -13,3 +13,9 @@ script:
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
+# required until bug is fixed: https://github.com/travis-ci/travis-ci/issues/3259
+sudo: false
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
