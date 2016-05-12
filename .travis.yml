@@ -4,8 +4,8 @@ scala:
    - 2.11.7
    - 2.11.8
 
-#jdk:
-#  - oraclejdk8
+jdk:
+  - oraclejdk8
 
 script:
   - sbt clean coverage test
