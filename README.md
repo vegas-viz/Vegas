@@ -8,9 +8,13 @@ Vegas aims to be the missing MatPlotLib for the Scala and Spark world. Vegas wra
 
 ## Quick start
 
-```bash
-sbt veags/console
+Add the following jar as an SBT dependacy
+
+```sbt
+libraryDependencies += "com.github.aishfenton" % "vegas_2.11" % "0.1.0"
 ```
+
+And then use the following code to render a plot into a pop-up window (see below for more details on controlling how and where Vegas renders).
 
 ```scala
 import vegas._
@@ -33,7 +37,7 @@ chart.show
 
 See further examples [here](http://nbviewer.jupyter.org/github/aishfenton/Vegas/blob/master/docs/Examples.ipynb)
 
-## Renderers
+## Rendering
 
 Vegas provides a number of options for rendering charts out to. The primary focus is using Vegas within interactive notebook environments, such as Jupyter and Zeppelin.
 
@@ -85,7 +89,7 @@ See a comprehensive list example notebook of plots  [here](http://nbviewer.jupyt
 
 ### Standalone
 
-Vegas can also be used to produce standalone HTML or even render within popup window.
+Vegas can also be used to produce standalone HTML or even render plots within a built-in display app (useful if you wanted to display charts for a command-line-app).
 
 #### HTML or JSON
 
@@ -111,7 +115,7 @@ println(chart.spec.toJson())
 
 #### Window
 
-Vegas also contains a self-contained simple app for displaying plots (internally JavaFX's HTML renderer is used). The 
+Vegas also contains a self-contained display app for displaying plots (internally JavaFX's HTML renderer is used). The following demonstrates this and can be used from the command line. 
 
 ```scala
 import vegas._
@@ -130,16 +134,26 @@ val chart = Vegas("Country Pop").
 chart.show
 ```
 
+## Spark integration
 
+Vegas comes with an optional extension package that makes it easier to work with Spark DataFrames and RDDs. First you'll need an extra import
 
+```sbt
+libraryDependencies += "com.github.aishfenton" % "vegas_2.11" % "0.1.0"
+```
+
+```scala
+import vegas.spark.SparkExt._
+```
+
+This adds the following new methods: *withData(df: DataFrame)* and *withData(rdd: RDD[Product])*. In the first case, each DataFrame column is exposed as a field keyed using the column's name. In the second case, an RDD of _case classes_ is expected, and reflection is used to map the case classes fields to fields within Vegas.   
+
+## Plot Options
+
+TODO
 
 ## Contributing
 
-See TODO
-
-
-
-
-
+See [here](abc) for more information on contributing bug fixes and features.
 
 
