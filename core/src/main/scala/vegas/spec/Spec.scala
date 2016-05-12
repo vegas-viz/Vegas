@@ -73,7 +73,8 @@ case object Max extends Aggregate { val name = "max" }
 case class Axis(hide: Option[Boolean] = None, title: Option[String] = None, titleOffset: Option[Int] = None,
                 titleMaxLength: Option[Int] = None, characterWidth: Option[Int] = None, orient: Option[Orient] = None,
                 axisWidth: Option[Int] = None, offset: Option[Int] = None, grid: Option[Boolean] = None,
-               ticks: Option[Int] = None, tickColor: Option[String] = None)
+                ticks: Option[Int] = None, tickColor: Option[String] = None, tickLabelFontSize: Option[Int] = None,
+                titleFontSize: Option[Int] = None)
 
 sealed trait Orient { def name: String }
 case object Bottom extends Orient { val name = "bottom" }
@@ -142,6 +143,8 @@ object Encoders {
       ("grid" := a.grid) ->:
       ("ticks" := a.ticks) ->:
       ("tickColor" := a.tickColor) ->:
+      ("tickLabelFontSize" := a.tickLabelFontSize) ->:
+      ("titleFontSize" := a.titleFontSize) ->:
       jEmptyObject
   })
 

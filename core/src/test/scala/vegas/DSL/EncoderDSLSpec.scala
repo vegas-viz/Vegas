@@ -65,7 +65,7 @@ class EncoderDSLSpec extends BaseSpec {
   it should "set axis parameters" in {
     val specBuilder = Vegas()
       .axisX(title = "title x", titleOffset=1, titleMaxLength=2, characterWidth=3, orient=Top, axisWidth=1,
-             offset= -8, grid=false, ticks=5, tickColor = "red")
+             offset= -8, grid=false, ticks=5, tickColor = "red", tickLabelFontSize = 15, titleFontSize=12)
       .axisY(title = "title y")
 
     specBuilder.spec.encoding.get.x.get.axis.get should equal (Axis(
@@ -79,7 +79,9 @@ class EncoderDSLSpec extends BaseSpec {
       offset = Some(-8),
       grid = Some(false),
       ticks = Some(5),
-      tickColor = Some("red")
+      tickColor = Some("red"),
+      tickLabelFontSize = Some(15),
+      titleFontSize = Some(12)
     ))
     specBuilder.spec.encoding.get.y.get.axis.get should equal (Axis(title = Some("title y")))
   }
