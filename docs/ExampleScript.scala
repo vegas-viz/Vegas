@@ -27,3 +27,5 @@ val chart = Vegas("A bar chart showing the US population distribution of age gro
 
 chart.show
 
+
+
