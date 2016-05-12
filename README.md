@@ -8,15 +8,21 @@ Vegas is a DSL for Scala and Spark to produce [Vega-Lite](https://vega.github.io
 
 ```scala
 import vegas._
-import vegas.render.StaticHTMLRenderer._
+import vegas.render.WindowRenderer._
 
 val chart = Vegas("Country Pop").
-  withData(Array("USA", 318000), Array("UK", 64000000)).
-  encodeX("population", Quantitive).
-  encodeY("country", Nominal).
+  withData(
+    Map("country" -> "USA", "population" -> 314),
+    Map("country" -> "UK", "population" -> 64),
+    Map("country" -> "DK", "population" -> 80)
+  ).
+  encodeX("country", Nominal).
+  encodeY("population", Quantitative).
   mark(Bar).
   show
 ```
+
+
 
 ## Renderers
 
