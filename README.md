@@ -12,9 +12,30 @@ import vegas.render.StaticHTMLRenderer._
 
 val chart = Vegas("Country Pop").
   withData(Array("USA", 318000), Array("UK", 64000000)).
-  encodeX("population", QUANTITATIVE).
-  encodeY("country", NOMINAL).
-  mark(BAR).
-  pageHTML
-
+  encodeX("population", Quantitive).
+  encodeY("country", Nominal).
+  mark(Bar).
+  show
 ```
+
+## Renderers
+
+### Jupyer notebook
+
+This 
+
+### Zeppelin notebook
+
+### Standalone window (using JavaFX)
+
+
+## Contributing
+
+See TODO
+
+
+
+
+
+
+
