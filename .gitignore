@@ -1,2 +1,7 @@
 .idea
 .ipynb_checkpoints
+core/target/
+project/project/
+project/target/
+spark/target/
+target/
