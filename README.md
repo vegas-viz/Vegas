@@ -146,7 +146,12 @@ libraryDependencies += "com.github.aishfenton" % "vegas_2.11" % "0.1.0"
 import vegas.spark.SparkExt._
 ```
 
-This adds the following new methods: *withData(df: DataFrame)* and *withData(rdd: RDD[Product])*. In the first case, each DataFrame column is exposed as a field keyed using the column's name. In the second case, an RDD of _case classes_ is expected, and reflection is used to map the case classes fields to fields within Vegas.   
+This adds the following new methods: 
+
+* withData(df: DataFrame)
+* withData(rdd: RDD[Product])
+
+In the first case, each DataFrame column is exposed as a field keyed using the column's name. In the second case, an RDD of _case classes_ is expected, and reflection is used to map the case class's fields to fields within Vegas.   
 
 ## Plot Options
 
