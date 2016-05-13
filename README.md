@@ -81,7 +81,7 @@ And lastly if you're using Apache Zeppelin [Zeppelin](https://zeppelin.incubator
 ```scala
 import vegas._
 import vegas.render.HTMLRenderer._
-implicit val displayer: String => Unit = { s => "%HTML " + s }
+implicit val displayer: String => Unit = { s => print("%HTML " + s) }
 ``` 
 
 The last line in each of the above is required to connect Vegas to the notebook's HTML renderer (so that the returned HTML is rendered instead of displayed as a string). 
