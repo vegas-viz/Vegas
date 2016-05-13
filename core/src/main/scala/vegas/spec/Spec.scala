@@ -75,8 +75,8 @@ case class Axis(hide: Option[Boolean] = None, title: Option[String] = None, titl
                 axisWidth: Option[Int] = None, offset: Option[Int] = None, grid: Option[Boolean] = None,
                 ticks: Option[Int] = None, tickColor: Option[String] = None, tickLabelFontSize: Option[Int] = None,
                 titleFontSize: Option[Int] = None,
-                labels: Option[Boolean] = None, format: Option[String], labelAngle: Option[Double] = None,
-                labelMaxLength: Option[Int], shortTimeLabels: Option[Boolean])
+                labels: Option[Boolean] = None, format: Option[String] = None, labelAngle: Option[Double] = None,
+                labelMaxLength: Option[Int] = None, shortTimeLabels: Option[Boolean] = None)
 
 sealed trait Orient { def name: String }
 case object Bottom extends Orient { val name = "bottom" }
