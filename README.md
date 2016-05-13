@@ -36,7 +36,7 @@ chart.show
 
 !["Readme Chart 1"](https://dl.dropboxusercontent.com/u/8245460/readme-chart-1.png)
 
-See further examples [here](http://nbviewer.jupyter.org/github/aishfenton/Vegas/blob/master/docs/Examples.ipynb)
+See further examples [here](http://nbviewer.jupyter.org/github/aishfenton/Vegas/blob/master/docs/ExampleJupyterScala.ipynb)
 
 ## Rendering
 
@@ -88,7 +88,7 @@ implicit val displayer: String => Unit = { s => print("%html " + s) }
 
 The last line in each of the above is required to connect Vegas to the notebook's HTML renderer (so that the returned HTML is rendered instead of displayed as a string). 
 
-See a comprehensive list example notebook of plots  [here](http://nbviewer.jupyter.org/github/aishfenton/Vegas/blob/master/docs/Examples.ipynb)
+See a comprehensive list example notebook of plots  [here](http://nbviewer.jupyter.org/github/aishfenton/Vegas/blob/master/docs/ExampleJupyterScala.ipynb)
 
 ### Standalone
 
