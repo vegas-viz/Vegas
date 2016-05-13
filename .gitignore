@@ -5,3 +5,6 @@ project/project/
 project/target/
 spark/target/
 target/
+derby.log
+metastore_db/
+
