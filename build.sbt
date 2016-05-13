@@ -1,7 +1,7 @@
 
 lazy val commonSettings = Seq(
   organization := "com.github.aishfenton",
-  version := "0.2.2",
+  version := "0.2.3",
   scalaVersion := "2.11.8",
   scalacOptions += "-target:jvm-1.7",
   crossScalaVersions := Seq("2.10.6", "2.11.8"),
@@ -68,7 +68,7 @@ lazy val spark = project.
   settings(commonSettings: _*).
   settings(
     libraryDependencies ++= Seq(
-      "org.apache.spark" % "spark-sql_2.11" % "[1.5,)" % "provided"
+      "org.apache.spark" %% "spark-sql" % "[1.5,)" % "provided"
     )
   )
 

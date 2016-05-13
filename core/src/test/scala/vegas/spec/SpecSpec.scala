@@ -45,7 +45,13 @@ class SpecSpec extends BaseSpec {
         scale = Some(Scale(rangePreset = Some(Category20)))
       ))
     )),
-    mark = Some(Bar)
+    mark = Some(Bar),
+    config = Some(Config(
+      cell = Some(Cell(
+        width = Some(1),
+        strokeDash = Some(Seq(1))
+      ))
+    ))
   )
 
   def checkSchema(json: String, schemaPath: String) = {
