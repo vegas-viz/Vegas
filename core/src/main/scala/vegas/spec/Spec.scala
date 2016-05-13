@@ -126,8 +126,11 @@ case object Category20 extends RangePreset { val name = "category20" }
 case object Category20b extends RangePreset { val name = "category20b" }
 case object Category20c extends RangePreset { val name = "category20c" }
 
-case class Config(cell: Cell)
-case class Cell(todo: String)
+case class Config(cell: Option[Cell] = None)
+case class Cell(width: Option[Int] = None, height: Option[Int] = None, fill: Option[String] = None,
+                fillOpacity: Option[Double] = None, stroke: Option[String] = None, strokeOpacity: Option[Double] = None,
+                strokeWidth: Option[Int] = None, strokeDash: Option[Seq[Int]] = None,
+                strokeDashOffset: Option[Int] = None)
 
 object Encoders {
 
@@ -189,7 +192,12 @@ object Encoders {
   })
 
   implicit def ConfigEncoder: EncodeJson[Config] =
-    jencode1L((c: Config) => (c.todo))("todo")
+    jencode1L((c: Config) => (c.cell))("cell")
+
+  implicit def CellEncoder: EncodeJson[Cell] =
+    jencode9L((c: Cell) => (c.width, c.height, c.fill, c.fillOpacity, c.stroke, c.strokeOpacity, c.strokeWidth,
+      c.strokeDash, c.strokeDashOffset))("width", "height", "fill", "fillOpacity", "stroke", "strokeOpacity",
+      "strokeWidth", "strokeDash", "strokeDashOffset")
 
 }
 

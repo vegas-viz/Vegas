@@ -15,7 +15,7 @@ object Vegas {
 /**
   * @author Aish Fenton.
   */
-case class SpecBuilder(spec: Spec) extends SpecDSL with EncoderDSL with DataDSL with TransformDSL
+case class SpecBuilder(spec: Spec) extends SpecDSL with EncoderDSL with DataDSL with TransformDSL with ConfigDSL
 
 trait SpecDSL {
   self: SpecBuilder =>
