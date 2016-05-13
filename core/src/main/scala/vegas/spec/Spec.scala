@@ -126,7 +126,8 @@ case object Category20 extends RangePreset { val name = "category20" }
 case object Category20b extends RangePreset { val name = "category20b" }
 case object Category20c extends RangePreset { val name = "category20c" }
 
-case class Config(todo: String)
+case class Config(cell: Cell)
+case class Cell(todo: String)
 
 object Encoders {
 
