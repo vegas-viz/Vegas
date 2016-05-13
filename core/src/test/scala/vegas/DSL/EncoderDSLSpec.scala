@@ -89,6 +89,31 @@ class EncoderDSLSpec extends BaseSpec {
     specBuilder.spec.encoding.get.y.get.axis.get should equal (Axis(title = Some("title y")))
   }
 
+  it should "set labels in axis parameters" in {
+    val specBuilder = Vegas()
+      .axisX(title = "title x", titleOffset=1, titleMaxLength=2, characterWidth=3, orient=Top, axisWidth=1,
+        offset= -8, grid=false, labels = true, format = "04d", labelAngle = 32.5,  labelMaxLength = 12, shortTimeLabels = true)
+      .axisY(title = "title y")
+
+    specBuilder.spec.encoding.get.x.get.axis.get should equal (Axis(
+      hide = None,
+      title = Some("title x"),
+      titleOffset = Some(1),
+      titleMaxLength = Some(2),
+      characterWidth = Some(3),
+      orient = Some(Top),
+      axisWidth = Some(1),
+      offset = Some(-8),
+      grid = Some(false),
+      labels = Some(true),
+      format = Some("04d"),
+      labelAngle = Some(32.5),
+      labelMaxLength = Some(12),
+      shortTimeLabels = Some(true)
+    ))
+    specBuilder.spec.encoding.get.y.get.axis.get should equal (Axis(title = Some("title y")))
+  }
+
   it should "thrown an exception if Axis is set to wrong orientation" in {
     an [IllegalArgumentException] should be thrownBy { Vegas().axisX(orient = Right) }
     an [IllegalArgumentException] should be thrownBy { Vegas().axisY(orient = Bottom) }
