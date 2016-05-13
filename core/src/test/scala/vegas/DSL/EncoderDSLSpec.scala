@@ -8,10 +8,10 @@ import vegas.spec.{ ChannelDef, Encoding, Scale, Axis, Aggregate }
   */
 class EncoderDSLSpec extends BaseSpec {
 
-  "Encoder Trait" should "encode x and y fields, and possibly aggregate" in {
+  "Encoder Trait" should "encode x and y fields, and optionally aggregate and timeUnit" in {
     val specBuilder = Vegas()
       .encodeX("population", Quantitative)
-      .encodeY("country", Nominal, aggregate=Mean)
+      .encodeY("country", Nominal, aggregate=Mean, timeUnit=YearMonthDate)
 
     specBuilder.spec.encoding.get should equal (Encoding(
       x=Some(ChannelDef(
@@ -21,21 +21,23 @@ class EncoderDSLSpec extends BaseSpec {
       y=Some(ChannelDef(
         field = Some("country"),
         dataType = Some(Nominal),
-        aggregate = Some(Mean)
+        aggregate = Some(Mean),
+        timeUnit = Some(YearMonthDate)
       ))
     ))
   }
 
-  it should "encode column and row, and possibly aggregate" in {
+  it should "encode column and row, and optionally aggregate and timeUnit" in {
     val specBuilder = Vegas()
-      .encodeColumn("population", Quantitative, Sum)
+      .encodeColumn("population", Quantitative, Sum, Date)
       .encodeRow("country", Nominal)
 
     specBuilder.spec.encoding.get should equal (Encoding(
       column=Some(ChannelDef(
         field = Some("population"),
         dataType = Some(Quantitative),
-        aggregate = Some(Sum)
+        aggregate = Some(Sum),
+        timeUnit = Some(Date)
       )),
       row=Some(ChannelDef(
         field = Some("country"),
@@ -44,10 +46,10 @@ class EncoderDSLSpec extends BaseSpec {
     ))
   }
 
-  it should "encode color and size, and possibly aggregate" in {
+  it should "encode color and size, and optionally aggregate, and timeUnit" in {
     val specBuilder = Vegas()
       .encodeColor("country", Nominal, aggregate=Median)
-      .encodeSize("population", Quantitative)
+      .encodeSize("population", Quantitative, timeUnit=SecondsMilliseconds)
 
     specBuilder.spec.encoding.get should equal (Encoding(
       color=Some(ChannelDef(
@@ -57,7 +59,8 @@ class EncoderDSLSpec extends BaseSpec {
       )),
       size=Some(ChannelDef(
         field = Some("population"),
-        dataType = Some(Quantitative)
+        dataType = Some(Quantitative),
+        timeUnit = Some(SecondsMilliseconds)
       ))
     ))
   }

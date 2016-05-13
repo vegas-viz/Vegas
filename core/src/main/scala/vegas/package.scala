@@ -64,5 +64,24 @@ package object vegas {
   val Category20b = spec.Category20b
   val Category20c = spec.Category20c
 
+  val Year = spec.Year
+  val YearMonth = spec.YearMonth
+  val YearMonthDay = spec.YearMonthDay
+  val YearMonthDate = spec.YearMonthDate
+  val YearDay = spec.YearDay
+  val YearDate = spec.YearDate
+  val YearMonthDayHours = spec.YearMonthDayHours
+  val YearMonthDayHoursMinutes = spec.YearMonthDayHoursMinutes
+  val Month = spec.Month
+  val Day = spec.Day
+  val Date = spec.Date
+  val Hours = spec.Hours
+  val Minutes = spec.Minutes
+  val Seconds = spec.Seconds
+  val Milliseconds = spec.Milliseconds
+  val HoursMinutes = spec.HoursMinutes
+  val HoursMinutesSeconds = spec.HoursMinutesSeconds
+  val MinutesSeconds = spec.MinutesSeconds
+  val SecondsMilliseconds = spec.SecondsMilliseconds
 
 }

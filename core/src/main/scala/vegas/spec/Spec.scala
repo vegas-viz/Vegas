@@ -43,7 +43,29 @@ case class Encoding(x: Option[ChannelDef] = None, y: Option[ChannelDef] = None, 
                     column: Option[ChannelDef] = None, row: Option[ChannelDef] = None, size: Option[ChannelDef] = None)
 
 case class ChannelDef(field: Option[String] = None, dataType: Option[DataType] = None, value: Option[String] = None,
-                      aggregate: Option[Aggregate] = None, axis: Option[Axis] = None, scale: Option[Scale] = None)
+                      aggregate: Option[Aggregate] = None, axis: Option[Axis] = None, scale: Option[Scale] = None,
+                      timeUnit: Option[TimeUnit] = None)
+
+sealed trait TimeUnit { def name: String }
+case object Year extends TimeUnit { val name = "year" }
+case object YearMonth extends TimeUnit { val name = "yearmonth" }
+case object YearMonthDay extends TimeUnit { val name = "yearmonthday" }
+case object YearMonthDate extends TimeUnit { val name = "yearmonthdate" }
+case object YearDay extends TimeUnit { val name = "yearday" }
+case object YearDate extends TimeUnit { val name = "yeardate" }
+case object YearMonthDayHours extends TimeUnit { val name = "yearmonthdayhours" }
+case object YearMonthDayHoursMinutes extends TimeUnit { val name = "yearmonthdayhoursminutes" }
+case object Month extends TimeUnit { val name = "month" }
+case object Day extends TimeUnit { val name = "day" }
+case object Date extends TimeUnit { val name = "date" }
+case object Hours extends TimeUnit { val name = "hours" }
+case object Minutes extends TimeUnit { val name = "minutes" }
+case object Seconds extends TimeUnit { val name = "seconds" }
+case object Milliseconds extends TimeUnit { val name = "milliseconds" }
+case object HoursMinutes extends TimeUnit { val name = "hoursminutes" }
+case object HoursMinutesSeconds extends TimeUnit { val name = "hoursminutesseconds" }
+case object MinutesSeconds extends TimeUnit { val name = "minutesseconds" }
+case object SecondsMilliseconds extends TimeUnit { val name = "secondsmilliseconds" }
 
 sealed trait DataType { def name: String }
 case object Quantitative extends DataType { val name = "quantitative" }
@@ -129,8 +151,8 @@ object Encoders {
     jencode6L((e: Encoding) => (e.x, e.y, e.color, e.column, e.row, e.size))("x", "y", "color", "column", "row", "size")
 
   implicit def ChannelDefEncoder: EncodeJson[ChannelDef] =
-    jencode6L((cd: ChannelDef) => (cd.field, cd.dataType.map(_.name), cd.value, cd.aggregate.map(_.name),
-      cd.axis, cd.scale))("field", "type", "value", "aggregate", "axis", "scale")
+    jencode7L((cd: ChannelDef) => (cd.field, cd.dataType.map(_.name), cd.value, cd.aggregate.map(_.name),
+      cd.axis, cd.scale, cd.timeUnit.map(_.name)))("field", "type", "value", "aggregate", "axis", "scale", "timeUnit")
 
   implicit def AxisEncoder: EncodeJson[Axis] = EncodeJson((a: Axis) => if (a.hide.getOrElse(false)) {
     jFalse

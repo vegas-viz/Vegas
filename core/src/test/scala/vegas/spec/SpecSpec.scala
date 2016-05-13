@@ -32,7 +32,8 @@ class SpecSpec extends BaseSpec {
       x = Some(ChannelDef(
         field = Some("pop_millions"),
         dataType = Some(Quantitative),
-        axis = Some(Axis(hide = Some(true)))
+        axis = Some(Axis(hide = Some(true))),
+        timeUnit = Some(YearMonthDayHoursMinutes)
       )),
       y = Some(ChannelDef(
         field = Some("country"),

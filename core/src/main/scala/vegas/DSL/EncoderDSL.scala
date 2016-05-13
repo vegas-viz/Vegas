@@ -20,36 +20,52 @@ trait EncoderDSL {
 
   private val _aggregate = GenLens[ChannelDef](_.aggregate)
   private val _axis = GenLens[ChannelDef](_.axis)
-
+  private val _timeUnit = GenLens[ChannelDef](_.timeUnit)
   private val _scale = GenLens[ChannelDef](_.scale)
 
-  def encodeX(field: String, dataType: DataType, aggregate: OptArg[Aggregate] = NoArg) = {
-    val cd = ChannelDef(field=Some(field), dataType=Some(dataType), aggregate=aggregate)
+  // --------
+  // Encoder
+  // --------
+
+  def encodeX(field: String, dataType: DataType, aggregate: OptArg[Aggregate] = NoArg,
+              timeUnit: OptArg[TimeUnit] = NoArg) = {
+
+    val cd = ChannelDef(field=Some(field), dataType=Some(dataType), aggregate=aggregate, timeUnit=timeUnit)
     (_spec composeLens _encoding composePrism _orElse(Encoding()) composeLens _x).set(Some(cd))(this)
   }
 
-  def encodeY(field: String, dataType: DataType, aggregate: OptArg[Aggregate] = NoArg) = {
-    val cd = ChannelDef(field=Some(field), dataType=Some(dataType), aggregate=aggregate)
+  def encodeY(field: String, dataType: DataType, aggregate: OptArg[Aggregate] = NoArg,
+              timeUnit: OptArg[TimeUnit] = NoArg) = {
+
+    val cd = ChannelDef(field=Some(field), dataType=Some(dataType), aggregate=aggregate, timeUnit=timeUnit)
     (_spec composeLens _encoding composePrism _orElse(Encoding()) composeLens _y).set(Some(cd))(this)
   }
 
-  def encodeColumn(field: String, dataType: DataType, aggregate: OptArg[Aggregate] = NoArg) = {
-    val cd = ChannelDef(field=Some(field), dataType=Some(dataType), aggregate=aggregate)
+  def encodeColumn(field: String, dataType: DataType, aggregate: OptArg[Aggregate] = NoArg,
+                   timeUnit: OptArg[TimeUnit] = NoArg) = {
+
+    val cd = ChannelDef(field=Some(field), dataType=Some(dataType), aggregate=aggregate, timeUnit=timeUnit)
     (_spec composeLens _encoding composePrism _orElse(Encoding()) composeLens _column).set(Some(cd))(this)
   }
 
-  def encodeRow(field: String, dataType: DataType, aggregate: OptArg[Aggregate] = NoArg) = {
-    val cd = ChannelDef(field=Some(field), dataType=Some(dataType), aggregate=aggregate)
+  def encodeRow(field: String, dataType: DataType, aggregate: OptArg[Aggregate] = NoArg,
+                timeUnit: OptArg[TimeUnit] = NoArg) = {
+
+    val cd = ChannelDef(field=Some(field), dataType=Some(dataType), aggregate=aggregate, timeUnit=timeUnit)
     (_spec composeLens _encoding composePrism _orElse(Encoding()) composeLens _row).set(Some(cd))(this)
   }
 
-  def encodeColor(field: String, dataType: DataType, aggregate: OptArg[Aggregate] = NoArg) = {
-    val cd = ChannelDef(field=Some(field), dataType=Some(dataType), aggregate=aggregate)
+  def encodeColor(field: String, dataType: DataType, aggregate: OptArg[Aggregate] = NoArg,
+                  timeUnit: OptArg[TimeUnit] = NoArg) = {
+
+    val cd = ChannelDef(field=Some(field), dataType=Some(dataType), aggregate=aggregate, timeUnit=timeUnit)
     (_spec composeLens _encoding composePrism _orElse(Encoding()) composeLens _color).set(Some(cd))(this)
   }
 
-  def encodeSize(field: String, dataType: DataType, aggregate: OptArg[Aggregate] = NoArg) = {
-    val cd = ChannelDef(field=Some(field), dataType=Some(dataType), aggregate=aggregate)
+  def encodeSize(field: String, dataType: DataType, aggregate: OptArg[Aggregate] = NoArg,
+                 timeUnit: OptArg[TimeUnit] = NoArg) = {
+
+    val cd = ChannelDef(field=Some(field), dataType=Some(dataType), aggregate=aggregate, timeUnit=timeUnit)
     (_spec composeLens _encoding composePrism _orElse(Encoding()) composeLens _size).set(Some(cd))(this)
   }
 
