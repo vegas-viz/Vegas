@@ -61,7 +61,7 @@ implicit val displayer: String => Unit = display.html(_)
 And if you're using [Apache Toree](https://toree.incubator.apache.org/), then this:
 
 ```
-%addJar file:../core/target/scala-2.10/vegas-assembly-0.1.0.jar
+%AddDeps com.github.aishfenton vegas_2.10 0.2.1 --transitive
 ```
 
 ```scala
@@ -75,14 +75,14 @@ implicit val displayer: String => Unit = { s => kernel.display.content("text/htm
 And lastly if you're using Apache Zeppelin [Zeppelin](https://zeppelin.incubator.apache.org/) then use the following to initialize the notebook.
 
 ```
-%addJar file:../core/target/scala-2.10/vegas-assembly-0.1.0.jar
+%dep
+z.load("com.github.aishfenton:vegas_{scala-version}:{vegas-version}")
 ```
-
-```scala
+```
 import vegas._
 import vegas.render.HTMLRenderer._
-implicit val displayer: String => Unit = { s => print("%HTML " + s) }
-``` 
+implicit val displayer: String => Unit = { s => print("%html " + s) }
+```
 
 The last line in each of the above is required to connect Vegas to the notebook's HTML renderer (so that the returned HTML is rendered instead of displayed as a string). 
 
