@@ -59,9 +59,10 @@ trait EncoderDSL {
 
   private def axisCD(cd: Lens[Encoding, Option[ChannelDef]], hide: OptArg[Boolean], title: OptArg[String],
                      titleOffset: OptArg[Int], titleMaxLength: OptArg[Int], characterWidth: OptArg[Int],
-                     orient: OptArg[Orient], axisWidth: OptArg[Int], offset: OptArg[Int], grid: OptArg[Boolean]) = {
+                     orient: OptArg[Orient], axisWidth: OptArg[Int], offset: OptArg[Int], grid: OptArg[Boolean],
+                     label: OptArg[Boolean]) = {
 
-    val axis = Axis(hide, title, titleOffset, titleMaxLength, characterWidth, orient, axisWidth, offset, grid)
+    val axis = Axis(hide, title, titleOffset, titleMaxLength, characterWidth, orient, axisWidth, offset, grid, label)
 
     (_spec composeLens _encoding composePrism _orElse(Encoding()) composeLens cd composePrism _orElse(ChannelDef())
       composeLens _axis).set(Some(axis))(this)
@@ -69,38 +70,42 @@ trait EncoderDSL {
 
   def axisX(hide: OptArg[Boolean] = NoArg, title: OptArg[String] = NoArg, titleOffset: OptArg[Int] = NoArg,
             titleMaxLength: OptArg[Int] = NoArg, characterWidth: OptArg[Int] = NoArg, orient: OptArg[Orient] = NoArg,
-            axisWidth: OptArg[Int] = NoArg, offset: OptArg[Int] = NoArg, grid: OptArg[Boolean] = NoArg) = {
+            axisWidth: OptArg[Int] = NoArg, offset: OptArg[Int] = NoArg, grid: OptArg[Boolean] = NoArg,
+            label: OptArg[Boolean] = NoArg) = {
 
     require(orient.map(Seq(Top, Bottom).contains).getOrElse(true), "Orient must be Top or Bottom for X or Column")
 
-    axisCD(_x, hide, title, titleOffset, titleMaxLength, characterWidth, orient, axisWidth, offset, grid)
+    axisCD(_x, hide, title, titleOffset, titleMaxLength, characterWidth, orient, axisWidth, offset, grid, label)
   }
 
   def axisY(hide: OptArg[Boolean] = NoArg, title: OptArg[String] = NoArg, titleOffset: OptArg[Int] = NoArg,
             titleMaxLength: OptArg[Int] = NoArg, characterWidth: OptArg[Int] = NoArg, orient: OptArg[Orient] = NoArg,
-            axisWidth: OptArg[Int] = NoArg, offset: OptArg[Int] = NoArg, grid: OptArg[Boolean] = NoArg) = {
+            axisWidth: OptArg[Int] = NoArg, offset: OptArg[Int] = NoArg, grid: OptArg[Boolean] = NoArg,
+            label: OptArg[Boolean] = NoArg) = {
 
     require(orient.map(Seq(Left, Right).contains).getOrElse(true), "Orient must be Left or Right for Y or Row")
 
-    axisCD(_y, hide, title, titleOffset, titleMaxLength, characterWidth, orient, axisWidth, offset, grid)
+    axisCD(_y, hide, title, titleOffset, titleMaxLength, characterWidth, orient, axisWidth, offset, grid, label)
   }
 
   def axisColumn(hide: OptArg[Boolean] = NoArg, title: OptArg[String] = NoArg, titleOffset: OptArg[Int] = NoArg,
                  titleMaxLength: OptArg[Int] = NoArg, characterWidth: OptArg[Int] = NoArg, orient: OptArg[Orient] = NoArg,
-                 axisWidth: OptArg[Int] = NoArg, offset: OptArg[Int] = NoArg, grid: OptArg[Boolean] = NoArg) = {
+                 axisWidth: OptArg[Int] = NoArg, offset: OptArg[Int] = NoArg, grid: OptArg[Boolean] = NoArg,
+                 label: OptArg[Boolean] = NoArg) = {
 
     require(orient.map(Seq(Top, Bottom).contains).getOrElse(true), "Orient must be Top or Bottom for X or Column")
 
-    axisCD(_column, hide, title, titleOffset, titleMaxLength, characterWidth, orient, axisWidth, offset, grid)
+    axisCD(_column, hide, title, titleOffset, titleMaxLength, characterWidth, orient, axisWidth, offset, grid, label)
   }
 
   def axisRow(hide: OptArg[Boolean] = NoArg, title: OptArg[String] = NoArg, titleOffset: OptArg[Int] = NoArg,
               titleMaxLength: OptArg[Int] = NoArg, characterWidth: OptArg[Int] = NoArg, orient: OptArg[Orient] = NoArg,
-              axisWidth: OptArg[Int] = NoArg, offset: OptArg[Int] = NoArg, grid: OptArg[Boolean] = NoArg) = {
+              axisWidth: OptArg[Int] = NoArg, offset: OptArg[Int] = NoArg, grid: OptArg[Boolean] = NoArg,
+              label: OptArg[Boolean] = NoArg) = {
 
     require(orient.map(Seq(Left, Right).contains).getOrElse(true), "Orient must be Left or Right for Y or Row")
 
-    axisCD(_row, hide, title, titleOffset, titleMaxLength, characterWidth, orient, axisWidth, offset, grid)
+    axisCD(_row, hide, title, titleOffset, titleMaxLength, characterWidth, orient, axisWidth, offset, grid, label)
   }
 
   // -------
