@@ -12,7 +12,7 @@ Vegas aims to be the missing MatPlotLib for the Scala and Spark world. Vegas wra
 Add the following jar as an SBT dependacy
 
 ```sbt
-libraryDependencies += "com.github.aishfenton" % "vegas_2.11" % "0.1.0"
+libraryDependencies += "com.github.aishfenton" % "vegas_2.11" % "0.2.2"
 ```
 
 And then use the following code to render a plot into a pop-up window (see below for more details on controlling how and where Vegas renders).
@@ -49,8 +49,10 @@ Vegas provides a number of options for rendering charts out to. The primary focu
 If you're using [jupyter-scala](https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=jupyter%20scala), then you must incldue the following in your notebook before using Vegas.
 
 ```scala
-load.jar("../core/target/scala-2.11/vegas-assembly-0.1.0.jar")
+load.ivy("com.github.aishfenton" %% "vegas" % "{vegas-version}")
+```
 
+```
 import vegas._
 import vegas.render.HTMLRenderer._
 implicit val displayer: String => Unit = display.html(_)
@@ -61,7 +63,7 @@ implicit val displayer: String => Unit = display.html(_)
 And if you're using [Apache Toree](https://toree.incubator.apache.org/), then this:
 
 ```
-%AddDeps com.github.aishfenton vegas_2.10 0.2.1 --transitive
+%AddDeps com.github.aishfenton vegas_{scala-version} {vegas-version} --transitive
 ```
 
 ```scala
@@ -140,7 +142,7 @@ chart.show
 Vegas comes with an optional extension package that makes it easier to work with Spark DataFrames and RDDs. First you'll need an extra import
 
 ```sbt
-libraryDependencies += "com.github.aishfenton" % "vegas_2.11" % "0.1.0"
+libraryDependencies += "com.github.aishfenton" % "vegas_{scala-version}" % "{vegas-version}"
 ```
 
 ```scala
