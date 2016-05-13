@@ -1,7 +1,7 @@
 
 lazy val commonSettings = Seq(
   organization := "com.github.aishfenton",
-  version := "0.2.1",
+  version := "0.2.2",
   scalaVersion := "2.11.8",
   scalacOptions += "-target:jvm-1.7",
   crossScalaVersions := Seq("2.10.6", "2.11.8"),
