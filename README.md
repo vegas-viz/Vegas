@@ -146,7 +146,7 @@ libraryDependencies += "com.github.aishfenton" % "vegas_{scala-version}" % "{veg
 ```
 
 ```scala
-import vegas.spark.SparkExt._
+import vegas.spark.Spark._
 ```
 
 This adds the following new methods: 
