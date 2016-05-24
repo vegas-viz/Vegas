@@ -8,6 +8,7 @@ lazy val commonSettings = Seq(
   homepage := Some(url("https://github.com/aishfenton/Vegas")),
   licenses := Seq("MIT License" -> url("http://www.opensource.org/licenses/MIT")),
 
+  addCompilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.full),
   publishMavenStyle := true,
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
@@ -47,8 +48,22 @@ lazy val noPublishSettings = Seq(
   publishArtifact := false
 )
 
+lazy val macros = project.
+  settings(moduleName := "vegas-macros").
+  settings(commonSettings: _*).
+  settings(
+    libraryDependencies ++= Seq(
+      "org.scala-lang" % "scala-reflect" % scalaVersion.value,
+      "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided",
+      "org.typelevel" %% "macro-compat" % "1.1.1",
+      "com.github.julien-truffaut"  %%  "monocle-core" % "1.1.0"
+    )
+  ).
+  settings(noPublishSettings: _*)
+
 lazy val vegas = project.in(file("core")).
   settings(moduleName := "vegas").
+  dependsOn(macros).
   settings(commonSettings: _*).
   settings(
     libraryDependencies ++= Seq(
@@ -72,8 +87,10 @@ lazy val spark = project.
     )
   )
 
+
 lazy val root = (project in file(".")).
   aggregate(vegas, spark).
+  settings(commonSettings: _*).
   settings(noPublishSettings: _*)
 
 // Clears screen between refreshes in continuous mode
