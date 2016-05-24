@@ -86,11 +86,6 @@ class EncoderDSLSpec extends BaseSpec {
     specBuilder.spec.encoding.get.y.get.axis.get should equal (Axis(title = Some("title y")))
   }
 
-  it should "thrown an exception if Axis is set to wrong orientation" in {
-    an [IllegalArgumentException] should be thrownBy { Vegas().axisX(orient = Right) }
-    an [IllegalArgumentException] should be thrownBy { Vegas().axisY(orient = Bottom) }
-  }
-
   it should "set scale parameters" in {
     val specBuilder = Vegas()
       .scaleX(scaleType = Log, bandSize=1, padding=5)

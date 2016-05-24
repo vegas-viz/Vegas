@@ -3,10 +3,12 @@ package vegas.DSL
 import monocle.Lens
 import monocle.macros.GenLens
 import vegas.spec._
+import vegas.macros.{ alias_with_lens, aliased }
 
 /**
   * @author Aish Fenton.
   */
+@aliased
 trait EncoderDSL {
   self: SpecBuilder =>
 
@@ -17,51 +19,31 @@ trait EncoderDSL {
   private val _row = GenLens[Encoding](_.row)
   private val _color = GenLens[Encoding](_.color)
   private val _size = GenLens[Encoding](_.size)
-
   private val _aggregate = GenLens[ChannelDef](_.aggregate)
   private val _axis = GenLens[ChannelDef](_.axis)
-
   private val _scale = GenLens[ChannelDef](_.scale)
 
-  def encodeX(field: String, dataType: DataType, aggregate: OptArg[Aggregate] = NoArg) = {
+  @alias_with_lens("encodeX", _x)
+  @alias_with_lens("encodeY", _y)
+  @alias_with_lens("encodeColumn", _column)
+  @alias_with_lens("encodeRow", _row)
+  @alias_with_lens("encodeColor", _color)
+  @alias_with_lens("encodeSize", _size)
+  private def encode_(l: Lens[Encoding, Option[ChannelDef]])(field: String, dataType: DataType, aggregate: OptArg[Aggregate] = NoArg) = {
     val cd = ChannelDef(field=Some(field), dataType=Some(dataType), aggregate=aggregate)
-    (_spec composeLens _encoding composePrism _orElse(Encoding()) composeLens _x).set(Some(cd))(this)
+    (_spec composeLens _encoding composePrism _orElse(Encoding()) composeLens l).set(Some(cd))(this)
   }
 
-  def encodeY(field: String, dataType: DataType, aggregate: OptArg[Aggregate] = NoArg) = {
-    val cd = ChannelDef(field=Some(field), dataType=Some(dataType), aggregate=aggregate)
-    (_spec composeLens _encoding composePrism _orElse(Encoding()) composeLens _y).set(Some(cd))(this)
-  }
-
-  def encodeColumn(field: String, dataType: DataType, aggregate: OptArg[Aggregate] = NoArg) = {
-    val cd = ChannelDef(field=Some(field), dataType=Some(dataType), aggregate=aggregate)
-    (_spec composeLens _encoding composePrism _orElse(Encoding()) composeLens _column).set(Some(cd))(this)
-  }
-
-  def encodeRow(field: String, dataType: DataType, aggregate: OptArg[Aggregate] = NoArg) = {
-    val cd = ChannelDef(field=Some(field), dataType=Some(dataType), aggregate=aggregate)
-    (_spec composeLens _encoding composePrism _orElse(Encoding()) composeLens _row).set(Some(cd))(this)
-  }
-
-  def encodeColor(field: String, dataType: DataType, aggregate: OptArg[Aggregate] = NoArg) = {
-    val cd = ChannelDef(field=Some(field), dataType=Some(dataType), aggregate=aggregate)
-    (_spec composeLens _encoding composePrism _orElse(Encoding()) composeLens _color).set(Some(cd))(this)
-  }
-
-  def encodeSize(field: String, dataType: DataType, aggregate: OptArg[Aggregate] = NoArg) = {
-    val cd = ChannelDef(field=Some(field), dataType=Some(dataType), aggregate=aggregate)
-    (_spec composeLens _encoding composePrism _orElse(Encoding()) composeLens _size).set(Some(cd))(this)
-  }
-
-  // -------
-  // Axis
-  // ------
-
-  private def axisCD(cd: Lens[Encoding, Option[ChannelDef]], hide: OptArg[Boolean], title: OptArg[String],
-                     titleOffset: OptArg[Int], titleMaxLength: OptArg[Int], characterWidth: OptArg[Int],
-                     orient: OptArg[Orient], axisWidth: OptArg[Int], offset: OptArg[Int], grid: OptArg[Boolean],
-                     ticks: OptArg[Int], tickColor: OptArg[String], tickLabelFontSize: OptArg[Int],
-                      titleFontSize: OptArg[Int]) = {
+  @alias_with_lens("axisX", _x)
+  @alias_with_lens("axisY", _y)
+  @alias_with_lens("axisColumn", _column)
+  @alias_with_lens("axisRow", _row)
+  private def axis_(cd: Lens[Encoding, Option[ChannelDef]])
+                   (hide: OptArg[Boolean] = NoArg, title: OptArg[String] = NoArg,
+                    titleOffset: OptArg[Int] = NoArg, titleMaxLength: OptArg[Int] = NoArg, characterWidth: OptArg[Int] = NoArg,
+                    orient: OptArg[Orient] = NoArg, axisWidth: OptArg[Int] = NoArg, offset: OptArg[Int] = NoArg,
+                    grid: OptArg[Boolean] = NoArg, ticks: OptArg[Int] = NoArg, tickColor: OptArg[String] = NoArg,
+                    tickLabelFontSize: OptArg[Int] = NoArg, titleFontSize: OptArg[Int] = NoArg) = {
 
     val axis = Axis(hide, title, titleOffset, titleMaxLength, characterWidth, orient, axisWidth, offset, grid, ticks,
       tickColor, tickLabelFontSize,titleFontSize)
@@ -70,95 +52,20 @@ trait EncoderDSL {
       composeLens _axis).set(Some(axis))(this)
   }
 
-  def axisX(hide: OptArg[Boolean] = NoArg, title: OptArg[String] = NoArg, titleOffset: OptArg[Int] = NoArg,
-            titleMaxLength: OptArg[Int] = NoArg, characterWidth: OptArg[Int] = NoArg, orient: OptArg[Orient] = NoArg,
-            axisWidth: OptArg[Int] = NoArg, offset: OptArg[Int] = NoArg, grid: OptArg[Boolean] = NoArg,
-            ticks: OptArg[Int] = NoArg, tickColor: OptArg[String] = NoArg, tickLabelFontSize: OptArg[Int] = NoArg,
-            titleFontSize: OptArg[Int] = NoArg) = {
-
-    require(orient.map(Seq(Top, Bottom).contains).getOrElse(true), "Orient must be Top or Bottom for X or Column")
-
-    axisCD(_x, hide, title, titleOffset, titleMaxLength, characterWidth, orient, axisWidth, offset, grid, ticks,
-      tickColor, tickLabelFontSize, titleFontSize)
-  }
-
-  def axisY(hide: OptArg[Boolean] = NoArg, title: OptArg[String] = NoArg, titleOffset: OptArg[Int] = NoArg,
-            titleMaxLength: OptArg[Int] = NoArg, characterWidth: OptArg[Int] = NoArg, orient: OptArg[Orient] = NoArg,
-            axisWidth: OptArg[Int] = NoArg, offset: OptArg[Int] = NoArg, grid: OptArg[Boolean] = NoArg,
-            ticks: OptArg[Int] = NoArg, tickColor: OptArg[String] = NoArg, tickLabelFontSize: OptArg[Int] = NoArg,
-            titleFontSize: OptArg[Int] = NoArg) = {
-
-    require(orient.map(Seq(Left, Right).contains).getOrElse(true), "Orient must be Left or Right for Y or Row")
-
-    axisCD(_y, hide, title, titleOffset, titleMaxLength, characterWidth, orient, axisWidth, offset, grid, ticks,
-      tickColor, tickLabelFontSize, titleFontSize)
-  }
-
-  def axisColumn(hide: OptArg[Boolean] = NoArg, title: OptArg[String] = NoArg, titleOffset: OptArg[Int] = NoArg,
-                 titleMaxLength: OptArg[Int] = NoArg, characterWidth: OptArg[Int] = NoArg, orient: OptArg[Orient] = NoArg,
-                 axisWidth: OptArg[Int] = NoArg, offset: OptArg[Int] = NoArg, grid: OptArg[Boolean] = NoArg,
-                 ticks: OptArg[Int] = NoArg, tickColor: OptArg[String] = NoArg, tickLabelFontSize: OptArg[Int] = NoArg,
-                 titleFontSize: OptArg[Int] = NoArg)
-  = {
-
-    require(orient.map(Seq(Top, Bottom).contains).getOrElse(true), "Orient must be Top or Bottom for X or Column")
-
-    axisCD(_column, hide, title, titleOffset, titleMaxLength, characterWidth, orient, axisWidth, offset, grid, ticks,
-      tickColor, tickLabelFontSize, titleFontSize)
-  }
-
-  def axisRow(hide: OptArg[Boolean] = NoArg, title: OptArg[String] = NoArg, titleOffset: OptArg[Int] = NoArg,
-              titleMaxLength: OptArg[Int] = NoArg, characterWidth: OptArg[Int] = NoArg, orient: OptArg[Orient] = NoArg,
-              axisWidth: OptArg[Int] = NoArg, offset: OptArg[Int] = NoArg, grid: OptArg[Boolean] = NoArg,
-              ticks: OptArg[Int] = NoArg, tickColor: OptArg[String] = NoArg, tickLabelFontSize: OptArg[Int] = NoArg,
-              titleFontSize: OptArg[Int] = NoArg) = {
-
-    require(orient.map(Seq(Left, Right).contains).getOrElse(true), "Orient must be Left or Right for Y or Row")
-
-    axisCD(_row, hide, title, titleOffset, titleMaxLength, characterWidth, orient, axisWidth, offset, grid, ticks,
-      tickColor, tickLabelFontSize, titleFontSize)
-  }
-
-  // -------
-  // Scale
-  // ------
-
-  private def scaleCD(cd: Lens[Encoding, Option[ChannelDef]], scaleType: OptArg[ScaleType], bandSize: OptArg[Int],
-                      padding: OptArg[Int], range: OptArg[Seq[String]], rangePreset: OptArg[RangePreset]) = {
+  @alias_with_lens("scaleX", _x)
+  @alias_with_lens("scaleY", _y)
+  @alias_with_lens("scaleColumn", _column)
+  @alias_with_lens("scaleRow", _row)
+  @alias_with_lens("scaleColor", _color)
+  private def scale_(cd: Lens[Encoding, Option[ChannelDef]])
+                    (scaleType: OptArg[ScaleType] = NoArg, bandSize: OptArg[Int] = NoArg,
+                     padding: OptArg[Int] = NoArg, range: OptArg[Seq[String]] = NoArg,
+                     rangePreset: OptArg[RangePreset] = NoArg) = {
 
     val scale = Scale(scaleType, bandSize, padding, range, rangePreset)
 
     (_spec composeLens _encoding composePrism _orElse(Encoding()) composeLens cd composePrism _orElse(ChannelDef())
       composeLens _scale).set(Some(scale))(this)
-  }
-
-  def scaleX(scaleType: OptArg[ScaleType] = NoArg, bandSize: OptArg[Int] = NoArg, padding: OptArg[Int] = NoArg,
-             range: OptArg[Seq[String]] = NoArg, rangePreset: OptArg[RangePreset] = NoArg) = {
-
-    scaleCD(_x, scaleType, bandSize, padding, range, rangePreset)
-  }
-
-  def scaleY(scaleType: OptArg[ScaleType] = NoArg, bandSize: OptArg[Int] = NoArg, padding: OptArg[Int] = NoArg,
-             range: OptArg[Seq[String]] = NoArg, rangePreset: OptArg[RangePreset] = NoArg) = {
-
-    scaleCD(_y, scaleType, bandSize, padding, range, rangePreset)
-  }
-
-  def scaleColumn(scaleType: OptArg[ScaleType] = NoArg, bandSize: OptArg[Int] = NoArg, padding: OptArg[Int] = NoArg,
-                  range: OptArg[Seq[String]] = NoArg, rangePreset: OptArg[RangePreset] = NoArg) = {
-
-    scaleCD(_column, scaleType, bandSize, padding, range, rangePreset)
-  }
-
-  def scaleRow(scaleType: OptArg[ScaleType] = NoArg, bandSize: OptArg[Int] = NoArg, padding: OptArg[Int] = NoArg,
-               range: OptArg[Seq[String]] = NoArg, rangePreset: OptArg[RangePreset] = NoArg) = {
-
-    scaleCD(_row, scaleType, bandSize, padding, range, rangePreset)
-  }
-
-  def scaleColor(range: OptArg[Seq[String]] = NoArg, rangePreset: OptArg[RangePreset] = NoArg) = {
-
-    scaleCD(_color, NoArg, NoArg, NoArg, range, rangePreset)
   }
 
 }

@@ -7,6 +7,7 @@ lazy val commonSettings = Seq(
   crossScalaVersions := Seq("2.10.6", "2.11.8"),
   homepage := Some(url("https://github.com/aishfenton/Vegas")),
   licenses := Seq("MIT License" -> url("http://www.opensource.org/licenses/MIT")),
+  addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
 
   publishMavenStyle := true,
   publishTo := {
@@ -47,8 +48,21 @@ lazy val noPublishSettings = Seq(
   publishArtifact := false
 )
 
+lazy val macros = project.
+  settings(moduleName := "vegas-macros").
+  settings(commonSettings: _*).
+  settings(
+    libraryDependencies ++= Seq(
+      "org.scala-lang" % "scala-reflect" % scalaVersion.value,
+      "com.github.julien-truffaut" %% "monocle-macro" % "1.1.0",
+      "com.github.julien-truffaut"  %%  "monocle-core" % "1.1.0"
+    )
+  ).
+  settings(noPublishSettings: _*)
+
 lazy val vegas = project.in(file("core")).
   settings(moduleName := "vegas").
+  dependsOn(macros).
   settings(commonSettings: _*).
   settings(
     libraryDependencies ++= Seq(
@@ -71,6 +85,7 @@ lazy val spark = project.
       "org.apache.spark" % "spark-sql_2.11" % "[1.5,)" % "provided"
     )
   )
+
 
 lazy val root = (project in file(".")).
   aggregate(vegas, spark).
