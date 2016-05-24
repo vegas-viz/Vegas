@@ -12,7 +12,7 @@ Vegas aims to be the missing MatPlotLib for the Scala and Spark world. Vegas wra
 Add the following jar as an SBT dependacy
 
 ```sbt
-libraryDependencies += "com.github.aishfenton" % "vegas_2.11" % "0.1.0"
+libraryDependencies += "com.github.aishfenton" % "vegas_2.11" % "0.2.2"
 ```
 
 And then use the following code to render a plot into a pop-up window (see below for more details on controlling how and where Vegas renders).
@@ -36,7 +36,7 @@ chart.show
 
 !["Readme Chart 1"](https://dl.dropboxusercontent.com/u/8245460/readme-chart-1.png)
 
-See further examples [here](http://nbviewer.jupyter.org/github/aishfenton/Vegas/blob/master/docs/Examples.ipynb)
+See further examples [here](http://nbviewer.jupyter.org/github/aishfenton/Vegas/blob/master/docs/ExampleJupyterScala.ipynb)
 
 ## Rendering
 
@@ -49,8 +49,10 @@ Vegas provides a number of options for rendering charts out to. The primary focu
 If you're using [jupyter-scala](https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=jupyter%20scala), then you must incldue the following in your notebook before using Vegas.
 
 ```scala
-load.jar("../core/target/scala-2.11/vegas-assembly-0.1.0.jar")
+load.ivy("com.github.aishfenton" %% "vegas" % "{vegas-version}")
+```
 
+```
 import vegas._
 import vegas.render.HTMLRenderer._
 implicit val displayer: String => Unit = display.html(_)
@@ -61,7 +63,7 @@ implicit val displayer: String => Unit = display.html(_)
 And if you're using [Apache Toree](https://toree.incubator.apache.org/), then this:
 
 ```
-%addJar file:../core/target/scala-2.10/vegas-assembly-0.1.0.jar
+%AddDeps com.github.aishfenton vegas_{scala-version} {vegas-version} --transitive
 ```
 
 ```scala
@@ -75,18 +77,18 @@ implicit val displayer: String => Unit = { s => kernel.display.content("text/htm
 And lastly if you're using Apache Zeppelin [Zeppelin](https://zeppelin.incubator.apache.org/) then use the following to initialize the notebook.
 
 ```
-%addJar file:../core/target/scala-2.10/vegas-assembly-0.1.0.jar
+%dep
+z.load("com.github.aishfenton:vegas_{scala-version}:{vegas-version}")
 ```
-
-```scala
+```
 import vegas._
 import vegas.render.HTMLRenderer._
-implicit val displayer: String => Unit = { s => "%HTML " + s }
-``` 
+implicit val displayer: String => Unit = { s => print("%html " + s) }
+```
 
 The last line in each of the above is required to connect Vegas to the notebook's HTML renderer (so that the returned HTML is rendered instead of displayed as a string). 
 
-See a comprehensive list example notebook of plots  [here](http://nbviewer.jupyter.org/github/aishfenton/Vegas/blob/master/docs/Examples.ipynb)
+See a comprehensive list example notebook of plots  [here](http://nbviewer.jupyter.org/github/aishfenton/Vegas/blob/master/docs/ExampleJupyterScala.ipynb)
 
 ### Standalone
 
@@ -140,11 +142,11 @@ chart.show
 Vegas comes with an optional extension package that makes it easier to work with Spark DataFrames and RDDs. First you'll need an extra import
 
 ```sbt
-libraryDependencies += "com.github.aishfenton" % "vegas_2.11" % "0.1.0"
+libraryDependencies += "com.github.aishfenton" % "vegas_{scala-version}" % "{vegas-version}"
 ```
 
 ```scala
-import vegas.spark.SparkExt._
+import vegas.spark.Spark._
 ```
 
 This adds the following new methods: 

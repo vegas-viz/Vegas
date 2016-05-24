@@ -32,7 +32,8 @@ class SpecSpec extends BaseSpec {
       x = Some(ChannelDef(
         field = Some("pop_millions"),
         dataType = Some(Quantitative),
-        axis = Some(Axis(hide = Some(true)))
+        axis = Some(Axis(hide = Some(true))),
+        timeUnit = Some(YearMonthDayHoursMinutes)
       )),
       y = Some(ChannelDef(
         field = Some("country"),
@@ -44,7 +45,13 @@ class SpecSpec extends BaseSpec {
         scale = Some(Scale(rangePreset = Some(Category20)))
       ))
     )),
-    mark = Some(Bar)
+    mark = Some(Bar),
+    config = Some(Config(
+      cell = Some(Cell(
+        width = Some(1),
+        strokeDash = Some(Seq(1))
+      ))
+    ))
   )
 
   def checkSchema(json: String, schemaPath: String) = {
