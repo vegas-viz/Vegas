@@ -54,10 +54,9 @@ lazy val macros = project.
   settings(
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
+      "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided",
+      "org.typelevel" %% "macro-compat" % "1.1.1",
       "com.github.julien-truffaut"  %%  "monocle-core" % "1.1.0"
-    ) ++ (
-      if (scalaVersion.value.startsWith("2.10")) Seq("org.scalamacros" %% "quasiquotes" % "2.1.0")
-      else Nil
     )
   ).
   settings(noPublishSettings: _*)

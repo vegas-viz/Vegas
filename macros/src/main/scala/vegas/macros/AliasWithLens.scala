@@ -2,33 +2,33 @@ package vegas.macros
 
 import language.experimental.macros
 import scala.annotation.{ StaticAnnotation, compileTimeOnly }
-import scala.reflect.macros.blackbox.Context
+import reflect.macros.blackbox.Context
 import monocle.Lens
+
+import macrocompat.bundle
 
 class alias_with_lens(name: String, lens: Lens[_,_]) extends StaticAnnotation
 
 @compileTimeOnly("You must enable the macro paradise plugin.")
 class aliased extends StaticAnnotation {
-  def macroTransform(annottees: Any*): Any = macro LensAliasMacroImpl.impl
+  def macroTransform(annottees: Any*): Any = macro AliasMacros.lensAliasMacroImpl
 }
 
-class Helpers[C <: Context](val c: C) {
+/**
+  * Aliases an annotated method using the given name and partially applies using the given lens
+  * Hat tip to following for inspiration
+  *   http://stackoverflow.com/questions/33279472/use-scala-macros-to-generate-methods
+  */
+@bundle
+class AliasMacros(val c: Context) {
   import c.universe._
 
   def paramsToArgs(params: List[ValDef]): List[Tree] = {
-    params.map { case q"$_ val $param: $_ = $_" => q"$param" }
+    params.map { case q"$a val $param: $b = $c" => q"$param" }
   }
 
-}
-
-// Hat tip to following for inspiration
-//   http://stackoverflow.com/questions/33279472/use-scala-macros-to-generate-methods
-object LensAliasMacroImpl {
-
-  def impl(c: Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
+  def lensAliasMacroImpl(annottees: c.Expr[Any]*): c.Expr[Any] = {
     import c.universe._
-
-    val helpers = new Helpers[c.type](c)
 
     val result = annottees map (_.tree) match {
 
@@ -44,7 +44,7 @@ object LensAliasMacroImpl {
         } yield {
           val List(Literal(Constant(name: String)), lens) = annotArgs
           val aliasIdent = TermName(name)
-          val args = paramss.tail.map(helpers.paramsToArgs)
+          val args = paramss.tail.map(paramsToArgs)
           q"def $aliasIdent[..$tparams](...${ paramss.tail }): $tpt = $tname(..$lens)(...$args)"
         }
 
@@ -68,3 +68,4 @@ object LensAliasMacroImpl {
   }
 
 }
+
