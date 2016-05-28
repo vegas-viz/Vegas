@@ -13,20 +13,26 @@ object Spark {
 
   implicit class SparkExt(val specBuilder: SpecBuilder) {
 
-    def withData(df: DataFrame, limit: Int = 1000) = {
+    def withDataFrame(df: DataFrame, limit: Int = 1000) = {
       val columns: Array[String] = df.columns
-      val counts: Double = df.count
+      val count: Double = df.count
       val localData = {
-        if (counts >= limit) df.sample(false, limit / counts).collect() else df.collect()
+        if (count >= limit) df.sample(false, limit / count).collect() else df.collect()
       }.map { row => row.toSeq.map(_.toString) }.toSeq
 
       val data = localData.map { point =>
         columns.zip(point).map { case (name, value) => name -> value }.toMap
       }
-      specBuilder.withData(data: _*)
+      specBuilder.withData(data)
     }
 
-    def withData(df: RDD[Product]) = ???
+    def withRDD(rdd: RDD[Product], limit: Int = 1000) = {
+      val count = rdd.count
+      val localData: Array[Product] = {
+        if (count >= limit) rdd.sample(false, limit / count).collect() else rdd.collect()
+      }
+      specBuilder.withReflectData(localData)
+    }
 
   }
 

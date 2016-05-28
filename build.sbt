@@ -87,7 +87,6 @@ lazy val spark = project.
     )
   )
 
-
 lazy val root = (project in file(".")).
   aggregate(vegas, spark).
   settings(commonSettings: _*).

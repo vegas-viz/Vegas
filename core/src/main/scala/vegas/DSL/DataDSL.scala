@@ -12,19 +12,29 @@ trait DataDSL extends FieldExtractor {
 
   private val _data = GenLens[Spec](_.data)
 
-  def withData(values: Map[String, Any]*): SpecBuilder = {
+  def withData(values: Seq[Map[String, Any]]): SpecBuilder = {
     val data = Data(Option(values))
     (_spec composeLens _data).set(Some(data))(this)
   }
 
-  def withData(url: String, formatType: FormatType = JSON): SpecBuilder = {
+  def withDataURL(url: String, formatType: FormatType = JSON): SpecBuilder = {
     val data = Data(None, Option(new URI(url)), Option(formatType))
     (_spec composeLens _data).set(Some(data))(this)
   }
 
-  def withRowData(values: Seq[Any]*): SpecBuilder = {
+  def withDataSeq(values: Seq[Any]): SpecBuilder = {
+    val data = values.zipWithIndex.map { case(y, i) => Map("x" -> i, "y" -> y) }
+    withData(data)
+  }
+
+  def withDataXY(values: Seq[(Any, Any)]): SpecBuilder = {
+    val data = values.map { case(x, y) => Map("x" -> x, "y" -> y) }
+    withData(data)
+  }
+
+  def withDataRow(values: Seq[Seq[Any]]): SpecBuilder = {
     val v = values.map(_.zipWithIndex.map { case(v,i) => (i.toString,v) }.toMap)
-    withData(v:  _*)
+    withData(v)
   }
 
   /**
@@ -32,9 +42,9 @@ trait DataDSL extends FieldExtractor {
     * @param values: Expects an array of case classes, but no way to enforce this. Uses reflection to pull out
     * fields.
     */
-  def withReflectData(values: Product*): SpecBuilder = {
+  def withReflectData(values: Seq[Product]): SpecBuilder = {
     val v = values.map(extractFields)
-    withData(v: _*)
+    withData(v)
   }
 
 }
