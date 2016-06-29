@@ -40,7 +40,8 @@ case class Transform(calculate: Option[Seq[Formula]] = None, filterNull: Option[
 case class Formula(field: String, expr: String)
 
 case class Encoding(x: Option[ChannelDef] = None, y: Option[ChannelDef] = None, color: Option[ChannelDef] = None,
-                    column: Option[ChannelDef] = None, row: Option[ChannelDef] = None, size: Option[ChannelDef] = None)
+                    column: Option[ChannelDef] = None, row: Option[ChannelDef] = None, size: Option[ChannelDef] = None,
+                    shape: Option[ChannelDef] = None)
 
 case class ChannelDef(field: Option[String] = None, dataType: Option[DataType] = None, value: Option[String] = None,
                       aggregate: Option[Aggregate] = None, axis: Option[Axis] = None, scale: Option[Scale] = None,
@@ -152,7 +153,7 @@ object Encoders {
     jencode2L((f: Formula) => (f.field, f.expr))("field", "expr")
 
   implicit def EncodingEncoder: EncodeJson[Encoding] =
-    jencode6L((e: Encoding) => (e.x, e.y, e.color, e.column, e.row, e.size))("x", "y", "color", "column", "row", "size")
+    jencode7L((e: Encoding) => (e.x, e.y, e.color, e.column, e.row, e.size, e.shape))("x", "y", "color", "column", "row", "size", "shape")
 
   implicit def ChannelDefEncoder: EncodeJson[ChannelDef] =
     jencode7L((cd: ChannelDef) => (cd.field, cd.dataType.map(_.name), cd.value, cd.aggregate.map(_.name),

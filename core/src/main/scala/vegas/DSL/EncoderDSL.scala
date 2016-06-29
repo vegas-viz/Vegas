@@ -19,6 +19,7 @@ trait EncoderDSL {
   private val _row = GenLens[Encoding](_.row)
   private val _color = GenLens[Encoding](_.color)
   private val _size = GenLens[Encoding](_.size)
+  private val _shape = GenLens[Encoding](_.shape)
   private val _aggregate = GenLens[ChannelDef](_.aggregate)
   private val _axis = GenLens[ChannelDef](_.axis)
   private val _scale = GenLens[ChannelDef](_.scale)
@@ -29,6 +30,7 @@ trait EncoderDSL {
   @alias_with_lens("encodeRow", _row)
   @alias_with_lens("encodeColor", _color)
   @alias_with_lens("encodeSize", _size)
+  @alias_with_lens("encodeShape", _shape)
   private def encode_(l: Lens[Encoding, Option[ChannelDef]])(field: String, dataType: DataType, aggregate: OptArg[Aggregate] = NoArg) = {
     val cd = ChannelDef(field=Some(field), dataType=Some(dataType), aggregate=aggregate)
     (_spec composeLens _encoding composePrism _orElse(Encoding()) composeLens l).set(Some(cd))(this)
