@@ -49,7 +49,7 @@ Vegas provides a number of options for rendering charts out to. The primary focu
 If you're using [jupyter-scala](https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=jupyter%20scala), then you must incldue the following in your notebook before using Vegas.
 
 ```scala
-load.ivy("com.github.aishfenton" %% "vegas" % "{vegas-version}")
+classpath.add("com.github.aishfenton" %% "vegas" % "{vegas-version}")
 ```
 
 ```
@@ -112,7 +112,7 @@ val chart = Vegas("Country Pop").
   encodeY("population", Quantitative).
   mark(Bar)
 
-println(chart.spec.pageHTML())
+println(chart.pageHTML())
 println(chart.spec.toJson())
 ```
 
