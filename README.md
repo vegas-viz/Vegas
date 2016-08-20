@@ -5,7 +5,7 @@
 
 Vegas aims to be the missing MatPlotLib for the Scala and Spark world. Vegas wraps around [Vega-Lite](https://vega.github.io/vega-lite/) but provides syntax more familar (and type checked) for use within Scala.
 
-<img src="https://dl.dropboxusercontent.com/u/8245460/gallary.png" width="1021">
+<img src="https://dl.dropboxusercontent.com/u/8245460/vegas/gallary.png" width="1021">
 
 ## Quick start
 
@@ -34,7 +34,7 @@ val chart = Vegas("Country Pop").
 chart.show
 ```
 
-!["Readme Chart 1"](https://dl.dropboxusercontent.com/u/8245460/readme-chart-1.png)
+!["Readme Chart 1"](https://dl.dropboxusercontent.com/u/8245460/vegas/readme-chart-1.png)
 
 See further examples [here](http://nbviewer.jupyter.org/github/aishfenton/Vegas/blob/master/docs/ExampleJupyterScala.ipynb)
 
