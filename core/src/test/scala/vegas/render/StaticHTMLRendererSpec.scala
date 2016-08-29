@@ -2,6 +2,7 @@ package vegas.render
 
 import vegas._
 import vegas.BaseSpec
+import vegas.spec._
 
 /**
   * @author Aish Fenton.
@@ -22,7 +23,7 @@ class StaticHTMLRendererSpec extends BaseSpec {
     val html = specBuilder.pageHTML()
     html shouldBe a [String]
     html should startWith("<html>")
-    html should include(specBuilder.spec.toJson())
+    html should include(specBuilder.toJson)
     html should endWith("</html>")
   }
 
@@ -31,7 +32,7 @@ class StaticHTMLRendererSpec extends BaseSpec {
 
     html shouldBe a [String]
     html.trim should startWith ("<script>")
-    html should include (specBuilder.spec.toJson())
+    html should include (specBuilder.toJson)
     html.trim should include ("</script>")
   }
 

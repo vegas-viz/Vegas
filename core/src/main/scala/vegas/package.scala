@@ -1,7 +1,6 @@
+import vegas.spec.Spec2
 
 /**
-  * Created by afenton on 4/13/16.
-  *
   * Use package object to list public API
   */
 package object vegas {
@@ -9,79 +8,78 @@ package object vegas {
   val Vegas = DSL.Vegas
   type SpecBuilder = DSL.SpecBuilder
 
-  val JSON = spec.JSON
-  val CSV = spec.CSV
-  val TSV = spec.TSV
+  val Json = Spec2.DataFormatTypeEnums.Json
+  val CSV = Spec2.DataFormatTypeEnums.Csv
+  val TSV = Spec2.DataFormatTypeEnums.Tsv
 
-  val Bar = spec.Bar
-  val Circle = spec.Circle
-  val Square = spec.Square
-  val Tick = spec.Tick
-  val Line = spec.Line
-  val Area = spec.Area
-  val Point = spec.Point
-  val Text = spec.Text
+  val Bar = Spec2.MarkEnums.Bar
+  val Circle = Spec2.MarkEnums.Circle
+  val Square = Spec2.MarkEnums.Square
+  val Tick = Spec2.MarkEnums.Tick
+  val Line = Spec2.MarkEnums.Line
+  val Area = Spec2.MarkEnums.Area
+  val Point = Spec2.MarkEnums.Point
+  val Text = Spec2.MarkEnums.Text
 
-  val Quantitative = spec.Quantitative
-  val Nominal = spec.Nominal
-  val Ordinal = spec.Ordinal
-  val Temporal = spec.Temporal
+  val Quantitative = Spec2.TypeEnums.Quantitative
+  val Nominal = Spec2.TypeEnums.Nominal
+  val Ordinal = Spec2.TypeEnums.Ordinal
+  val Temporal = Spec2.TypeEnums.Temporal
 
-  val Count = spec.Count
-  val Valid = spec.Valid
-  val Missing = spec.Missing
-  val Distinct = spec.Distinct
-  val Sum = spec.Sum
-  val Mean = spec.Mean
-  val Average = spec.Average
-  val Variance = spec.Variance
-  val VarianceP = spec.VarianceP
-  val StDev = spec.StDev
-  val Median = spec.Median
-  val Q1 = spec.Q1
-  val Q3 = spec.Q3
-  val ModeSkew = spec.ModeSkew
-  val Min = spec.Min
-  val Max = spec.Max
+  val Count = Spec2.AggregateOpEnums.Count
+  val Valid = Spec2.AggregateOpEnums.Valid
+  val Missing = Spec2.AggregateOpEnums.Missing
+  val Distinct = Spec2.AggregateOpEnums.Distinct
+  val Sum = Spec2.AggregateOpEnums.Sum
+  val Mean = Spec2.AggregateOpEnums.Mean
+  val Average = Spec2.AggregateOpEnums.Average
+  val Variance = Spec2.AggregateOpEnums.Variance
+  val VarianceP = Spec2.AggregateOpEnums.Variancep
+  val Stdev = Spec2.AggregateOpEnums.Stdev
+  val Median = Spec2.AggregateOpEnums.Median
+  val Q1 = Spec2.AggregateOpEnums.Q1
+  val Q3 = Spec2.AggregateOpEnums.Q3
+  val Modeskew = Spec2.AggregateOpEnums.Modeskew
+  val Min = Spec2.AggregateOpEnums.Min
+  val Max = Spec2.AggregateOpEnums.Max
 
-  val Linear = spec.Linear
-  val Log = spec.Log
-  val Pow = spec.Pow
-  val Sqrt = spec.Sqrt
-  val Quantile = spec.Quantile
-  val Quantize = spec.Quantize
-  val Threshold = spec.Threshold
-  val Time = spec.Time
-  val OrdinalS = spec.OrdinalS
+  val Linear = Spec2.ScaleTypeEnums.Linear
+  val Log = Spec2.ScaleTypeEnums.Log
+  val Pow = Spec2.ScaleTypeEnums.Pow
+  val Sqrt = Spec2.ScaleTypeEnums.Sqrt
+  val Quantile = Spec2.ScaleTypeEnums.Quantile
+  val Quantize = Spec2.ScaleTypeEnums.Quantize
+  val Time = Spec2.ScaleTypeEnums.Time
+  val OrdinalS = Spec2.ScaleTypeEnums.Ordinal
 
-  val Bottom = spec.Bottom
-  val Top = spec.Top
-  val Left = spec.Left
-  val Right = spec.Right
+  val Bottom = Spec2.AxisOrientEnums.Bottom
+  val Top = Spec2.AxisOrientEnums.Top
+  val Left = Spec2.AxisOrientEnums.Left
+  val Right = Spec2.AxisOrientEnums.Right
 
-  val Category10 = spec.Category10
-  val Category20 = spec.Category20
-  val Category20b = spec.Category20b
-  val Category20c = spec.Category20c
+  val Category10 = "category10"
+  val Category20 = "category20"
+  val Category20b = "category20b"
+  val Category20c = "category20c"
 
-  val Year = spec.Year
-  val YearMonth = spec.YearMonth
-  val YearMonthDay = spec.YearMonthDay
-  val YearMonthDate = spec.YearMonthDate
-  val YearDay = spec.YearDay
-  val YearDate = spec.YearDate
-  val YearMonthDayHours = spec.YearMonthDayHours
-  val YearMonthDayHoursMinutes = spec.YearMonthDayHoursMinutes
-  val Month = spec.Month
-  val Day = spec.Day
-  val Date = spec.Date
-  val Hours = spec.Hours
-  val Minutes = spec.Minutes
-  val Seconds = spec.Seconds
-  val Milliseconds = spec.Milliseconds
-  val HoursMinutes = spec.HoursMinutes
-  val HoursMinutesSeconds = spec.HoursMinutesSeconds
-  val MinutesSeconds = spec.MinutesSeconds
-  val SecondsMilliseconds = spec.SecondsMilliseconds
+  val Year = Spec2.TimeUnitEnums.Year
+  val YearMonth = Spec2.TimeUnitEnums.Yearmonth
+  val YearMonthDate = Spec2.TimeUnitEnums.Yearmonthdate
+  val YearQuarter = Spec2.TimeUnitEnums.Yearquarter
+  val YearQuarterMonth = Spec2.TimeUnitEnums.Yearquartermonth
+  val YearMonthDateHours = Spec2.TimeUnitEnums.Yearmonthdatehours
+  val YearMonthDateHoursMinutes = Spec2.TimeUnitEnums.Yearmonthdatehoursminutes
+  val YearMonthDateHoursMinutesSeconds = Spec2.TimeUnitEnums.Yearmonthdatehoursminutesseconds
+  val Month = Spec2.TimeUnitEnums.Month
+  val Day = Spec2.TimeUnitEnums.Day
+  val Date = Spec2.TimeUnitEnums.Date
+  val Hours = Spec2.TimeUnitEnums.Hours
+  val Minutes = Spec2.TimeUnitEnums.Minutes
+  val Seconds = Spec2.TimeUnitEnums.Seconds
+  val Milliseconds = Spec2.TimeUnitEnums.Milliseconds
+  val HoursMinutes = Spec2.TimeUnitEnums.Hoursminutes
+  val HoursMinutesSeconds = Spec2.TimeUnitEnums.Hoursminutesseconds
+  val MinutesSeconds = Spec2.TimeUnitEnums.Minutesseconds
+  val SecondsMilliseconds = Spec2.TimeUnitEnums.Secondsmilliseconds
 
 }

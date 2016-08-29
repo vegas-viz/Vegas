@@ -1,4 +1,4 @@
-# Vegas
+<img src="https://dl.dropboxusercontent.com/u/8245460/vegas/vegas-logo.png" alt="Vegas">
 
 [![TravisCI](https://travis-ci.org/aishfenton/Vegas.svg?branch=master)](https://travis-ci.org/aishfenton/Vegas)
 [![codecov.io](https://codecov.io/github/aishfenton/Vegas/coverage.svg?branch=master)](https://codecov.io/github/aishfenton/Vegas?branch=master)
@@ -162,6 +162,6 @@ TODO
 
 ## Contributing
 
-See [here](abc) for more information on contributing bug fixes and features.
+See [here](CONTRIB.md) for more information on contributing bug fixes and features.
 
 

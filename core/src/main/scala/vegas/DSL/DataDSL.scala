@@ -1,7 +1,7 @@
 package vegas.DSL
 
 import monocle.macros.GenLens
-import vegas.spec._
+import vegas.spec.Spec2._
 import java.net.URI
 
 /**
@@ -10,15 +10,22 @@ import java.net.URI
 trait DataDSL extends FieldExtractor {
   self: SpecBuilder =>
 
-  private val _data = GenLens[Spec](_.data)
+  private val _data = GenLens[ExtendedUnitSpec](_.data)
+  private val _values = GenLens[Data](_.values)
 
   def withData(values: Seq[Map[String, Any]]): SpecBuilder = {
-    val data = Data(Option(values))
+    val data = Data(
+      values = Some(values.toList.map(Data.Values(_)))
+    )
+
     (_spec composeLens _data).set(Some(data))(this)
   }
 
-  def withDataURL(url: String, formatType: FormatType = JSON): SpecBuilder = {
-    val data = Data(None, Option(new URI(url)), Option(formatType))
+  def withDataURL(url: String, formatType: DataFormatType = vegas.Json): SpecBuilder = {
+    val data = Data(
+      url = Some(url),
+      format = Some(DataFormat(`type`=Some(formatType)))
+    )
     (_spec composeLens _data).set(Some(data))(this)
   }
 

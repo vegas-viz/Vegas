@@ -3,9 +3,8 @@ package vegas.macros
 import language.experimental.macros
 import scala.annotation.{ StaticAnnotation, compileTimeOnly }
 import reflect.macros.blackbox.Context
-import monocle.Lens
-
 import macrocompat.bundle
+import monocle.Lens
 
 class alias_with_lens(name: String, lens: Lens[_,_]) extends StaticAnnotation
 
@@ -39,8 +38,7 @@ class AliasMacros(val c: Context) {
         val aliasedDefs = for {
           q"@..$annots private def $tname[..$tparams](...$paramss): $tpt = $expr" <- stats
           annot <- annots
-          Apply(Select(New(Ident(TypeName(aName))), _), annotArgs) = annot
-          if (aName == "alias_with_lens")
+          Apply(Select(New(Ident(TypeName(aName))), _), annotArgs) = annot if (aName == "alias_with_lens")
         } yield {
           val List(Literal(Constant(name: String)), lens) = annotArgs
           val aliasIdent = TermName(name)

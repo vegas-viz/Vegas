@@ -1,7 +1,7 @@
 package vegas.DSL
 
 import vegas._
-import vegas.spec.{Data}
+import vegas.spec.Spec2._
 
 /**
   * @author Aish Fenton.
@@ -11,14 +11,14 @@ class DataDSLSpec extends BaseSpec {
   case class Ex(a: Int, b: String)
 
   "DataDSL Trait" should "wire in data from Seq of Maps" in {
-    val data = Seq(Map("population" -> "318", "country" -> "UK"), Map("population" -> "64", "country" -> "UK"))
+    val data = List(Map("population" -> "318", "country" -> "UK"), Map("population" -> "64", "country" -> "UK"))
 
     val specBuilder = Vegas()
       .withData(data)
 
-    specBuilder.spec.data.get should equal (Data(
-      values = Some(data)
-    ))
+    specBuilder.spec.data should === (Some(Data(
+      values = Some(data.map(Data.Values(_)))
+    )))
   }
 
   it should "wire in 'row' data, treating each index as a field name" in {
@@ -27,8 +27,10 @@ class DataDSLSpec extends BaseSpec {
     val specBuilder = Vegas()
       .withDataRow(data)
 
-    val expectedData = Seq(Map("0" -> "a", "1" -> 1), Map("0" -> "b", "1" -> 2))
-    specBuilder.spec.data.get should equal (Data(values=Some( expectedData )))
+    val expectedData = List(Map("0" -> "a", "1" -> 1), Map("0" -> "b", "1" -> 2))
+    specBuilder.spec.data should === (Some(Data(
+      values=Some( expectedData.map(Data.Values(_)) )
+    )))
   }
 
   it should "extract data from a Seq of case classes" in {
@@ -37,8 +39,10 @@ class DataDSLSpec extends BaseSpec {
     val specBuilder = Vegas()
       .withReflectData(data)
 
-    val expectedData = Seq(Map("a" -> 1, "b" -> "UK"), Map("a" -> 2, "b" -> "USA"))
-    specBuilder.spec.data.get should equal (Data(values=Some( expectedData )))
+    val expectedData = List(Map("a" -> 1, "b" -> "UK"), Map("a" -> 2, "b" -> "USA"))
+    specBuilder.spec.data should === (Some(Data(
+      values=Some( expectedData.map(Data.Values(_)))
+    )))
   }
 
   it should "wire in a simple seq of numbers" in {
@@ -47,8 +51,10 @@ class DataDSLSpec extends BaseSpec {
     val specBuilder = Vegas()
       .withDataSeq(data)
 
-    val expectedData = Seq(Map("x" -> 0, "y" -> 1), Map("x" -> 1, "y" -> 2))
-    specBuilder.spec.data.get should equal (Data(values=Some( expectedData )))
+    val expectedData = List(Map("x" -> 0, "y" -> 1), Map("x" -> 1, "y" -> 2))
+    specBuilder.spec.data should === (Some(Data(
+      values=Some( expectedData.map(Data.Values(_)) )
+    )))
   }
 
   it should "wire in a seq of (x,y) tuples" in {
@@ -57,8 +63,10 @@ class DataDSLSpec extends BaseSpec {
     val specBuilder = Vegas()
       .withDataXY(data)
 
-    val expectedData = Seq(Map("x" -> "uk", "y" -> 10), Map("x" -> "usa", "y" -> 20))
-    specBuilder.spec.data.get should equal (Data(values=Some( expectedData )))
+    val expectedData = List(Map("x" -> "uk", "y" -> 10), Map("x" -> "usa", "y" -> 20))
+    specBuilder.spec.data should === (Some(Data(
+      values=Some( expectedData.map(Data.Values(_)) )
+    )))
   }
 
   "FieldExtractor" should "extract fields from a case class using reflection" in {

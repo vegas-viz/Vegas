@@ -1,6 +1,6 @@
 package vegas.render
 
-import vegas.spec.Spec
+import vegas.spec.Spec2.ExtendedUnitSpec
 
 /**
   * @author Aish Fenton.
@@ -18,7 +18,7 @@ trait BaseHTMLRenderer {
     "vegas-" + java.util.UUID.randomUUID.toString
   }
 
-  def spec: Spec
+  def spec: ExtendedUnitSpec
 
   def show(implicit fn: String => Unit)
 
