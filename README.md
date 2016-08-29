@@ -1,4 +1,3 @@
-# Vegas
 
 <img src="https://dl.dropboxusercontent.com/u/8245460/vegas/vegas-logo.png" alt="Vegas" width="250px">
 [![TravisCI](https://travis-ci.org/aishfenton/Vegas.svg?branch=master)](https://travis-ci.org/aishfenton/Vegas)
