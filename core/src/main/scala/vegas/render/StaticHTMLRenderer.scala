@@ -1,7 +1,7 @@
 package vegas.render
 
 import vegas.DSL.SpecBuilder
-import vegas.spec.Spec2.ExtendedUnitSpec
+import vegas.spec.Spec.ExtendedUnitSpec
 
 /**
   * @author Aish Fenton.

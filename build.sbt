@@ -1,11 +1,11 @@
 
 // ---------
-// Task Definitions
+// Setting / Task Definitions
 // ---------
 
 lazy val vegaLiteVersion = settingKey[String]("The release version of vega-lite to build off")
-lazy val updateVegaDeps = taskKey[Unit]("Download and replace the vega-lite json schema and examples with the latest versions from their github repo")
 
+lazy val updateVegaDeps = taskKey[Unit]("Download and replace the vega-lite json schema and examples with the latest versions from their github repo")
 updateVegaDeps := {
   val schemaFile = file("core/src/main/resources/vega-lite-schema.json")
   val examples = file("core/src/test/resources/example-specs/")
@@ -16,23 +16,28 @@ updateVegaDeps := {
   IO.copyFile(vegaDir / "vega-lite-schema.json", schemaFile)
 }
 
-// We hide this under the Integration Test config so that ti doesn't get triggered normally.
-addCommandAlias("writeVegaSchema", ";clean ;vegas/it:test")
+// Gets included into vegaLiteSpec to generate code.
 lazy val genCode = (dir: File) => {
   val file = dir / "Container.scala"
   IO.write(file,
     s"""
       import argus.macros._
-      @fromSchemaResource("/vega-lite-schema.json", name="Vega", outPath=Some("${(dir / "Vega.scala").getAbsolutePath}"))
-      object Spec2
+      @fromSchemaResource("/vega-lite-schema.json", name="Vega", outPath=Some("${(dir / "Spec.scala").getAbsolutePath}"))
+      object Spec
     """)
   Seq(file)
 }
 
 addCommandAlias("look", "vegas/test:runMain vegas.Look")
 
+lazy val mkVegaModel = taskKey[Unit]("Compiles and copies the vega-lite model and codec to the Vegas project")
+mkVegaModel := {
+  IO.copyFile(file("spec/target/scala-2.11/src_managed/main/Spec.scala"), file("core/src/main/scala/vegas/spec/Spec.scala"))
+}
+mkVegaModel <<= mkVegaModel.dependsOn(compile in vegaLiteSpec in Compile)
+
 // -------
-// Config
+// Build Config
 // -------
 
 lazy val circeVersion = "0.4.1"
@@ -99,7 +104,22 @@ lazy val macros = project.
       "com.github.julien-truffaut" %% "monocle-core" % "1.1.0"
     )
   )
-// settings(noPublishSettings: _*)
+
+// This project exists just to generate the Vega-Lite Json model + codecs
+lazy val vegaLiteSpec = project.in(file("spec")).
+  settings(commonSettings: _*).
+  settings(noPublishSettings: _*).
+  settings(
+    libraryDependencies ++= Seq(
+      "io.circe" %% "circe-core" % circeVersion,
+      "io.circe" %% "circe-generic" % circeVersion,
+      "io.circe" %% "circe-parser" % circeVersion,
+      "com.github.aishfenton" %% "argus" % "0.2.0",
+      "org.scalactic" %% "scalactic" % "2.2.6" % "test",
+      "org.scalatest" %% "scalatest" % "2.2.6" % "test"
+    )
+  ).
+  settings(sourceGenerators in Compile <+= (sourceManaged in Compile) map genCode)
 
 lazy val vegas = project.in(file("core")).
   settings(moduleName := "vegas").
@@ -107,25 +127,18 @@ lazy val vegas = project.in(file("core")).
   settings(commonSettings: _*).
   settings(
     libraryDependencies ++= Seq(
-      "io.argonaut" %% "argonaut" % "6.1",
       "io.circe" %% "circe-core" % circeVersion,
       "io.circe" %% "circe-generic" % circeVersion,
       "io.circe" %% "circe-parser" % circeVersion,
       "com.github.julien-truffaut" %% "monocle-macro" % "1.1.0",
       "com.github.julien-truffaut" %% "monocle-core" % "1.1.0",
       "org.scalafx" %% "scalafx" % "8.0.92-R10",
-      "com.github.aishfenton" %% "argus" % "0.2.0",
+      "com.github.aishfenton" %% "argus" % "0.2.0" % "test",
       "org.scalactic" %% "scalactic" % "2.2.6" % "test",
       "org.scalatest" %% "scalatest" % "2.2.6" % "test",
       "org.seleniumhq.selenium" % "selenium-java" % "3.0.0-beta2" % "test"
     )
-  ).
-  // For integration debug task (see writeVegaSchema)
-  settings(inConfig(IntegrationTest)(
-    Defaults.testSettings ++ Seq(
-      sourceGenerators <+= (sourceManaged in IntegrationTest) map genCode
-    )
-  ))
+  )
 
 lazy val spark = project.
   settings(moduleName := "vegas-spark").

@@ -1,7 +1,7 @@
 package vegas.DSL
 
 import monocle.macros.GenLens
-import vegas.spec.Spec2._
+import vegas.spec.Spec._
 
 /**
   * @author Aish Fenton.

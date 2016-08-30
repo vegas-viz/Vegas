@@ -1,7 +1,8 @@
 package vegas.DSL
 
 import monocle.macros.GenLens
-import vegas.spec.Spec2._
+import vegas.spec.Spec._
+import io.circe.syntax._
 
 object Vegas {
 
@@ -13,7 +14,20 @@ object Vegas {
 }
 
 case class SpecBuilder(spec: ExtendedUnitSpec) extends SpecDSL with EncoderDSL with DataDSL with TransformDSL with ConfigDSL {
+
+  /**
+    * Returns a Json string representation of this vega-lite spec
+    */
   def toJson = vegas.spec.toJson(spec)
+
+  /**
+    * Returns a Circe Json object that represents the spec. Also see [[toJson]]
+    */
+  def asCirceJson = {
+    import vegas.spec.Spec.Implicits._
+    spec.asJson
+  }
+
 }
 
 trait SpecDSL {

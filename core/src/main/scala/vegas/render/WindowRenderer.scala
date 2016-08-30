@@ -1,7 +1,7 @@
 package vegas.render
 
 import vegas.DSL.SpecBuilder
-import vegas.spec.Spec2.ExtendedUnitSpec
+import vegas.spec.Spec.ExtendedUnitSpec
 import scalafx.Includes._
 import scalafx.application.Platform
 import scalafx.scene.Scene

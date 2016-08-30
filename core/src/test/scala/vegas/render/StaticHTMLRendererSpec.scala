@@ -1,13 +1,9 @@
 package vegas.render
 
+import org.scalatest.{FlatSpec, Matchers}
 import vegas._
-import vegas.BaseSpec
-import vegas.spec._
 
-/**
-  * @author Aish Fenton.
-  */
-class StaticHTMLRendererSpec extends BaseSpec {
+class StaticHTMLRendererSpec extends FlatSpec with Matchers {
   import StaticHTMLRenderer._
 
   val data = Seq( Map("population" -> 318000000, "country" -> "USA"), Map("population" -> 64000000, "country" -> "UK") )

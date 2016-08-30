@@ -1,12 +1,13 @@
 package vegas.DSL
 
+import org.scalatest.{FlatSpec, Matchers}
 import vegas._
-import vegas.spec.Spec2._
+import vegas.spec.Spec._
 
 /**
   * @author Aish Fenton.
   */
-class DataDSLSpec extends BaseSpec {
+class DataDSLSpec extends FlatSpec with Matchers {
 
   case class Ex(a: Int, b: String)
 

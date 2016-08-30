@@ -1,11 +1,12 @@
 
+import org.scalatest.{FlatSpec, Matchers}
 import vegas._
-import vegas.spec.Spec2._
+import vegas.spec.Spec._
 
 /**
   * @author Aish Fenton.
   */
-class TransformDSLSpec extends BaseSpec {
+class TransformDSLSpec extends FlatSpec with Matchers {
 
 //  "TransformDSL Trait" should "add a transform filter" in {
 //    val specBuilder = Vegas()

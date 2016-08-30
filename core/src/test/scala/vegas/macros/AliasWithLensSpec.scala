@@ -2,6 +2,7 @@ package vegas.macros
 
 import monocle.Lens
 import monocle.macros.GenLens
+import org.scalatest.{FlatSpec, Matchers}
 import vegas._
 
 import scala.annotation.StaticAnnotation
@@ -9,7 +10,7 @@ import scala.annotation.StaticAnnotation
 /**
   * @author Aish Fenton.
   */
-class AliasWithLensSpec extends BaseSpec {
+class AliasWithLensSpec extends FlatSpec with Matchers {
 
   class ignore_me extends StaticAnnotation
   case class Ex(a: Int)

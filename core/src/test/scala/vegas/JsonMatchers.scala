@@ -8,14 +8,14 @@ import org.scalatest.matchers.{ MatchResult, Matcher }
 // TODO This is copy-and-pasted from argus. Really needs to be put somewhere shared.
 trait JsonMatchers {
 
-  def beNoDifferentFrom(jrStr: String): Matcher[Json] = new Matcher[Json] {
+  def beSameJsonAs(jrStr: String): Matcher[Json] = new Matcher[Json] {
     def apply(jl: Json) = {
       val jr = parser.parse(jrStr).toOption.get
-      beNoDifferentFrom(jr)(jl)
+      beSameJsonAs(jr)(jl)
     }
   }
 
-  def beNoDifferentFrom(jr: Json): Matcher[Json] = new Matcher[Json] {
+  def beSameJsonAs(jr: Json): Matcher[Json] = new Matcher[Json] {
     def apply(jl: Json) = {
       val diff = JsonDiff.diff(jl, jr)
       MatchResult(diff.isEmpty, "Differences found in json: " + diff.mkString(","), "No differences found!")

@@ -1,6 +1,6 @@
 # Contributing
 
-Contributions encouraged! 
+Contributions welcome! 
 
 * Submit contributions as pull requests. The PR should include a brief
 note describing the changes.
@@ -37,14 +37,13 @@ plots out an HTML page and opens it in your browser.
  
 # Dev and debugging tips
 
-* Generate the vega code. Most of the vega-lite json encoding/decoding is 
-auto-magically generated from macros (fromSchemaResource...). If you're 
-looking to expose a new option in the DSL, or wanting to debug something 
-it can be helpful to manually inspect the produced code. The following 
-sbt command writes the generated code out to ```[project-root]/core/target/scala-2.11/src_managed/it/Vega.scala```.
+* Generate the vegas model and json codecs. Vegas generates most of the
+vega-lite model and json codecs from the vega-lite-schema.json file. To
+re-generate it run the following. This generates the code (in the vegaLiteSpec 
+project) and copies the Spec.scala file into the Vegas src dir.
 
     ```bash
-    sbt writeVegaSchema
+    sbt mkVegaModel
     ```
 
 * Updating vega-lite dependency version. If you want to pull in a new version 
