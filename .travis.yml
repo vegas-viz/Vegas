@@ -1,4 +1,28 @@
 language: scala
+
+dist: trusty
+
+# required: until bug is fixed: https://github.com/travis-ci/travis-ci/issues/3259
+sudo: required
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
+      - google-chrome-stable
+      - unzip
+
+before_install:
+    # Install Chrome driver
+    - wget http://chromedriver.storage.googleapis.com/2.22/chromedriver_linux64.zip
+    - unzip chromedriver_linux64.zip
+    - sudo chmod u+x chromedriver
+    - sudo mv chromedriver /usr/bin/
+
+    # For selenium in headless linux system
+    - "export DISPLAY=:99.0"
+    - "sh -e /etc/init.d/xvfb start"
+    - sleep 3 # give xvfb some time to start
+
 scala:
    - 2.10.6
    - 2.11.7
@@ -13,9 +37,3 @@ script:
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
-# required until bug is fixed: https://github.com/travis-ci/travis-ci/issues/3259
-sudo: false
-addons:
-  apt:
-    packages:
-      - oracle-java8-installer
