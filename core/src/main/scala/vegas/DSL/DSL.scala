@@ -1,31 +1,43 @@
 package vegas.DSL
 
 import monocle.macros.GenLens
-import vegas.spec._
+import vegas.spec.Spec._
+import io.circe.syntax._
 
-/**
-  * @author Aish Fenton.
-  */
 object Vegas {
 
-  def apply(description: String = "") = SpecBuilder(Spec(description=Some(description)))
+  def apply(description: OptArg[String] = NoArg) = SpecBuilder(ExtendedUnitSpec(
+    description=description,
+    mark=MarkEnums.Circle
+  ))
 
 }
 
-/**
-  * @author Aish Fenton.
-  */
-case class SpecBuilder(spec: Spec) extends SpecDSL with EncoderDSL with DataDSL with TransformDSL with ConfigDSL
+case class SpecBuilder(spec: ExtendedUnitSpec) extends SpecDSL with EncoderDSL with DataDSL with TransformDSL with ConfigDSL {
+
+  /**
+    * Returns a Json string representation of this vega-lite spec
+    */
+  def toJson = vegas.spec.toJson(spec)
+
+  /**
+    * Returns a Circe Json object that represents the spec. Also see [[toJson]]
+    */
+  def asCirceJson = {
+    import vegas.spec.Spec.Implicits._
+    spec.asJson
+  }
+
+}
 
 trait SpecDSL {
   self: SpecBuilder =>
 
   protected[this] val _spec = GenLens[SpecBuilder](_.spec)
-
-  private val _mark = GenLens[Spec](_.mark)
+  private val _mark = GenLens[ExtendedUnitSpec](_.mark)
 
   def mark(mark: Mark) = {
-    (_spec composeLens _mark).set(Some(mark))(this)
+    (_spec composeLens _mark).set(mark)(this)
   }
 
 }

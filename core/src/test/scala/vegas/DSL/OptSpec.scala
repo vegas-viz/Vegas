@@ -1,11 +1,12 @@
 package vegas.DSL
 
+import org.scalatest.{FlatSpec, Matchers}
 import vegas.BaseSpec
 
 /**
   * @author Aish Fenton.
   */
-class OptSpec extends BaseSpec {
+class OptSpec extends FlatSpec with Matchers {
 
   def test(a: OptArg[Int] = NoArg, b: OptArg[String] = NoArg, c: OptArg[Any] = NoArg) = (a,b,c)
 

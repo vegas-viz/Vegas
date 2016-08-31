@@ -1,29 +1,21 @@
 
+import org.scalatest.{FlatSpec, Matchers}
 import vegas._
-import vegas.spec.{Formula, Transform}
+import vegas.spec.Spec._
 
 /**
   * @author Aish Fenton.
   */
-class TransformDSLSpec extends BaseSpec {
+class TransformDSLSpec extends FlatSpec with Matchers {
 
-  "TransformDSL Trait" should "add a transform filter" in {
-    val specBuilder = Vegas()
-      .transformFilter("datum.b2 > 60")
-
-    specBuilder.spec.transform.get should equal (Transform(
-      filter = Some("datum.b2 > 60")
-    ))
-  }
-
-  it should "filter nulls" in {
-    val specBuilder = Vegas()
-      .transformFilterNull()
-
-    specBuilder.spec.transform.get should equal (Transform(
-      filterNull = Some(true)
-    ))
-  }
+//  "TransformDSL Trait" should "add a transform filter" in {
+//    val specBuilder = Vegas()
+//      .transformFilter("datum.b2 > 60")
+//
+//    specBuilder.spec.transform.get should equal (Transform(
+//      filter = Some("datum.b2 > 60")
+//    ))
+//  }
 
   it should "add to an array of transform formulas" in {
     val specBuilder = Vegas()
@@ -31,7 +23,7 @@ class TransformDSLSpec extends BaseSpec {
       .addTransformCalculation("b", "datum.b + 2")
 
     specBuilder.spec.transform.get should equal (Transform(
-      calculate = Some(Seq(
+      calculate = Some(List(
         Formula("a", "datum.a + 1"),
         Formula("b", "datum.b + 2")
       ))

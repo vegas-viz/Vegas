@@ -1,12 +1,12 @@
 package vegas.render
 
 import vegas.DSL.SpecBuilder
-import vegas.spec.Spec
+import vegas.spec.Spec.ExtendedUnitSpec
 
 /**
   * @author Aish Fenton.
   */
-case class StaticHTMLRenderer(spec: Spec) extends BaseHTMLRenderer {
+case class StaticHTMLRenderer(spec: ExtendedUnitSpec) extends BaseHTMLRenderer {
 
   def importsHTML(additionalImports: String*) = (JSImports.values ++ additionalImports).map { s => "<script src=\"" + s + "\" charset=\"utf-8\"></script>" }.mkString("\n")
 
@@ -24,7 +24,7 @@ case class StaticHTMLRenderer(spec: Spec) extends BaseHTMLRenderer {
        | <script>
        |   var embedSpec = {
        |     mode: "vega-lite",
-       |     spec: ${spec.toJson()}
+       |     spec: ${vegas.spec.toJson(spec)}
        |   }
        |   vg.embed("#$name", embedSpec, function(error, result) {});
        | </script>
@@ -64,7 +64,7 @@ case class StaticHTMLRenderer(spec: Spec) extends BaseHTMLRenderer {
     """.stripMargin
     }
 
-  // Conviennce method
+  // Continence method
   def show(implicit fn: String => Unit) = fn(frameHTML())
 
 }
