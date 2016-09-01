@@ -49,7 +49,6 @@ lazy val commonSettings = Seq(
   scalaVersion := "2.11.8",
   vegaLiteVersion := "1.1.2",
   scalacOptions += "-target:jvm-1.7",
-  crossScalaVersions := Seq("2.10.6", "2.11.8"),
   homepage := Some(url("https://github.com/aishfenton/Vegas")),
   licenses := Seq("MIT License" -> url("http://www.opensource.org/licenses/MIT")),
 
