@@ -1,3 +1,4 @@
+import ReleaseTransformations._
 
 // ---------
 // Setting / Task Definitions
@@ -45,7 +46,6 @@ lazy val circeVersion = "0.4.1"
 lazy val commonSettings = Seq(
   description := "The missing MatPlotLib for Scala and Spark",
   organization := "com.github.aishfenton",
-  version := "0.2.4",
   scalaVersion := "2.11.8",
   vegaLiteVersion := "1.1.2",
   scalacOptions += "-target:jvm-1.7",
@@ -64,6 +64,7 @@ lazy val commonSettings = Seq(
   },
   publishArtifact in Test := false,
   pomIncludeRepository := { _ => false },
+  sonatypeProfileName := "com.github.aishfenton",
   pomExtra := (
     <scm>
       <url>git@github.com:aishfenton/Vegas.git</url>
@@ -82,9 +83,26 @@ lazy val commonSettings = Seq(
           <id>dbtsai</id>
           <name>DB Tsai</name>
         </developer>
+        <developer>
+          <id>rogermenezes</id>
+          <name>Roger Menezes</name>
+        </developer>
       </developers>
-    )
-
+  ),
+  releaseProcess := Seq[ReleaseStep](
+    checkSnapshotDependencies,
+    inquireVersions,
+    runClean,
+    runTest,
+    setReleaseVersion,
+    commitReleaseVersion,
+    tagRelease,
+    ReleaseStep(action = Command.process("publishSigned", _)),
+    setNextVersion,
+    commitNextVersion,
+    ReleaseStep(action = Command.process("sonatypeReleaseAll", _)),
+    pushChanges
+  )
 )
 
 lazy val noPublishSettings = Seq(
