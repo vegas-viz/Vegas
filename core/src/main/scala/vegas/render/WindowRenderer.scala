@@ -1,7 +1,7 @@
 package vegas.render
 
 import vegas.DSL.SpecBuilder
-import vegas.spec.Spec
+import vegas.spec.Spec.ExtendedUnitSpec
 import scalafx.Includes._
 import scalafx.application.Platform
 import scalafx.scene.Scene
@@ -15,9 +15,9 @@ class Window {
 
   var webEngine: WebEngine = null
 
-  private def html(spec: Spec) = StaticHTMLRenderer(spec).pageHTML()
+  private def html(spec: ExtendedUnitSpec) = StaticHTMLRenderer(spec).pageHTML()
 
-  def load(spec: Spec) = {
+  def load(spec: ExtendedUnitSpec) = {
     webEngine.loadContent(html(spec))
   }
 
@@ -45,7 +45,7 @@ class Window {
 
 }
 
-case class WindowRenderer(spec: Spec) {
+case class WindowRenderer(spec: ExtendedUnitSpec) {
   lazy val window = new Window()
 
   def show = Platform.runLater { window.load(spec) }

@@ -1,7 +1,7 @@
 package vegas.DSL
 
 import monocle.macros.GenLens
-import vegas.spec._
+import vegas.spec.Spec._
 import java.net.URI
 
 /**
@@ -10,21 +10,38 @@ import java.net.URI
 trait DataDSL extends FieldExtractor {
   self: SpecBuilder =>
 
-  private val _data = GenLens[Spec](_.data)
+  private val _data = GenLens[ExtendedUnitSpec](_.data)
+  private val _values = GenLens[Data](_.values)
 
-  def withData(values: Map[String, Any]*): SpecBuilder = {
-    val data = Data(Option(values))
+  def withData(values: Seq[Map[String, Any]]): SpecBuilder = {
+    val data = Data(
+      values = Some(values.toList.map(Data.Values(_)))
+    )
+
     (_spec composeLens _data).set(Some(data))(this)
   }
 
-  def withData(url: String, formatType: FormatType = JSON): SpecBuilder = {
-    val data = Data(None, Option(new URI(url)), Option(formatType))
+  def withDataURL(url: String, formatType: OptArg[DataFormatType] = NoArg): SpecBuilder = {
+    val data = Data(
+      url = Some(url),
+      format = formatType.map( t => DataFormat(`type`= Some(t)))
+    )
     (_spec composeLens _data).set(Some(data))(this)
   }
 
-  def withRowData(values: Seq[Any]*): SpecBuilder = {
+  def withDataSeq(values: Seq[Any]): SpecBuilder = {
+    val data = values.zipWithIndex.map { case(y, i) => Map("x" -> i, "y" -> y) }
+    withData(data)
+  }
+
+  def withDataXY(values: Seq[(Any, Any)]): SpecBuilder = {
+    val data = values.map { case(x, y) => Map("x" -> x, "y" -> y) }
+    withData(data)
+  }
+
+  def withDataRow(values: Seq[Seq[Any]]): SpecBuilder = {
     val v = values.map(_.zipWithIndex.map { case(v,i) => (i.toString,v) }.toMap)
-    withData(v:  _*)
+    withData(v)
   }
 
   /**
@@ -32,9 +49,9 @@ trait DataDSL extends FieldExtractor {
     * @param values: Expects an array of case classes, but no way to enforce this. Uses reflection to pull out
     * fields.
     */
-  def withReflectData(values: Product*): SpecBuilder = {
+  def withReflectData(values: Seq[Product]): SpecBuilder = {
     val v = values.map(extractFields)
-    withData(v: _*)
+    withData(v)
   }
 
 }

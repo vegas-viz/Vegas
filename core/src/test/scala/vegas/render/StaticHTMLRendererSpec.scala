@@ -1,18 +1,15 @@
 package vegas.render
 
+import org.scalatest.{FlatSpec, Matchers}
 import vegas._
-import vegas.BaseSpec
 
-/**
-  * @author Aish Fenton.
-  */
-class StaticHTMLRendererSpec extends BaseSpec {
+class StaticHTMLRendererSpec extends FlatSpec with Matchers {
   import StaticHTMLRenderer._
 
   val data = Seq( Map("population" -> 318000000, "country" -> "USA"), Map("population" -> 64000000, "country" -> "UK") )
 
   val specBuilder = Vegas("Country Pop")
-    .withData(data: _*)
+    .withData(data)
     .addTransformCalculation("pop_millions", "datum.population / 1000000")
     .encodeX("pop_millions", Quantitative)
     .encodeY("country", Nominal)
@@ -22,7 +19,7 @@ class StaticHTMLRendererSpec extends BaseSpec {
     val html = specBuilder.pageHTML()
     html shouldBe a [String]
     html should startWith("<html>")
-    html should include(specBuilder.spec.toJson())
+    html should include(specBuilder.toJson)
     html should endWith("</html>")
   }
 
@@ -31,7 +28,7 @@ class StaticHTMLRendererSpec extends BaseSpec {
 
     html shouldBe a [String]
     html.trim should startWith ("<script>")
-    html should include (specBuilder.spec.toJson())
+    html should include (specBuilder.toJson)
     html.trim should include ("</script>")
   }
 
