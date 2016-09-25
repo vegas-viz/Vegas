@@ -10,7 +10,7 @@ import org.openqa.selenium.logging.LogType
 import java.util.logging.Level
 
 import org.scalatest.ShouldMatchers
-import vegas.fixtures.BasicPlots
+import vegas.fixtures.{BasicPlots, VegasPlots}
 
 import scala.collection.JavaConverters._
 
@@ -63,7 +63,7 @@ trait WebGenerators {
 object Look extends App with WebGenerators {
   import scala.sys.process._
 
-  val plots = BasicPlots.plots
+  val plots = BasicPlots.plots ++ VegasPlots.plots
   val page = mkPage(plots)
 
   s"open $page".!!

@@ -52,6 +52,7 @@ lazy val commonSettings = Seq(
   crossScalaVersions := Seq("2.10.6", "2.11.8"),
   homepage := Some(url("https://github.com/aishfenton/Vegas")),
   licenses := Seq("MIT License" -> url("http://www.opensource.org/licenses/MIT")),
+//  parallelExecution in Test := false,
 
   addCompilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.full),
   publishMavenStyle := true,

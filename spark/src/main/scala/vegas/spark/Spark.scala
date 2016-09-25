@@ -11,7 +11,7 @@ import vegas.DSL._
 
 object Spark {
 
-  implicit class SparkExt(val specBuilder: SpecBuilder) {
+  implicit class SparkExt(val specBuilder: ExtendedUnitSpecBuilder) {
 
     def withDataFrame(df: DataFrame, limit: Int = 1000) = {
       val columns: Array[String] = df.columns

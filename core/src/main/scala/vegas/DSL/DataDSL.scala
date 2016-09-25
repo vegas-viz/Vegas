@@ -1,45 +1,47 @@
 package vegas.DSL
 
 import monocle.macros.GenLens
+import monocle.Lens
 import vegas.spec.Spec._
 import java.net.URI
 
 /**
-  * @author Aish Fenton
+  * @tparam T the base builder type. Needs to be generic since this can be mixed into different places
   */
-trait DataDSL extends FieldExtractor {
-  self: SpecBuilder =>
+trait DataDSL[T] extends FieldExtractor {
+  self: T =>
 
-  private val _data = GenLens[ExtendedUnitSpec](_.data)
+  protected[this] def _data: Lens[T, Option[Data]]
+
   private val _values = GenLens[Data](_.values)
 
-  def withData(values: Seq[Map[String, Any]]): SpecBuilder = {
+  def withData(values: Seq[Map[String, Any]]): T = {
     val data = Data(
       values = Some(values.toList.map(Data.Values(_)))
     )
 
-    (_spec composeLens _data).set(Some(data))(this)
+    _data.set(Some(data))(this)
   }
 
-  def withDataURL(url: String, formatType: OptArg[DataFormatType] = NoArg): SpecBuilder = {
+  def withDataURL(url: String, formatType: OptArg[DataFormatType] = NoArg): T = {
     val data = Data(
       url = Some(url),
       format = formatType.map( t => DataFormat(`type`= Some(t)))
     )
-    (_spec composeLens _data).set(Some(data))(this)
+    _data.set(Some(data))(this)
   }
 
-  def withDataSeq(values: Seq[Any]): SpecBuilder = {
+  def withDataSeq(values: Seq[Any]): T = {
     val data = values.zipWithIndex.map { case(y, i) => Map("x" -> i, "y" -> y) }
     withData(data)
   }
 
-  def withDataXY(values: Seq[(Any, Any)]): SpecBuilder = {
+  def withDataXY(values: Seq[(Any, Any)]): T = {
     val data = values.map { case(x, y) => Map("x" -> x, "y" -> y) }
     withData(data)
   }
 
-  def withDataRow(values: Seq[Seq[Any]]): SpecBuilder = {
+  def withDataRow(values: Seq[Seq[Any]]): T = {
     val v = values.map(_.zipWithIndex.map { case(v,i) => (i.toString,v) }.toMap)
     withData(v)
   }
@@ -49,7 +51,7 @@ trait DataDSL extends FieldExtractor {
     * @param values: Expects an array of case classes, but no way to enforce this. Uses reflection to pull out
     * fields.
     */
-  def withReflectData(values: Seq[Product]): SpecBuilder = {
+  def withReflectData(values: Seq[Product]): T = {
     val v = values.map(extractFields)
     withData(v)
   }

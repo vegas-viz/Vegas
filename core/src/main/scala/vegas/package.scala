@@ -6,7 +6,14 @@ import vegas.spec.Spec
 package object vegas {
 
   val Vegas = DSL.Vegas
-  type SpecBuilder = DSL.SpecBuilder
+  type SpecBuilder = DSL.ExtendedUnitSpecBuilder
+
+  val Axis = vegas.DSL.AxisDSL
+  val Scale = vegas.DSL.ScaleDSL
+
+  // -------
+  // Enums
+  // -------
 
   val Json = Spec.DataFormatTypeEnums.Json
   val CSV = Spec.DataFormatTypeEnums.Csv

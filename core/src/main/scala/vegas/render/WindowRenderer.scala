@@ -1,6 +1,6 @@
 package vegas.render
 
-import vegas.DSL.SpecBuilder
+import vegas.DSL.ExtendedUnitSpecBuilder
 import vegas.spec.Spec.ExtendedUnitSpec
 import scalafx.Includes._
 import scalafx.application.Platform
@@ -54,6 +54,6 @@ case class WindowRenderer(spec: ExtendedUnitSpec) {
 
 object WindowRenderer {
   new JFXPanel()
-  implicit def toWindow(sb: SpecBuilder): WindowRenderer = { WindowRenderer(sb.spec) }
+  implicit def toWindow(sb: ExtendedUnitSpecBuilder): WindowRenderer = { WindowRenderer(sb.spec) }
 }
 
