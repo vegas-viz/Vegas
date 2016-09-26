@@ -6,7 +6,8 @@ import vegas.spec.Spec
 package object vegas {
 
   val Vegas = DSL.Vegas
-  type SpecBuilder = DSL.ExtendedUnitSpecBuilder
+  val Layer = DSL.Layer
+//  type SpecBuilder = { def spec }
 
   val Axis = vegas.DSL.AxisDSL
   val Scale = vegas.DSL.ScaleDSL

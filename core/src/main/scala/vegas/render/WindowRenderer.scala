@@ -1,12 +1,13 @@
 package vegas.render
 
-import vegas.DSL.ExtendedUnitSpecBuilder
+import vegas.DSL.{ExtendedUnitSpecBuilder, SpecBuilder}
 import vegas.spec.Spec.ExtendedUnitSpec
+
 import scalafx.Includes._
 import scalafx.application.Platform
 import scalafx.scene.Scene
 import scalafx.stage.Stage
-import scalafx.scene.web.{ WebEngine, WebView }
+import scalafx.scene.web.{WebEngine, WebView}
 import javafx.embed.swing.JFXPanel
 
 class Window {
@@ -15,10 +16,10 @@ class Window {
 
   var webEngine: WebEngine = null
 
-  private def html(spec: ExtendedUnitSpec) = StaticHTMLRenderer(spec).pageHTML()
+  private def html(specJson: String) = StaticHTMLRenderer(specJson).pageHTML()
 
-  def load(spec: ExtendedUnitSpec) = {
-    webEngine.loadContent(html(spec))
+  def load(specJson: String) = {
+    webEngine.loadContent(html(specJson))
   }
 
   def init = {
@@ -45,15 +46,14 @@ class Window {
 
 }
 
-case class WindowRenderer(spec: ExtendedUnitSpec) {
+case class WindowRenderer(specJson: String) {
   lazy val window = new Window()
 
-  def show = Platform.runLater { window.load(spec) }
-
+  def show = Platform.runLater { window.load(specJson) }
 }
 
 object WindowRenderer {
   new JFXPanel()
-  implicit def toWindow(sb: ExtendedUnitSpecBuilder): WindowRenderer = { WindowRenderer(sb.spec) }
+  implicit def toWindow(sb: SpecBuilder): WindowRenderer = { WindowRenderer(sb.toJson) }
 }
 

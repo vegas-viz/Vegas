@@ -1,6 +1,7 @@
 package vegas.fixtures
 
 import vegas._
+import vegas.DSL.SpecBuilder
 
 object BasicPlots {
 

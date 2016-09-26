@@ -10,6 +10,7 @@ import org.openqa.selenium.logging.LogType
 import java.util.logging.Level
 
 import org.scalatest.ShouldMatchers
+import vegas.DSL.SpecBuilder
 import vegas.fixtures.{BasicPlots, VegasPlots}
 
 import scala.collection.JavaConverters._

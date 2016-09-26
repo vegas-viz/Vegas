@@ -1,12 +1,12 @@
 package vegas.DSL
 
-import monocle.Lens
+import monocle.{Lens, Optional}
 import monocle.macros.GenLens
 import vegas.spec.Spec._
-import vegas.macros.{ alias_with_lens, aliased }
+import vegas.macros.{alias_with_lens, aliased}
 
 @aliased
-trait EncoderDSL[T] {
+trait EncoderDSL[T] extends BaseEncoderDSL[T] {
   self: T =>
 
   protected[this] def _encoding: Lens[T, Option[Encoding]]
@@ -30,7 +30,6 @@ trait EncoderDSL[T] {
   private val _path = GenLens[Encoding](_.path)
   private val _order = GenLens[Encoding](_.order)
 
-
   @alias_with_lens("encodeColumn", _column)
   @alias_with_lens("encodeRow", _row)
   @alias_with_lens("encodeX", _x)
@@ -43,18 +42,8 @@ trait EncoderDSL[T] {
      aggregate: OptArg[AggregateOp] = NoArg, axis: OptArg[Axis] = NoArg, hideAxis: OptArg[Boolean] = NoArg,
      scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg) = {
 
-    val valueU = value.map {
-      case b: Boolean => PositionChannelDef.ValueBoolean(b)
-      case s: String =>  PositionChannelDef.ValueString(s)
-      case x@_ => toDouble(x).map(PositionChannelDef.ValueDouble(_))
-        .getOrElse(throw new Exception("Value must be AnyVal, Boolean, or String"))
-    }
-    val axisU = (axis.map(PositionChannelDef.AxisAxis(_)) orElse hideAxis.map(b => PositionChannelDef.AxisBoolean( !b )))
-
-    val cd = PositionChannelDef(field=field, `type`=dataType, aggregate=aggregate, axis=axisU, scale=scale, value=valueU,
-      timeUnit=timeUnit, title=title)
-
-    (_encoding composePrism _orElse(Encoding()) composeLens l).set(Some(cd))(this)
+    val lens = (_encoding composePrism _orElse(Encoding()) composeLens l)
+    baseEncodePCD(lens)(field, dataType, value, aggregate, axis, hideAxis, scale, timeUnit, title)
   }
 
   @alias_with_lens("encodeColor", _color)
@@ -66,24 +55,15 @@ trait EncoderDSL[T] {
      aggregate: OptArg[AggregateOp] = NoArg, scale:OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg,
      title: OptArg[String] = NoArg) = {
 
-    val valueU = value.map {
-      case b: Boolean => ChannelDefWithLegend.ValueBoolean(b)
-      case s: String => ChannelDefWithLegend.ValueString(s)
-      case x@_ => toDouble(x).map(ChannelDefWithLegend.ValueDouble(_))
-        .getOrElse(throw new Exception("Value must be AnyVal, Boolean, or String"))
-    }
-
-    val cd = ChannelDefWithLegend(field=field, `type`=dataType, aggregate=aggregate, value=valueU, scale=scale,
-      timeUnit=timeUnit, title=title)
-
-    (_encoding composePrism _orElse(Encoding()) composeLens l).set(Some(cd))(this)
+    val lens = (_encoding composePrism _orElse(Encoding()) composeLens l)
+    baseEncodeCDWL(lens)(field, dataType, value, aggregate, scale, timeUnit, title)
   }
 
 }
 
 
 @aliased
-trait UnitEncoderDSL[T] {
+trait UnitEncoderDSL[T] extends BaseEncoderDSL[T] {
   self: T =>
 
   protected[this] def _encoding: Lens[T, Option[UnitEncoding]]
@@ -116,18 +96,8 @@ trait UnitEncoderDSL[T] {
                          aggregate: OptArg[AggregateOp] = NoArg, axis: OptArg[Axis] = NoArg, hideAxis: OptArg[Boolean] = NoArg,
                          scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg) = {
 
-    val valueU = value.map {
-      case b: Boolean => PositionChannelDef.ValueBoolean(b)
-      case s: String =>  PositionChannelDef.ValueString(s)
-      case x@_ => toDouble(x).map(PositionChannelDef.ValueDouble(_))
-        .getOrElse(throw new Exception("Value must be AnyVal, Boolean, or String"))
-    }
-    val axisU = (axis.map(PositionChannelDef.AxisAxis(_)) orElse hideAxis.map(b => PositionChannelDef.AxisBoolean( !b )))
-
-    val cd = PositionChannelDef(field=field, `type`=dataType, aggregate=aggregate, axis=axisU, scale=scale, value=valueU,
-      timeUnit=timeUnit, title=title)
-
-    (_encoding composePrism _orElse(UnitEncoding()) composeLens l).set(Some(cd))(this)
+    val lens = (_encoding composePrism _orElse(UnitEncoding()) composeLens l)
+    baseEncodePCD(lens)(field, dataType, value, aggregate, axis, hideAxis, scale, timeUnit, title)
   }
 
   @alias_with_lens("encodeColor", _color)
@@ -139,17 +109,8 @@ trait UnitEncoderDSL[T] {
                           aggregate: OptArg[AggregateOp] = NoArg, scale:OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg,
                           title: OptArg[String] = NoArg) = {
 
-    val valueU = value.map {
-      case b: Boolean => ChannelDefWithLegend.ValueBoolean(b)
-      case s: String => ChannelDefWithLegend.ValueString(s)
-      case x@_ => toDouble(x).map(ChannelDefWithLegend.ValueDouble(_))
-        .getOrElse(throw new Exception("Value must be AnyVal, Boolean, or String"))
-    }
-
-    val cd = ChannelDefWithLegend(field=field, `type`=dataType, aggregate=aggregate, value=valueU, scale=scale,
-      timeUnit=timeUnit, title=title)
-
-    (_encoding composePrism _orElse(UnitEncoding()) composeLens l).set(Some(cd))(this)
+    val lens = (_encoding composePrism _orElse(UnitEncoding()) composeLens l)
+    baseEncodeCDWL(lens)(field, dataType, value, aggregate, scale, timeUnit, title)
   }
 
 }
@@ -157,7 +118,27 @@ trait UnitEncoderDSL[T] {
 trait BaseEncoderDSL[T] {
   self: T =>
 
-  protected def baseEncodeCDWL_(l: Lens[T, Option[ChannelDefWithLegend]])
+  protected def baseEncodePCD(lens: Optional[T, Option[PositionChannelDef]])
+                        (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg,
+                         value: OptArg[Any] = NoArg,
+                         aggregate: OptArg[AggregateOp] = NoArg, axis: OptArg[Axis] = NoArg, hideAxis: OptArg[Boolean] = NoArg,
+                         scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg) = {
+
+    val valueU = value.map {
+      case b: Boolean => PositionChannelDef.ValueBoolean(b)
+      case s: String =>  PositionChannelDef.ValueString(s)
+      case x@_ => toDouble(x).map(PositionChannelDef.ValueDouble(_))
+        .getOrElse(throw new Exception("Value must be AnyVal, Boolean, or String"))
+    }
+    val axisU = (axis.map(PositionChannelDef.AxisAxis(_)) orElse hideAxis.map(b => PositionChannelDef.AxisBoolean( !b )))
+
+    val cd = PositionChannelDef(field=field, `type`=dataType, aggregate=aggregate, axis=axisU, scale=scale, value=valueU,
+      timeUnit=timeUnit, title=title)
+
+    lens.set(Some(cd))(this)
+  }
+
+  protected def baseEncodeCDWL(lens: Optional[T, Option[ChannelDefWithLegend]])
                          (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
                           aggregate: OptArg[AggregateOp] = NoArg, scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg,
                           title: OptArg[String] = NoArg) = {
@@ -173,6 +154,6 @@ trait BaseEncoderDSL[T] {
     val cd = ChannelDefWithLegend(field = field, `type` = dataType, aggregate = aggregate, value = valueU, scale = scale,
       timeUnit = timeUnit, title = title)
 
-    l.set(Some(cd))(this)
+    lens.set(Some(cd))(this)
   }
 }
