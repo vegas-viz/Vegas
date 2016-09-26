@@ -4,14 +4,11 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.DataFrame
 
 import vegas.DSL._
-
-/**
-  * @author Aish Fenton.
-  */
+import vegas.DSL.DataDSL
 
 object Spark {
 
-  implicit class SparkExt(val specBuilder: ExtendedUnitSpecBuilder) {
+  implicit class SparkExt(val specBuilder: DataDSL[_]) {
 
     def withDataFrame(df: DataFrame, limit: Int = 1000) = {
       val columns: Array[String] = df.columns

@@ -1,6 +1,7 @@
 package vegas.fixtures
 
 import vegas._
+import vegas.data.External._
 import vegas.DSL.SpecBuilder
 
 object BasicPlots {
@@ -18,7 +19,7 @@ object BasicPlots {
 
   val AggregateBarChart =
     Vegas("A bar chart showing the US population distribution of age groups in 2000.").
-    withDataURL("https://vega.github.io/vega-editor/app/data/population.json").
+    withDataURL(Population).
     mark(Bar).
     transformFilter("datum.year == 2000").
     encodeY("age", Ordinal, scale=Scale(bandSize=17)).
@@ -26,7 +27,7 @@ object BasicPlots {
 
   val GroupedBarChart =
     Vegas().
-      withDataURL("https://vega.github.io/vega-editor/app/data/population.json").
+      withDataURL(Population).
       mark(Bar).
       addTransformCalculation("gender", """datum.sex == 2 ? "Female" : "Male"""").
       transformFilter("datum.year == 2000").
