@@ -171,8 +171,9 @@ import vegas.flink.Flink._
 
 This adds the following method:
 
+```text
 * withData[T <: Product](ds: DataSet[T])
-
+```
 Similarly, to the RDD concept in Spark, a DataSet of _case classes_ or _tuples_ is expected and reflection is used to map the case class' fields to fields within Vegas. In the case of tuples you can encode the fields using `"_1", "_2"` and so on.
 
 ## Plot Options
