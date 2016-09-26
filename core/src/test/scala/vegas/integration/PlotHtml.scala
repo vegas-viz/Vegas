@@ -2,24 +2,36 @@ package vegas.integration
 
 import org.openqa.selenium.WebDriver
 import vegas.WebMatchers
-import vegas.fixtures.BasicPlots
-import org.scalatest.{FlatSpec, ShouldMatchers}
+import vegas.fixtures.{BasicPlots, VegasPlots}
+import org.scalatest.{BeforeAndAfterAll, FlatSpec, ShouldMatchers}
 import org.scalatest.selenium.Chrome
 
-class PlotHtml extends FlatSpec with ShouldMatchers with WebMatchers with Chrome {
+class PlotHtml extends FlatSpec with ShouldMatchers with WebMatchers with Chrome with BeforeAndAfterAll {
 
   val scheme = "file://"
-  val Plots = BasicPlots.plots
 
   "Basic plots" should "render HTML without error" in {
 
-    Plots.foreach { plot =>
+    BasicPlots.plots.foreach { plot =>
       go to (scheme + mkPage(plot))
       find(tagName("canvas"))
       hasNoJsErrors()
     }
 
-    close()
+  }
+
+  "Vegas plots" should "render HTML without error" in {
+
+    VegasPlots.plots.foreach { plot =>
+      go to (scheme + mkPage(plot))
+      find(tagName("canvas"))
+      hasNoJsErrors()
+    }
+
+  }
+
+  override protected def afterAll() {
+    quit()
   }
 
 }

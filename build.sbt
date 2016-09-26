@@ -51,6 +51,7 @@ lazy val commonSettings = Seq(
   scalacOptions += "-target:jvm-1.7",
   homepage := Some(url("https://github.com/aishfenton/Vegas")),
   licenses := Seq("MIT License" -> url("http://www.opensource.org/licenses/MIT")),
+//  parallelExecution in Test := false,
 
   addCompilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.full),
   publishMavenStyle := true,
