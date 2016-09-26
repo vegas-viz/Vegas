@@ -49,7 +49,6 @@ lazy val commonSettings = Seq(
   scalaVersion := "2.11.8",
   vegaLiteVersion := "1.1.2",
   scalacOptions += "-target:jvm-1.7",
-  crossScalaVersions := Seq("2.10.6", "2.11.8"),
   homepage := Some(url("https://github.com/aishfenton/Vegas")),
   licenses := Seq("MIT License" -> url("http://www.opensource.org/licenses/MIT")),
 //  parallelExecution in Test := false,
@@ -169,8 +168,20 @@ lazy val spark = project.
     )
   )
 
+lazy val flink = project.
+  settings(moduleName := "vegas-flink").
+  dependsOn(vegas).
+  settings(commonSettings: _*).
+  settings(
+    libraryDependencies ++= Seq(
+      "org.apache.flink" %% "flink-scala" % "[1.1.1,)" % "provided",
+      "org.apache.flink" %% "flink-clients" % "[1.1.1,)" % "provided"
+    )
+  )
+
+
 lazy val root = (project in file(".")).
-  aggregate(vegas, spark).
+  aggregate(vegas, spark, flink, macros).
   settings(commonSettings: _*).
   settings(noPublishSettings: _*)
 
