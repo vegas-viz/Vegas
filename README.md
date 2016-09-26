@@ -157,6 +157,25 @@ This adds the following new methods:
 
 In the first case, each DataFrame column is exposed as a field keyed using the column's name. In the second case, an RDD of _case classes_ is expected, and reflection is used to map the case class's fields to fields within Vegas.   
 
+### Flink integration
+---
+Vegas also comes with an optional extension package that makes it easier to work with Flink DataSets. You'll also need to import:
+```sbt
+libraryDependencies += "com.github.aishfenton % "vegas-flink_{scala-version} % "{vegas-version}"
+```
+
+To use:
+```scala
+import vegas.flink.Flink._
+```
+
+This adds the following method:
+
+```text
+* withData[T <: Product](ds: DataSet[T])
+```
+Similarly, to the RDD concept in Spark, a DataSet of _case classes_ or _tuples_ is expected and reflection is used to map the case class' fields to fields within Vegas. In the case of tuples you can encode the fields using `"_1", "_2"` and so on.
+
 ## Plot Options
 
 TODO
