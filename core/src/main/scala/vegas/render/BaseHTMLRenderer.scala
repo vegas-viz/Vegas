@@ -18,7 +18,7 @@ trait BaseHTMLRenderer {
     "vegas-" + java.util.UUID.randomUUID.toString
   }
 
-  def spec: ExtendedUnitSpec
+  def specJson: String
 
   def show(implicit fn: String => Unit)
 

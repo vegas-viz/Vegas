@@ -1,12 +1,13 @@
 package vegas.render
 
-import vegas.DSL.SpecBuilder
+import vegas.DSL.{ExtendedUnitSpecBuilder, SpecBuilder}
 import vegas.spec.Spec.ExtendedUnitSpec
 
 /**
   * @author Aish Fenton.
   */
-case class StaticHTMLRenderer(spec: ExtendedUnitSpec) extends BaseHTMLRenderer {
+case class StaticHTMLRenderer(specJson: String) extends BaseHTMLRenderer {
+  import vegas.spec.Spec.Implicits._
 
   def importsHTML(additionalImports: String*) = (JSImports.values ++ additionalImports).map { s => "<script src=\"" + s + "\" charset=\"utf-8\"></script>" }.mkString("\n")
 
@@ -24,7 +25,7 @@ case class StaticHTMLRenderer(spec: ExtendedUnitSpec) extends BaseHTMLRenderer {
        | <script>
        |   var embedSpec = {
        |     mode: "vega-lite",
-       |     spec: ${vegas.spec.toJson(spec)}
+       |     spec: $specJson
        |   }
        |   vg.embed("#$name", embedSpec, function(error, result) {});
        | </script>
@@ -71,6 +72,6 @@ case class StaticHTMLRenderer(spec: ExtendedUnitSpec) extends BaseHTMLRenderer {
 
 object StaticHTMLRenderer {
 
-  implicit def toStaticHTMLRenderer(sb: SpecBuilder): StaticHTMLRenderer = { new StaticHTMLRenderer(sb.spec) }
+  implicit def toStaticHTMLRenderer(sb: SpecBuilder): StaticHTMLRenderer = { new StaticHTMLRenderer(sb.toJson) }
 
 }

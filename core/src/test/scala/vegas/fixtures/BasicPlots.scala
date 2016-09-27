@@ -1,6 +1,8 @@
 package vegas.fixtures
 
 import vegas._
+import vegas.data.External._
+import vegas.DSL.SpecBuilder
 
 object BasicPlots {
 
@@ -17,31 +19,24 @@ object BasicPlots {
 
   val AggregateBarChart =
     Vegas("A bar chart showing the US population distribution of age groups in 2000.").
-    withDataURL("https://vega.github.io/vega-editor/app/data/population.json").
-    encodeY("age", Ordinal).
-    transformFilter("datum.year == 2000").
+    withDataURL(Population).
     mark(Bar).
-    scaleY(bandSize = 17).
-    encodeX("people", Quantitative, aggregate=Sum).
-    axisX(title = "population")
+    transformFilter("datum.year == 2000").
+    encodeY("age", Ordinal, scale=Scale(bandSize=17)).
+    encodeX("people", Quantitative, aggregate=Sum, axis=Axis(title="population"))
 
   val GroupedBarChart =
     Vegas().
-      withDataURL("https://vega.github.io/vega-editor/app/data/population.json").
+      withDataURL(Population).
       mark(Bar).
       addTransformCalculation("gender", """datum.sex == 2 ? "Female" : "Male"""").
       transformFilter("datum.year == 2000").
-      encodeColumn("age", Ordinal).
-        scaleColumn(padding=4.0).
-        axisColumn(orient=Bottom, axisWidth=1.0, offset= -8.0).
-      encodeY("people", Quantitative, aggregate=Sum).
-        axisY(title="population", grid=false).
-      encodeX("gender", Nominal).
-        scaleX(bandSize=6.0).
-        axisX(false).
-      encodeColor("gender", Nominal).
-        scaleColor(rangeNominals=List("#EA98D2", "#659CCA"))
+      encodeColumn("age", Ordinal, scale=Scale(padding=4.0), axis=Axis(orient=Bottom, axisWidth=1.0, offset= -8.0)).
+      encodeY("people", Quantitative, aggregate=Sum, axis=Axis(title="population", grid=false)).
+      encodeX("gender", Nominal, scale=Scale(bandSize = 6.0), hideAxis=true).
+      encodeColor("gender", Nominal, scale=Scale(rangeNominals=List("#EA98D2", "#659CCA")))
 
   val plots: List[SpecBuilder] = SimpleBarChart :: AggregateBarChart :: GroupedBarChart :: Nil
 
 }
+

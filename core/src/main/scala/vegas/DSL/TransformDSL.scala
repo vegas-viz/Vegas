@@ -1,12 +1,13 @@
 package vegas.DSL
 
+import monocle.Lens
 import monocle.macros.GenLens
 import vegas.spec.Spec._
 
-trait TransformDSL {
-  self: SpecBuilder =>
+trait TransformDSL[T] {
+  self: T =>
 
-  private val _transform = GenLens[ExtendedUnitSpec](_.transform)
+  protected[this] def _transform: Lens[T, Option[Transform]]
 
   private val _calculate = GenLens[Transform](_.calculate)
   private val _filterInvalid = GenLens[Transform](_.filterInvalid)
@@ -14,17 +15,17 @@ trait TransformDSL {
 
   def addTransformCalculation(field: String, expr: String) = {
     val formula = Formula(field, expr)
-    (_spec composeLens _transform composePrism _orElse(Transform()) composeLens _calculate
+    (_transform composePrism _orElse(Transform()) composeLens _calculate
       composePrism _orElse(Nil)).modify((xs: List[Formula]) => xs :+ formula)(this)
   }
 
   def transformFilter(filter: String) = {
     val filterU = Transform.FilterString(filter)
-    (_spec composeLens _transform composePrism _orElse(Transform()) composeLens _filter).set(Some(filterU))(this)
+    (_transform composePrism _orElse(Transform()) composeLens _filter).set(Some(filterU))(this)
   }
 
   def transformFilterInvalid(filterInvalid: Boolean = true) = {
-    (_spec composeLens _transform composePrism _orElse(Transform()) composeLens _filterInvalid).set(Some(filterInvalid))(this)
+    (_transform composePrism _orElse(Transform()) composeLens _filterInvalid).set(Some(filterInvalid))(this)
   }
 
 }

@@ -1,15 +1,16 @@
 package vegas.DSL
 
+import monocle.Lens
 import monocle.macros.GenLens
 import vegas.spec.Spec._
 
 /**
   * @author Aish Fenton.
   */
-trait ConfigDSL extends FieldExtractor {
-  self: SpecBuilder =>
+trait ConfigDSL[T] extends FieldExtractor {
+  self: T =>
 
-  private val _config = GenLens[ExtendedUnitSpec](_.config)
+  protected[this] def _config: Lens[T, Option[Config]]
   private val _cell = GenLens[Config](_.cell)
 
   def configCell(width: OptArg[Double] = NoArg, height: OptArg[Double] = NoArg, fill: OptArg[String] = NoArg,
@@ -22,7 +23,7 @@ trait ConfigDSL extends FieldExtractor {
       strokeOpacity=strokeOpacity, strokeWidth=strokeWidth, strokeDash=strokeDash, strokeDashOffset=strokeDashOffset
     )
 
-    (_spec composeLens _config composePrism _orElse(Config()) composeLens _cell).set(Some(cell))(this)
+    (_config composePrism _orElse(Config()) composeLens _cell).set(Some(cell))(this)
   }
 
 }
