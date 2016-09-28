@@ -11,6 +11,7 @@ package object vegas {
 
   val Axis = vegas.DSL.AxisDSL
   val Scale = vegas.DSL.ScaleDSL
+  val Bin = vegas.DSL.BinDSL
 
   // -------
   // Enums

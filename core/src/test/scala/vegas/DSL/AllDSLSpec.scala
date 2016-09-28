@@ -27,6 +27,7 @@ class AllDSLSpec extends FlatSpec with Matchers with JsonMatchers {
 
     SimpleBarChart.asCirceJson should beSameJsonAs(examples("bar"))
     AggregateBarChart.asCirceJson should beSameJsonAs(examples("bar_aggregate"))
+    BinnedChart.asCirceJson should beSameJsonAs(examples("trellis_scatter_binned_row"))
 //    GroupedBarChart.asCirceJson should beSameJsonAs(examples("bar_grouped"))
   }
 

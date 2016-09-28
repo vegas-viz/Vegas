@@ -40,10 +40,11 @@ trait EncoderDSL[T] extends BaseEncoderDSL[T] {
     (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg,
      value: OptArg[Any] = NoArg,
      aggregate: OptArg[AggregateOp] = NoArg, axis: OptArg[Axis] = NoArg, hideAxis: OptArg[Boolean] = NoArg,
-     scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg) = {
+     scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg,
+     bin: OptArg[Bin] = NoArg, disableBin: OptArg[Boolean] = NoArg) = {
 
     val lens = (_encoding composePrism _orElse(Encoding()) composeLens l)
-    baseEncodePCD(lens)(field, dataType, value, aggregate, axis, hideAxis, scale, timeUnit, title)
+    baseEncodePCD(lens)(field, dataType, value, aggregate, axis, hideAxis, scale, timeUnit, title, bin, disableBin)
   }
 
   @alias_with_lens("encodeColor", _color)
@@ -53,10 +54,10 @@ trait EncoderDSL[T] extends BaseEncoderDSL[T] {
   private def encodeCDWL_(l: Lens[Encoding, Option[ChannelDefWithLegend]])
     (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
      aggregate: OptArg[AggregateOp] = NoArg, scale:OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg,
-     title: OptArg[String] = NoArg) = {
+     title: OptArg[String] = NoArg, bin: OptArg[Bin] = NoArg, disableBin: OptArg[Boolean] = NoArg) = {
 
     val lens = (_encoding composePrism _orElse(Encoding()) composeLens l)
-    baseEncodeCDWL(lens)(field, dataType, value, aggregate, scale, timeUnit, title)
+    baseEncodeCDWL(lens)(field, dataType, value, aggregate, scale, timeUnit, title, bin, disableBin)
   }
 
 }
@@ -94,10 +95,11 @@ trait UnitEncoderDSL[T] extends BaseEncoderDSL[T] {
                         (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg,
                          value: OptArg[Any] = NoArg,
                          aggregate: OptArg[AggregateOp] = NoArg, axis: OptArg[Axis] = NoArg, hideAxis: OptArg[Boolean] = NoArg,
-                         scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg) = {
+                         scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg,
+                         bin: OptArg[Bin] = NoArg, disableBin: OptArg[Boolean] = NoArg) = {
 
     val lens = (_encoding composePrism _orElse(UnitEncoding()) composeLens l)
-    baseEncodePCD(lens)(field, dataType, value, aggregate, axis, hideAxis, scale, timeUnit, title)
+    baseEncodePCD(lens)(field, dataType, value, aggregate, axis, hideAxis, scale, timeUnit, title, bin, disableBin)
   }
 
   @alias_with_lens("encodeColor", _color)
@@ -107,10 +109,10 @@ trait UnitEncoderDSL[T] extends BaseEncoderDSL[T] {
   private def encodeCDWL_(l: Lens[UnitEncoding, Option[ChannelDefWithLegend]])
                          (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
                           aggregate: OptArg[AggregateOp] = NoArg, scale:OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg,
-                          title: OptArg[String] = NoArg) = {
+                          title: OptArg[String] = NoArg, bin: OptArg[Bin] = NoArg, disableBin: OptArg[Boolean] = NoArg) = {
 
     val lens = (_encoding composePrism _orElse(UnitEncoding()) composeLens l)
-    baseEncodeCDWL(lens)(field, dataType, value, aggregate, scale, timeUnit, title)
+    baseEncodeCDWL(lens)(field, dataType, value, aggregate, scale, timeUnit, title, bin, disableBin)
   }
 
 }
@@ -122,7 +124,8 @@ trait BaseEncoderDSL[T] {
                         (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg,
                          value: OptArg[Any] = NoArg,
                          aggregate: OptArg[AggregateOp] = NoArg, axis: OptArg[Axis] = NoArg, hideAxis: OptArg[Boolean] = NoArg,
-                         scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg) = {
+                         scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg,
+                         bin: OptArg[Bin] = NoArg, disableBin: OptArg[Boolean] = NoArg) = {
 
     val valueU = value.map {
       case b: Boolean => PositionChannelDef.ValueBoolean(b)
@@ -131,9 +134,10 @@ trait BaseEncoderDSL[T] {
         .getOrElse(throw new Exception("Value must be AnyVal, Boolean, or String"))
     }
     val axisU = (axis.map(PositionChannelDef.AxisAxis(_)) orElse hideAxis.map(b => PositionChannelDef.AxisBoolean( !b )))
+    val binU = (bin.map(PositionChannelDef.BinBin(_)) orElse disableBin.map(b => PositionChannelDef.BinBoolean( !b )))
 
     val cd = PositionChannelDef(field=field, `type`=dataType, aggregate=aggregate, axis=axisU, scale=scale, value=valueU,
-      timeUnit=timeUnit, title=title)
+      timeUnit=timeUnit, title=title, bin=binU)
 
     lens.set(Some(cd))(this)
   }
@@ -141,7 +145,7 @@ trait BaseEncoderDSL[T] {
   protected def baseEncodeCDWL(lens: Optional[T, Option[ChannelDefWithLegend]])
                          (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
                           aggregate: OptArg[AggregateOp] = NoArg, scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg,
-                          title: OptArg[String] = NoArg) = {
+                          title: OptArg[String] = NoArg, bin: OptArg[Bin] = NoArg, disableBin: OptArg[Boolean] = NoArg) = {
 
 
     val valueU = value.map {
@@ -150,9 +154,10 @@ trait BaseEncoderDSL[T] {
       case x@_ => toDouble(x).map(ChannelDefWithLegend.ValueDouble(_))
         .getOrElse(throw new Exception("Value must be AnyVal, Boolean, or String"))
     }
+    val binU = (bin.map(ChannelDefWithLegend.BinBin(_)) orElse disableBin.map(b => ChannelDefWithLegend.BinBoolean( !b )))
 
     val cd = ChannelDefWithLegend(field = field, `type` = dataType, aggregate = aggregate, value = valueU, scale = scale,
-      timeUnit = timeUnit, title = title)
+      timeUnit = timeUnit, title = title, bin=binU)
 
     lens.set(Some(cd))(this)
   }
