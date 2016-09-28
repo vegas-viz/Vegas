@@ -36,7 +36,15 @@ object BasicPlots {
       encodeX("gender", Nominal, scale=Scale(bandSize = 6.0), hideAxis=true).
       encodeColor("gender", Nominal, scale=Scale(rangeNominals=List("#EA98D2", "#659CCA")))
 
-  val plots: List[SpecBuilder] = SimpleBarChart :: AggregateBarChart :: GroupedBarChart :: Nil
+  val BinnedChart =
+    Vegas("A trellis scatterplot showing Horsepower and Miles per gallons, faceted by binned values of Acceleration.").
+      withDataURL(Cars).
+      mark(Point).
+      encodeX("Horsepower", Quantitative).
+      encodeY("Miles_per_Gallon", Quantitative).
+      encodeRow("Acceleration", Quantitative, disableBin=false)
+
+  val plots: List[SpecBuilder] = SimpleBarChart :: AggregateBarChart :: GroupedBarChart :: BinnedChart :: Nil
 
 }
 

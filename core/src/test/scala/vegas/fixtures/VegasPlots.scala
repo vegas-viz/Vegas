@@ -39,7 +39,15 @@ object VegasPlots {
         titleColor="red"))
 
 
-  val plots: List[SpecBuilder] = ValuePlot :: IQRPlot :: LegendPlot :: Nil
+  val BinPlot =
+    Vegas("Plot with binning").
+      withDataURL(Movies).
+      mark(Point).
+      encodeY("IMDB_Rating", Quantitative, bin=Bin(maxbins=10.0)).
+      encodeX("Rotten_Tomatoes_Rating", Quantitative, bin=Bin(maxbins = Some(10.0))).
+      encodeSize(aggregate=Count, field="*", dataType=Quantitative)
+
+  val plots: List[SpecBuilder] = ValuePlot :: IQRPlot :: LegendPlot :: BinPlot :: Nil
 
 }
 
