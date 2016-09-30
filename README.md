@@ -143,7 +143,7 @@ chart.show
 Vegas comes with an optional extension package that makes it easier to work with Spark DataFrames and RDDs. First you'll need an extra import
 
 ```sbt
-libraryDependencies += "com.github.aishfenton" % "vegas_{scala-version}" % "{vegas-version}"
+libraryDependencies += "com.github.aishfenton" % "vegas-spark_{scala-version}" % "{vegas-version}"
 ```
 
 ```scala
@@ -152,8 +152,8 @@ import vegas.spark.Spark._
 
 This adds the following new methods: 
 
-* withData(df: DataFrame)
-* withData(rdd: RDD[Product])
+* withDataFrame(df: DataFrame)
+* withRDD(rdd: RDD[Product])
 
 In the first case, each DataFrame column is exposed as a field keyed using the column's name. In the second case, an RDD of _case classes_ is expected, and reflection is used to map the case class's fields to fields within Vegas.   
 
