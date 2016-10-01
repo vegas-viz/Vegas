@@ -29,13 +29,30 @@ lazy val genCode = (dir: File) => {
   Seq(file)
 }
 
-addCommandAlias("look", "vegas/test:runMain vegas.Look")
+addCommandAlias("look", "vegas/test:runMain vegas.util.Look")
 
 lazy val mkVegaModel = taskKey[Unit]("Compiles and copies the vega-lite model and codec to the Vegas project")
 mkVegaModel := {
   IO.copyFile(file("spec/target/scala-2.11/src_managed/main/Spec.scala"), file("core/src/main/scala/vegas/spec/Spec.scala"))
 }
 mkVegaModel <<= mkVegaModel.dependsOn(compile in vegaLiteSpec in Compile)
+
+lazy val lastReleaseVersion = taskKey[String]("Gets (using git tag) the version number of the last release")
+lastReleaseVersion := {
+  ("git tag" !!).split("\n").head.tail
+}
+
+lazy val mkNotebooks = inputKey[Unit]("Generates /notebook examples based on example plots in the test fixtures")
+mkNotebooks := (Def.inputTaskDyn {
+  val ver = lastReleaseVersion.value
+  val baseDir = file("core/src/test/scala/vegas/fixtures")
+  val files = (baseDir / "BasicPlots.scala") :: (baseDir / "VegasPlots.scala") :: Nil
+  val dest = file("notebooks")
+  val args = (ver :: files) :+ dest
+  Def.taskDyn {
+    (runMain in vegas in Test).toTask(" vegas.util.GenerateNotebooks " + args.mkString(" "))
+  }
+}).evaluated
 
 // -------
 // Build Config
