@@ -44,7 +44,7 @@ lastReleaseVersion := {
 
 lazy val mkNotebooks = inputKey[Unit]("Generates /notebook examples based on example plots in the test fixtures")
 mkNotebooks := (Def.inputTaskDyn {
-  val ver = lastReleaseVersion.value
+  val ver = version.value
   val baseDir = file("core/src/test/scala/vegas/fixtures")
   val files = (baseDir / "BasicPlots.scala") :: (baseDir / "VegasPlots.scala") :: Nil
   val dest = file("notebooks")

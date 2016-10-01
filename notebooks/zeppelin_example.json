@@ -6,7 +6,7 @@
  {
    "config": { "title": false },
    "title": "",
-   "text": "com.github.aishfenton:vegas-spark_2.10:0.3.0"
+   "text": "com.github.aishfenton:vegas-spark_2.10:0.3.1-SNAPSHOT"
  }
     ,
  {
@@ -43,6 +43,12 @@
    "config": { "title": true },
    "title": "Plots both mean and IQR as a background layer",
    "text": "Vegas.layered(\"Plots both mean and IQR as a background layer\").\n  withDataURL(Population).\n  withLayers(\n    Layer().\n      mark(Line).\n      encodeX(\"age\", Ordinal).\n      encodeY(\"people\", aggregate=Mean),\n    Layer().\n      mark(Area).\n      encodeX(\"age\", Ordinal).\n      encodeY(\"people\", aggregate=Q1).\n      encodeY2(\"people\", aggregate=Q3)\n  ).\n  show"
+ }
+    ,
+ {
+   "config": { "title": true },
+   "title": "Plot with legend on the left and a different title ",
+   "text": "Vegas(\"Plot with legend on the left and a different title \").\n  withDataURL(Cars).\n  mark(Point).\n  encodeY(\"Horsepower\", Quantitative).\n  encodeX(\"Miles_per_Gallon\", Quantitative).\n  encodeColor(field=\"Origin\",dataType=Nominal, legend= Legend(orient = \"left\", title=\"Place of Origin\" )).\n  encodeShape(field=\"Origin\",dataType=Nominal, legend= Legend(orient = \"left\", title=\"Place of Origin\" ,\n    titleColor=\"red\")).\n  show"
  }
      ]
  }
