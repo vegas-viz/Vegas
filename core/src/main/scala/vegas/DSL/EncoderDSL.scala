@@ -53,10 +53,10 @@ trait EncoderDSL[T] extends BaseEncoderDSL[T] {
   private def encodeCDWL_(l: Lens[Encoding, Option[ChannelDefWithLegend]])
     (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
      aggregate: OptArg[AggregateOp] = NoArg, scale:OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg,
-     title: OptArg[String] = NoArg) = {
+     title: OptArg[String] = NoArg, legend: OptArg[Legend] = NoArg) = {
 
     val lens = (_encoding composePrism _orElse(Encoding()) composeLens l)
-    baseEncodeCDWL(lens)(field, dataType, value, aggregate, scale, timeUnit, title)
+    baseEncodeCDWL(lens)(field, dataType, value, aggregate, scale, timeUnit, title, legend)
   }
 
 }
@@ -107,10 +107,11 @@ trait UnitEncoderDSL[T] extends BaseEncoderDSL[T] {
   private def encodeCDWL_(l: Lens[UnitEncoding, Option[ChannelDefWithLegend]])
                          (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
                           aggregate: OptArg[AggregateOp] = NoArg, scale:OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg,
-                          title: OptArg[String] = NoArg) = {
+                          title: OptArg[String] = NoArg,
+                         legend: OptArg[Legend] = NoArg) = {
 
     val lens = (_encoding composePrism _orElse(UnitEncoding()) composeLens l)
-    baseEncodeCDWL(lens)(field, dataType, value, aggregate, scale, timeUnit, title)
+    baseEncodeCDWL(lens)(field, dataType, value, aggregate, scale, timeUnit, title, legend)
   }
 
 }
@@ -141,7 +142,7 @@ trait BaseEncoderDSL[T] {
   protected def baseEncodeCDWL(lens: Optional[T, Option[ChannelDefWithLegend]])
                          (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
                           aggregate: OptArg[AggregateOp] = NoArg, scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg,
-                          title: OptArg[String] = NoArg) = {
+                          title: OptArg[String] = NoArg, legend: OptArg[Legend]= NoArg) = {
 
 
     val valueU = value.map {
@@ -151,8 +152,9 @@ trait BaseEncoderDSL[T] {
         .getOrElse(throw new Exception("Value must be AnyVal, Boolean, or String"))
     }
 
+
     val cd = ChannelDefWithLegend(field = field, `type` = dataType, aggregate = aggregate, value = valueU, scale = scale,
-      timeUnit = timeUnit, title = title)
+      timeUnit = timeUnit, title = title, legend=legend)
 
     lens.set(Some(cd))(this)
   }
