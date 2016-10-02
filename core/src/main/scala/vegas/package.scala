@@ -1,4 +1,5 @@
 import vegas.spec.Spec
+import vegas.spec.Spec.{HorizontalAlignEnums, StackOffsetEnums, VerticalAlignEnums}
 
 /**
   * Use package object to list public API
@@ -7,13 +8,13 @@ package object vegas {
 
   val Vegas = DSL.Vegas
   val Layer = DSL.Layer
-//  type SpecBuilder = { def spec }
 
   val Axis = vegas.DSL.AxisDSL
   val Scale = vegas.DSL.ScaleDSL
   val Legend = vegas.DSL.LegendDSL
+
   // -------
-  // Enums
+  // Core Enums
   // -------
 
   val Json = Spec.DataFormatTypeEnums.Json
@@ -89,5 +90,26 @@ package object vegas {
   val HoursMinutesSeconds = Spec.TimeUnitEnums.Hoursminutesseconds
   val MinutesSeconds = Spec.TimeUnitEnums.Minutesseconds
   val SecondsMilliseconds = Spec.TimeUnitEnums.Secondsmilliseconds
+
+  val Nice = Spec.NiceTimeEnums
+
+  // ---
+  // Config Enums
+  // ---
+
+  val StackOffset = Spec.StackOffsetEnums
+  val Orient = Spec.OrientEnums
+  val Interpolate = Spec.InterpolateEnums
+  val HorizontalAlign =  Spec.HorizontalAlignEnums
+  val VerticalAlign = Spec.VerticalAlignEnums
+  val Shape = Spec.ShapeEnums
+  val FontStyle = Spec.FontStyleEnums
+  val FontWeight = Spec.FontWeightEnums
+
+  val AreaOverlay = Spec.AreaOverlayEnums
+
+  val AxisConfig = vegas.DSL.AxisConfigDSL
+  val CellConfig = vegas.DSL.CellConfigDSL
+  val MarkConfig = vegas.DSL.MarkConfigDSL
 
 }

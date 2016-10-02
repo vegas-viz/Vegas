@@ -15,17 +15,21 @@ object ScaleDSL {
             bandSize: OptArg[Double] = NoArg,
             padding: OptArg[Double] = NoArg,
             clamp: OptArg[Boolean] = NoArg,
-            nice: OptArg[Scale.NiceUnion] = NoArg,
+            nice: OptArg[Spec.NiceTime] = NoArg,
+            niceEnable: OptArg[Boolean] = NoArg,
             exponent: OptArg[Double] = NoArg,
             zero: OptArg[Boolean] = NoArg,
             useRawDomain: OptArg[Boolean] = NoArg) = {
 
     val domainU = (domainValues.map(Scale.DomainListDouble(_)) orElse domainNominals.map(Scale.DomainListString(_)))
+
     val rangeU = (rangeValues.map(Scale.RangeListDouble(_)) orElse rangeNominals.map(Scale.RangeListString(_))
       orElse rangePreset.map(Scale.RangeString(_)))
 
+    val niceU = (nice.map(Scale.NiceNiceTime(_)) orElse niceEnable.map(Scale.NiceBoolean(_)))
+
     Spec.Scale(`type`=scaleType, domain=domainU, range=rangeU, round=round, bandSize=bandSize, padding=padding,
-      clamp=clamp, nice=nice, exponent=exponent, zero=zero, useRawDomain=useRawDomain)
+      clamp=clamp, nice=niceU, exponent=exponent, zero=zero, useRawDomain=useRawDomain)
   }
 
 }
