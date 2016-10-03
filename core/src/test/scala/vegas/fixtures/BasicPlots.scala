@@ -36,7 +36,47 @@ object BasicPlots {
       encodeX("gender", Nominal, scale=Scale(bandSize = 6.0), hideAxis=true).
       encodeColor("gender", Nominal, scale=Scale(rangeNominals=List("#EA98D2", "#659CCA")))
 
-  val plots: List[SpecBuilder] = SimpleBarChart :: AggregateBarChart :: GroupedBarChart :: Nil
+  val BinnedChart =
+    Vegas("A trellis scatterplot showing Horsepower and Miles per gallons, faceted by binned values of Acceleration.").
+      withDataURL(Cars).
+      mark(Point).
+      encodeX("Horsepower", Quantitative).
+      encodeY("Miles_per_Gallon", Quantitative).
+      encodeRow("Acceleration", Quantitative, enableBin=true)
+
+  val ScatterBinnedPlot =
+    Vegas().
+      withDataURL(Movies).
+      mark(Point).
+      encodeX("IMDB_Rating", Quantitative, bin=Bin(maxbins=10.0)).
+      encodeY("Rotten_Tomatoes_Rating", Quantitative, bin=Bin(maxbins=10.0)).
+      encodeSize(aggregate=Count, field="*", dataType=Quantitative)
+
+  val ScatterColorPlot =
+    Vegas().
+      withDataURL(Cars).
+      mark(Point).
+      encodeX("Horsepower", Quantitative).
+      encodeY("Miles_per_Gallon", Quantitative).
+      encodeColor(field="Origin", dataType=Nominal)
+
+  val ScatterBinnedColorPlot =
+    Vegas("A scatterplot showing horsepower and miles per gallons with binned acceleration on color.").
+      withDataURL(Cars).
+      mark(Point).
+      encodeX("Horsepower", Quantitative).
+      encodeY("Miles_per_Gallon", Quantitative).
+      encodeColor(field="Acceleration", dataType=Quantitative, bin=Bin(maxbins=5.0))
+
+  val StackedAreaBinnedPlot =
+    Vegas().
+      withDataURL(Cars).
+      mark(Area).
+      encodeX("Acceleration", Quantitative, bin=Bin()).
+      encodeY("Horsepower", Quantitative, aggregate=Mean, enableBin=false).
+      encodeColor(field="Cylinders", dataType=Nominal)
+
+  val plots: List[SpecBuilder] = SimpleBarChart :: AggregateBarChart :: GroupedBarChart :: BinnedChart ::
+    ScatterBinnedPlot :: ScatterColorPlot :: ScatterBinnedColorPlot :: StackedAreaBinnedPlot :: Nil
 
 }
-
