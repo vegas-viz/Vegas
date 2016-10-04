@@ -25,11 +25,20 @@ class AllDSLSpec extends FlatSpec with Matchers with JsonMatchers {
   "BasicPlots" should "produce their corresponding Json" in {
     import BasicPlots._
 
+    // NB: Please maintain the sorting based on the json filename. That will help to identify what files have been
+    // covered.
+
     SimpleBarChart.asCirceJson should beSameJsonAs(examples("bar"))
     AggregateBarChart.asCirceJson should beSameJsonAs(examples("bar_aggregate"))
     GroupedBarChart.asCirceJson should beSameJsonAs(examples("bar_grouped"))
     AreaChart.asCirceJson should beSameJsonAs(examples("area"))
     NormalizedStackedBarChart.asCirceJson should beSameJsonAs(examples("stacked_bar_normalize"))
+    ScatterBinnedPlot.asCirceJson should beSameJsonAs(examples("scatter_binned"))
+    ScatterColorPlot.asCirceJson should beSameJsonAs(examples("scatter_color"))
+    ScatterBinnedColorPlot.asCirceJson should beSameJsonAs(examples("scatter_binned_color"))
+    StackedAreaBinnedPlot.asCirceJson should beSameJsonAs(examples("stacked_area_binned"))
+    BinnedChart.asCirceJson should beSameJsonAs(examples("trellis_scatter_binned_row"))
+
   }
 
 }
