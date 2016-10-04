@@ -18,7 +18,7 @@ trait NotebookGenerator {
   private def extractPlotSources(file: File): List[(String, String)] = {
     val code = Source.fromFile(file).getLines().mkString("\n")
     PlotBlock.findAllIn(code).toList.map { block =>
-      val title = Title.findFirstMatchIn(block).get.group(2)
+      val title = Title.findFirstMatchIn(block).map(_.group(2)).getOrElse("")
       val code = format(block) + ".\n  show"
       (title, code)
     }

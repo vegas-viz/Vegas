@@ -87,7 +87,6 @@ trait UnitEncoderDSL[T] extends BaseEncoderDSL[T] {
   private val _path = GenLens[UnitEncoding](_.path)
   private val _order = GenLens[UnitEncoding](_.order)
 
-
   @alias_with_lens("encodeX", _x)
   @alias_with_lens("encodeY", _y)
   @alias_with_lens("encodeX2", _x2)

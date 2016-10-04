@@ -26,7 +26,7 @@ object BasicPlots {
       encodeX("people", Quantitative, aggregate=Sum, axis=Axis(title="population"))
 
   val GroupedBarChart =
-    Vegas("Grouped plot").
+    Vegas().
       withDataURL(Population).
       mark(Bar).
       addTransformCalculation("gender", """datum.sex == 2 ? "Female" : "Male"""").
@@ -34,7 +34,28 @@ object BasicPlots {
       encodeColumn("age", Ordinal, scale=Scale(padding=4.0), axis=Axis(orient=Bottom, axisWidth=1.0, offset= -8.0)).
       encodeY("people", Quantitative, aggregate=Sum, axis=Axis(title="population", grid=false)).
       encodeX("gender", Nominal, scale=Scale(bandSize = 6.0), hideAxis=true).
-      encodeColor("gender", Nominal, scale=Scale(rangeNominals=List("#EA98D2", "#659CCA")))
+      encodeColor("gender", Nominal, scale=Scale(rangeNominals=List("#EA98D2", "#659CCA"))).
+      configFacet(cell=CellConfig(strokeWidth = 0))
+
+  val AreaChart =
+    Vegas().
+      withDataURL(Unemployment).
+      mark(Area).
+      encodeX("date", Temporal, timeUnit=YearMonth, scale=Scale(nice=Nice.Month),
+        axis=Axis(axisWidth=0, format="%Y", labelAngle=0)).
+      encodeY("count", Quantitative, aggregate=Sum).
+      configCell(width=300, height=200)
+
+  val NormalizedStackedBarChart =
+    Vegas().
+      withDataURL(Population).
+      transformFilter("datum.year == 2000").
+      addTransformCalculation("gender", "datum.sex == 2 ? \"Female\" : \"Male\"").
+      mark(Bar).
+      encodeY("people", Quantitative, aggregate=Sum, axis=Axis(title="population")).
+      encodeX("age", Ordinal, scale=Scale(bandSize= 17)).
+      encodeColor("gender", Nominal, scale=Scale(rangeNominals=List("#EA98D2", "#659CCA"))).
+      configMark(stacked=StackOffset.Normalize)
 
   val BinnedChart =
     Vegas("A trellis scatterplot showing Horsepower and Miles per gallons, faceted by binned values of Acceleration.").
@@ -76,7 +97,9 @@ object BasicPlots {
       encodeY("Horsepower", Quantitative, aggregate=Mean, enableBin=false).
       encodeColor(field="Cylinders", dataType=Nominal)
 
-  val plots: List[SpecBuilder] = SimpleBarChart :: AggregateBarChart :: GroupedBarChart :: BinnedChart ::
-    ScatterBinnedPlot :: ScatterColorPlot :: ScatterBinnedColorPlot :: StackedAreaBinnedPlot :: Nil
+  val plots: List[SpecBuilder] = SimpleBarChart :: AggregateBarChart :: GroupedBarChart :: AreaChart ::
+    NormalizedStackedBarChart :: BinnedChart :: ScatterBinnedPlot :: ScatterColorPlot :: ScatterBinnedColorPlot ::
+    StackedAreaBinnedPlot ::
+    Nil
 
 }
