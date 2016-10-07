@@ -6,5 +6,6 @@ object External {
   val Cars = "https://vega.github.io/vega-editor/app/data/cars.json"
   val Unemployment = "https://vega.github.io/vega-editor/app/data/unemployment-across-industries.json"
   val Movies = "https://vega.github.io/vega-editor/app/data/movies.json"
+  val Barley = "https://vega.github.io/vega-editor/app/data/barley.json"
 
 }

@@ -37,6 +37,7 @@ class AllDSLSpec extends FlatSpec with Matchers with JsonMatchers {
     ScatterColorPlot.asCirceJson should beSameJsonAs(examples("scatter_color"))
     ScatterBinnedColorPlot.asCirceJson should beSameJsonAs(examples("scatter_binned_color"))
     StackedAreaBinnedPlot.asCirceJson should beSameJsonAs(examples("stacked_area_binned"))
+    SortColorPlot.asCirceJson should beSameJsonAs(examples("trellis_barley"))
     BinnedChart.asCirceJson should beSameJsonAs(examples("trellis_scatter_binned_row"))
 
   }

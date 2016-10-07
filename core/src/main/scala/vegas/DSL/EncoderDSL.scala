@@ -41,10 +41,12 @@ trait EncoderDSL[T] extends BaseEncoderDSL[T] {
      value: OptArg[Any] = NoArg,
      aggregate: OptArg[AggregateOp] = NoArg, axis: OptArg[Axis] = NoArg, hideAxis: OptArg[Boolean] = NoArg,
      scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg,
-     bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg) = {
+     bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg,
+     sortField: OptArg[SortField] = NoArg, sortOrder: OptArg[SortOrder] = NoArg) = {
 
     val lens = (_encoding composePrism _orElse(Encoding()) composeLens l)
-    baseEncodePCD(lens)(field, dataType, value, aggregate, axis, hideAxis, scale, timeUnit, title, bin, enableBin)
+    baseEncodePCD(lens)(field, dataType, value, aggregate, axis, hideAxis, scale, timeUnit, title, bin, enableBin,
+      sortField, sortOrder)
   }
 
   @alias_with_lens("encodeColor", _color)
@@ -55,10 +57,12 @@ trait EncoderDSL[T] extends BaseEncoderDSL[T] {
     (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
      aggregate: OptArg[AggregateOp] = NoArg, scale:OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg,
      title: OptArg[String] = NoArg, legend: OptArg[Legend] = NoArg,
-     bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg) = {
+     bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg,
+     sortField: OptArg[SortField] = NoArg, sortOrder: OptArg[SortOrder] = NoArg) = {
 
     val lens = (_encoding composePrism _orElse(Encoding()) composeLens l)
-    baseEncodeCDWL(lens)(field, dataType, value, aggregate, scale, timeUnit, title, legend, bin, enableBin)
+    baseEncodeCDWL(lens)(field, dataType, value, aggregate, scale, timeUnit, title, legend, bin, enableBin,
+      sortField, sortOrder)
   }
 
 }
@@ -96,10 +100,12 @@ trait UnitEncoderDSL[T] extends BaseEncoderDSL[T] {
                          value: OptArg[Any] = NoArg,
                          aggregate: OptArg[AggregateOp] = NoArg, axis: OptArg[Axis] = NoArg, hideAxis: OptArg[Boolean] = NoArg,
                          scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg,
-                         bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg) = {
+                         bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg,
+                         sortField: OptArg[SortField] = NoArg, sortOrder: OptArg[SortOrder] = NoArg) = {
 
     val lens = (_encoding composePrism _orElse(UnitEncoding()) composeLens l)
-    baseEncodePCD(lens)(field, dataType, value, aggregate, axis, hideAxis, scale, timeUnit, title, bin, enableBin)
+    baseEncodePCD(lens)(field, dataType, value, aggregate, axis, hideAxis, scale, timeUnit, title, bin, enableBin,
+      sortField, sortOrder)
   }
 
   @alias_with_lens("encodeColor", _color)
@@ -110,10 +116,12 @@ trait UnitEncoderDSL[T] extends BaseEncoderDSL[T] {
                          (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
                           aggregate: OptArg[AggregateOp] = NoArg, scale:OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg,
                           title: OptArg[String] = NoArg, legend: OptArg[Legend] = NoArg,
-                          bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg) = {
+                          bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg,
+                          sortField: OptArg[SortField] = NoArg, sortOrder: OptArg[SortOrder] = NoArg) = {
 
     val lens = (_encoding composePrism _orElse(UnitEncoding()) composeLens l)
-    baseEncodeCDWL(lens)(field, dataType, value, aggregate, scale, timeUnit, title, legend, bin, enableBin)
+    baseEncodeCDWL(lens)(field, dataType, value, aggregate, scale, timeUnit, title, legend, bin, enableBin,
+      sortField, sortOrder)
   }
 
 }
@@ -126,7 +134,8 @@ trait BaseEncoderDSL[T] {
                          value: OptArg[Any] = NoArg,
                          aggregate: OptArg[AggregateOp] = NoArg, axis: OptArg[Axis] = NoArg, hideAxis: OptArg[Boolean] = NoArg,
                          scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg,
-                         bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg) = {
+                         bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg,
+                         sortField: OptArg[SortField] = NoArg, sortOrder: OptArg[SortOrder] = NoArg) = {
 
     val valueU = value.map {
       case b: Boolean => PositionChannelDef.ValueBoolean(b)
@@ -137,8 +146,10 @@ trait BaseEncoderDSL[T] {
     val axisU = (axis.map(PositionChannelDef.AxisAxis(_)) orElse hideAxis.map(b => PositionChannelDef.AxisBoolean( !b )))
     val binU = (bin.map(PositionChannelDef.BinBin(_)) orElse enableBin.map(b => PositionChannelDef.BinBoolean( b )))
 
+    val sortU = (sortField.map(PositionChannelDef.SortSortField(_)) orElse sortOrder.map(PositionChannelDef.SortSortOrder(_)))
+
     val cd = PositionChannelDef(field=field, `type`=dataType, aggregate=aggregate, axis=axisU, scale=scale, value=valueU,
-      timeUnit=timeUnit, title=title, bin=binU)
+      timeUnit=timeUnit, title=title, bin=binU, sort=sortU)
 
     lens.set(Some(cd))(this)
   }
@@ -147,7 +158,8 @@ trait BaseEncoderDSL[T] {
                          (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
                           aggregate: OptArg[AggregateOp] = NoArg, scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg,
                           title: OptArg[String] = NoArg, legend: OptArg[Legend]= NoArg,
-                          bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg) = {
+                          bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg,
+                          sortField: OptArg[SortField] = NoArg, sortOrder: OptArg[SortOrder] = NoArg) = {
 
     val valueU = value.map {
       case b: Boolean => ChannelDefWithLegend.ValueBoolean(b)
@@ -156,9 +168,10 @@ trait BaseEncoderDSL[T] {
         .getOrElse(throw new Exception("Value must be AnyVal, Boolean, or String"))
     }
     val binU = (bin.map(ChannelDefWithLegend.BinBin(_)) orElse enableBin.map(b => ChannelDefWithLegend.BinBoolean( b )))
+    val sortU = (sortField.map(ChannelDefWithLegend.SortSortField(_)) orElse sortOrder.map(ChannelDefWithLegend.SortSortOrder(_)))
 
     val cd = ChannelDefWithLegend(field = field, `type` = dataType, aggregate = aggregate, value = valueU, scale = scale,
-      timeUnit = timeUnit, title = title, legend=legend, bin=binU)
+      timeUnit = timeUnit, title = title, legend=legend, bin=binU, sort=sortU)
     lens.set(Some(cd))(this)
   }
 }
