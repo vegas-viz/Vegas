@@ -1,6 +1,6 @@
 package vegas.DSL
 
-import java.util.{Calendar, GregorianCalendar}
+import java.util.{Calendar, GregorianCalendar, TimeZone}
 
 import org.scalatest.{FlatSpec, Matchers}
 import vegas._
@@ -76,7 +76,9 @@ class DataDSLSpec extends FlatSpec with Matchers {
   }
 
   it should "transform values to 'SimpleTypes' that can be handled by vega-lite" in {
-    val data = Seq((new GregorianCalendar(2015, Calendar.DECEMBER, 25)).getTime, Ex(4, "a"), 3.14)
+    val time = new GregorianCalendar(TimeZone.getTimeZone("PST"))
+    time.set(2015, Calendar.DECEMBER, 25, 0, 0, 0)
+    val data = Seq(time.getTime, Ex(4, "a"), 3.14)
 
     val specBuilder = Vegas()
       .withValues(data)
