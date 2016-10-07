@@ -28,7 +28,7 @@ object Spark {
       val localData: Array[Product] = {
         if (count >= limit) rdd.sample(false, limit / count).collect() else rdd.collect()
       }
-      specBuilder.withReflectData(localData)
+      specBuilder.withCaseClasses(localData)
     }
 
   }
