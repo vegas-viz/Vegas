@@ -19,47 +19,47 @@ object BasicPlots {
 
   val AggregateBarChart =
     Vegas("A bar chart showing the US population distribution of age groups in 2000.").
-      withDataURL(Population).
+      withURL(Population).
       mark(Bar).
       transformFilter("datum.year == 2000").
       encodeY("age", Ordinal, scale=Scale(bandSize=17)).
-      encodeX("people", Quantitative, aggregate=Sum, axis=Axis(title="population"))
+      encodeX("people", Quantitative, aggregate=AggOps.Sum, axis=Axis(title="population"))
 
   val GroupedBarChart =
     Vegas().
-      withDataURL(Population).
+      withURL(Population).
       mark(Bar).
       addTransformCalculation("gender", """datum.sex == 2 ? "Female" : "Male"""").
       transformFilter("datum.year == 2000").
-      encodeColumn("age", Ordinal, scale=Scale(padding=4.0), axis=Axis(orient=Bottom, axisWidth=1.0, offset= -8.0)).
-      encodeY("people", Quantitative, aggregate=Sum, axis=Axis(title="population", grid=false)).
+      encodeColumn("age", Ord, scale=Scale(padding=4.0), axis=Axis(orient=Orient.Bottom, axisWidth=1.0, offset= -8.0)).
+      encodeY("people", Quantitative, aggregate=AggOps.Sum, axis=Axis(title="population", grid=false)).
       encodeX("gender", Nominal, scale=Scale(bandSize = 6.0), hideAxis=true).
       encodeColor("gender", Nominal, scale=Scale(rangeNominals=List("#EA98D2", "#659CCA"))).
       configFacet(cell=CellConfig(strokeWidth = 0))
 
   val AreaChart =
     Vegas().
-      withDataURL(Unemployment).
+      withURL(Unemployment).
       mark(Area).
-      encodeX("date", Temporal, timeUnit=YearMonth, scale=Scale(nice=Nice.Month),
+      encodeX("date", Temp, timeUnit=TimeUnit.Yearmonth, scale=Scale(nice=Nice.Month),
         axis=Axis(axisWidth=0, format="%Y", labelAngle=0)).
-      encodeY("count", Quantitative, aggregate=Sum).
+      encodeY("count", Quantitative, aggregate=AggOps.Sum).
       configCell(width=300, height=200)
 
   val NormalizedStackedBarChart =
     Vegas().
-      withDataURL(Population).
+      withURL(Population).
       transformFilter("datum.year == 2000").
       addTransformCalculation("gender", "datum.sex == 2 ? \"Female\" : \"Male\"").
       mark(Bar).
-      encodeY("people", Quantitative, aggregate=Sum, axis=Axis(title="population")).
-      encodeX("age", Ordinal, scale=Scale(bandSize= 17)).
+      encodeY("people", Quant, AggOps.Sum, axis=Axis(title="population")).
+      encodeX("age", Ord, scale=Scale(bandSize= 17)).
       encodeColor("gender", Nominal, scale=Scale(rangeNominals=List("#EA98D2", "#659CCA"))).
       configMark(stacked=StackOffset.Normalize)
 
   val BinnedChart =
     Vegas("A trellis scatterplot showing Horsepower and Miles per gallons, faceted by binned values of Acceleration.").
-      withDataURL(Cars).
+      withURL(Cars).
       mark(Point).
       encodeX("Horsepower", Quantitative).
       encodeY("Miles_per_Gallon", Quantitative).
@@ -67,15 +67,15 @@ object BasicPlots {
 
   val ScatterBinnedPlot =
     Vegas().
-      withDataURL(Movies).
+      withURL(Movies).
       mark(Point).
       encodeX("IMDB_Rating", Quantitative, bin=Bin(maxbins=10.0)).
       encodeY("Rotten_Tomatoes_Rating", Quantitative, bin=Bin(maxbins=10.0)).
-      encodeSize(aggregate=Count, field="*", dataType=Quantitative)
+      encodeSize(aggregate=AggOps.Count, field="*", dataType=Quantitative)
 
   val ScatterColorPlot =
     Vegas().
-      withDataURL(Cars).
+      withURL(Cars).
       mark(Point).
       encodeX("Horsepower", Quantitative).
       encodeY("Miles_per_Gallon", Quantitative).
@@ -83,7 +83,7 @@ object BasicPlots {
 
   val ScatterBinnedColorPlot =
     Vegas("A scatterplot showing horsepower and miles per gallons with binned acceleration on color.").
-      withDataURL(Cars).
+      withURL(Cars).
       mark(Point).
       encodeX("Horsepower", Quantitative).
       encodeY("Miles_per_Gallon", Quantitative).
@@ -91,10 +91,10 @@ object BasicPlots {
 
   val StackedAreaBinnedPlot =
     Vegas().
-      withDataURL(Cars).
+      withURL(Cars).
       mark(Area).
       encodeX("Acceleration", Quantitative, bin=Bin()).
-      encodeY("Horsepower", Quantitative, aggregate=Mean, enableBin=false).
+      encodeY("Horsepower", Quantitative, AggOps.Mean, enableBin=false).
       encodeColor(field="Cylinders", dataType=Nominal)
 
   val plots: List[SpecBuilder] = SimpleBarChart :: AggregateBarChart :: GroupedBarChart :: AreaChart ::

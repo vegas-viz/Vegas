@@ -20,7 +20,7 @@ case class StaticHTMLRenderer(specJson: String) extends BaseHTMLRenderer {
        |  <body>
     """.stripMargin
 
-  def chartHTML(name: String = this.defaultName) =
+  def plotHTML(name: String = this.defaultName) =
     s"""
        | <script>
        |   var embedSpec = {
@@ -39,7 +39,7 @@ case class StaticHTMLRenderer(specJson: String) extends BaseHTMLRenderer {
     """.stripMargin
 
   def pageHTML(name: String = defaultName) = {
-    headerHTML().trim + chartHTML(name) + footerHTML.trim
+    headerHTML().trim + plotHTML(name) + footerHTML.trim
   }
 
   /**

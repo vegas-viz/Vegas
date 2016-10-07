@@ -2,13 +2,14 @@ package vegas.DSL
 
 import monocle.Lens
 import monocle.macros.GenLens
+import vegas.data.FieldExtractor
 import vegas.spec.Spec
 import vegas.spec.Spec._
 
 /**
   * @author Aish Fenton.
   */
-trait ConfigDSL[T] extends FieldExtractor {
+trait ConfigDSL[T] {
   self: T =>
 
   protected[this] def _config: Lens[T, Option[Config]]
