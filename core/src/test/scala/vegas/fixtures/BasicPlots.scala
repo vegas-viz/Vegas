@@ -97,9 +97,18 @@ object BasicPlots {
       encodeY("Horsepower", Quantitative, AggOps.Mean, enableBin=false).
       encodeColor(field="Cylinders", dataType=Nominal)
 
+  val SortColorPlot =
+    Vegas("The Trellis display by Becker et al. helped establish small multiples as a “powerful mechanism for understanding interactions in studies of how a response depends on explanatory variables”. Here we reproduce a trellis of Barley yields from the 1930s, complete with main-effects ordering to facilitate comparison.").
+      withURL(Barley).
+      mark(Point).
+      encodeRow("site", Ordinal).
+      encodeX("yield", Quantitative, aggregate=AggOps.Mean).
+      encodeY("variety", Ordinal, sortField=Sort("yield", AggOps.Mean), scale=Scale(bandSize = 12.0)).
+      encodeColor(field="year", dataType=Nominal)
+
   val plots: List[SpecBuilder] = SimpleBarChart :: AggregateBarChart :: GroupedBarChart :: AreaChart ::
     NormalizedStackedBarChart :: BinnedChart :: ScatterBinnedPlot :: ScatterColorPlot :: ScatterBinnedColorPlot ::
-    StackedAreaBinnedPlot ::
+    StackedAreaBinnedPlot :: SortColorPlot ::
     Nil
 
 }
