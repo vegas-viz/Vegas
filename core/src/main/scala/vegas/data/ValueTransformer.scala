@@ -14,7 +14,7 @@ trait ValueTransformer {
 }
 
 object DefaultValueTransformer extends ValueTransformer {
-  val df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+  val df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 
   def transform(v: Any) = v match {
     case st if SimpleTypeUtils.isSimpleType(st) => st
