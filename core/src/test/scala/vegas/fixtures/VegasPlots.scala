@@ -50,7 +50,7 @@ object VegasPlots {
     Vegas("Plot to show Binning options").
       withURL(Movies).
       mark(Bar).
-      encodeX("Worldwide_Gross", Quantitative, bin=Bin(maxbins=20.0), sortOrder=SortOps.Descending).
+      encodeX("Worldwide_Gross", Quantitative, bin=Bin(maxbins=20.0), sortOrder=SortOrder.Descending).
       encodeY(field="*", Quantitative, aggregate=AggOps.Count)
 
   val plots: List[SpecBuilder] = ValuePlot :: IQRPlot :: LegendPlot :: BinnedPlot :: BinnedPlotWithSort :: Nil

@@ -46,7 +46,7 @@ package object vegas {
   val TimeUnit = Spec.TimeUnitEnums
   val Nice = Spec.NiceTimeEnums
 
-  val SortOps = Spec.SortOrderEnums
+  val SortOrder = Spec.SortOrderEnums
 
   val Category10 = "category10"
   val Category20 = "category20"
