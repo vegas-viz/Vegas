@@ -46,7 +46,14 @@ object VegasPlots {
       encodeX("IMDB_Rating", Quantitative, bin=Bin(step=2.0, maxbins=3.0)).
       encodeY(field="*", Quantitative, aggregate=AggOps.Count)
 
-  val plots: List[SpecBuilder] = ValuePlot :: IQRPlot :: LegendPlot :: BinnedPlot :: Nil
+  val BinnedPlotWithSort =
+    Vegas("Plot to show Binning options").
+      withURL(Movies).
+      mark(Bar).
+      encodeX("Worldwide_Gross", Quantitative, bin=Bin(maxbins=20.0), sortOrder=SortOrder.Descending).
+      encodeY(field="*", Quantitative, aggregate=AggOps.Count)
+
+  val plots: List[SpecBuilder] = ValuePlot :: IQRPlot :: LegendPlot :: BinnedPlot :: BinnedPlotWithSort :: Nil
 
 }
 

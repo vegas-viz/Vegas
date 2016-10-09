@@ -15,6 +15,7 @@ package object vegas {
   val Scale = vegas.DSL.ScaleDSL
   val Legend = vegas.DSL.LegendDSL
   val Bin = vegas.DSL.BinDSL
+  val Sort = vegas.DSL.SortDSL
 
   // -------
   // Core Enums
@@ -44,6 +45,8 @@ package object vegas {
   val Orient = Spec.AxisOrientEnums
   val TimeUnit = Spec.TimeUnitEnums
   val Nice = Spec.NiceTimeEnums
+
+  val SortOrder = Spec.SortOrderEnums
 
   val Category10 = "category10"
   val Category20 = "category20"
