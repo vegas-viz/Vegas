@@ -14,7 +14,7 @@ class SpecSpec extends FlatSpec with Matchers with JsonMatchers {
   import vegas.spec.Spec._
   import vegas.spec.Spec.Implicits._
 
-  val examples = new File("core/src/test/resources/example-specs").listFiles.toList.filterNot(_.isDirectory)
+  val examples = new File("core/src/test/resources/example-specs").listFiles.toList.filter(_.getName.endsWith(".json"))
 
   "Spec" should "provide case-classes for vega-lite objects" in {
     """

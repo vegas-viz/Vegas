@@ -8,7 +8,7 @@ lazy val vegaLiteVersion = settingKey[String]("The release version of vega-lite 
 
 lazy val updateVegaDeps = taskKey[Unit]("Download and replace the vega-lite json schema and examples with the latest versions from their github repo")
 updateVegaDeps := {
-  val schemaFile = file("core/src/main/resources/vega-lite-schema.json")
+  val schemaFile = file("spec/src/main/resources/vega-lite-schema.json")
   val examples = file("core/src/test/resources/example-specs/")
 
   val vegaDir = target.value / ("vega-lite-" + vegaLiteVersion.value)
@@ -17,25 +17,17 @@ updateVegaDeps := {
   IO.copyFile(vegaDir / "vega-lite-schema.json", schemaFile)
 }
 
-// Gets included into vegaLiteSpec to generate code.
-lazy val genCode = (dir: File) => {
-  val file = dir / "Container.scala"
-  IO.write(file,
-    s"""
-      import argus.macros._
-      @fromSchemaResource("/vega-lite-schema.json", name="Vega", outPath=Some("${(dir / "Spec.scala").getAbsolutePath}"))
-      object Spec
-    """)
-  Seq(file)
-}
-
 addCommandAlias("look", "vegas/test:runMain vegas.util.Look")
 
 lazy val mkVegaModel = taskKey[Unit]("Compiles and copies the vega-lite model and codec to the Vegas project")
 mkVegaModel := {
-  IO.copyFile(file("spec/target/scala-2.11/src_managed/main/Spec.scala"), file("core/src/main/scala/vegas/spec/Spec.scala"))
+  val src = file("spec/target/scala-2.11/Spec.scala")
+  val dest = file("core/src/main/scala/vegas/spec/Spec.scala")
+  IO.write(dest, "package vegas.spec\n\n")
+  IO.append(dest, IO.readBytes(src))
 }
-mkVegaModel <<= mkVegaModel.dependsOn(compile in vegaLiteSpec in Compile)
+mkVegaModel <<= mkVegaModel
+  .dependsOn(compile in vegaLiteSpec in Compile)
 
 lazy val lastReleaseVersion = taskKey[String]("Gets (using git tag) the version number of the last release")
 lastReleaseVersion := {
@@ -64,7 +56,7 @@ lazy val commonSettings = Seq(
   description := "The missing MatPlotLib for Scala and Spark",
   organization := "com.github.aishfenton",
   scalaVersion := "2.11.8",
-  vegaLiteVersion := "1.1.2",
+  vegaLiteVersion := "1.2.0",
   scalacOptions += "-target:jvm-1.7",
   homepage := Some(url("https://github.com/aishfenton/Vegas")),
   licenses := Seq("MIT License" -> url("http://www.opensource.org/licenses/MIT")),
@@ -153,8 +145,8 @@ lazy val vegaLiteSpec = project.in(file("spec")).
       "org.scalactic" %% "scalactic" % "2.2.6" % "test",
       "org.scalatest" %% "scalatest" % "2.2.6" % "test"
     )
-  ).
-  settings(sourceGenerators in Compile <+= (sourceManaged in Compile) map genCode)
+  )
+//  settings(sourceGenerators in Compile <+= (sourceManaged in Compile) map genCode)
 
 lazy val vegas = project.in(file("core")).
   settings(moduleName := "vegas").

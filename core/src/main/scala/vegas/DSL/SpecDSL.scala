@@ -10,7 +10,10 @@ object Vegas {
   /**
     * Creates a Builder DSL for typical (non-layered) specs
     */
-  def apply(description: OptArg[String] = NoArg, name: OptArg[String] = NoArg) = ExtendedUnitSpecBuilder(ExtendedUnitSpec(
+  def apply(description: OptArg[String] = NoArg, name: OptArg[String] = NoArg, width: OptArg[Double] = NoArg,
+            height: OptArg[Double]) = ExtendedUnitSpecBuilder(ExtendedUnitSpec(
+    width=width,
+    height=height,
     name=name,
     description=description,
     mark=MarkEnums.Circle
@@ -19,7 +22,10 @@ object Vegas {
   /**
     * Creates a Builder DSL for LayeredSpecs
     */
-  def layered(description: OptArg[String] = NoArg, name: OptArg[String] = NoArg) = LayerSpecBuilder(LayerSpec(
+  def layered(description: OptArg[String] = NoArg, name: OptArg[String] = NoArg, width: OptArg[Double] = NoArg,
+              height: OptArg[Double]) = LayerSpecBuilder(LayerSpec(
+    width=width,
+    height=height,
     name=name,
     description=description,
     layers = Nil
@@ -29,7 +35,10 @@ object Vegas {
 }
 
 object Layer {
-  def apply(description: OptArg[String] = NoArg, name: OptArg[String] = NoArg) = UnitSpecBuilder(UnitSpec(
+  def apply(description: OptArg[String] = NoArg, name: OptArg[String] = NoArg, width: OptArg[Double] = NoArg,
+            height: OptArg[Double] = NoArg) = UnitSpecBuilder(UnitSpec(
+    width=width,
+    height=height,
     name=name,
     description=description,
     mark=MarkEnums.Circle
