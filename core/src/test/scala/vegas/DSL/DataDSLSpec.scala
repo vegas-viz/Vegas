@@ -76,15 +76,22 @@ class DataDSLSpec extends FlatSpec with Matchers {
   }
 
   it should "transform values to 'SimpleTypes' that can be handled by vega-lite" in {
-    val time = new GregorianCalendar(TimeZone.getTimeZone("PST"))
+
+    val refTimeZone = TimeZone.getTimeZone("PST")
+    val time = new GregorianCalendar(refTimeZone)
     time.set(2015, Calendar.DECEMBER, 25, 0, 0, 0)
+
+    val localOffset: Int = TimeZone.getDefault.getRawOffset
+    val refOffset: Int = refTimeZone.getRawOffset
+    time.add(Calendar.MILLISECOND, refOffset - localOffset)
+
     val data = Seq(time.getTime, Ex(4, "a"), 3.14)
 
     val specBuilder = Vegas()
       .withValues(data)
 
     val expectedData = List(
-      Map("x" -> 0, "y" -> "2015-12-25T00:00-0800"),
+      Map("x" -> 0, "y" -> "2015-12-25T00:00"),
       Map("x" -> 1, "y" -> "Ex(4,a)"),
       Map("x" -> 2, "y" -> 3.14)
     )
