@@ -1,6 +1,6 @@
 package vegas.DSL
 
-import monocle.{POptional, Lens, Optional}
+import monocle.{Lens, Optional}
 import monocle.macros.GenLens
 import vegas.data.SimpleTypeUtils
 import vegas.spec.Spec._
