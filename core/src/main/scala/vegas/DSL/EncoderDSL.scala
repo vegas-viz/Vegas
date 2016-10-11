@@ -1,6 +1,6 @@
 package vegas.DSL
 
-import monocle.{Lens, Optional}
+import monocle.{POptional, Lens, Optional}
 import monocle.macros.GenLens
 import vegas.spec.Spec._
 import vegas.macros.{alias_with_lens, aliased}
@@ -37,10 +37,10 @@ trait EncoderDSL[T] extends BaseEncoderDSL[T] {
   @alias_with_lens("encodeX2", _x2)
   @alias_with_lens("encodeY2", _y2)
   private def encodePCD_(l: Lens[Encoding, Option[PositionChannelDef]])
-    (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg,
-     value: OptArg[Any] = NoArg,
-     aggregate: OptArg[AggregateOp] = NoArg, axis: OptArg[Axis] = NoArg, hideAxis: OptArg[Boolean] = NoArg,
-     scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg) = {
+                        (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg,
+                         value: OptArg[Any] = NoArg,
+                         aggregate: OptArg[AggregateOp] = NoArg, axis: OptArg[Axis] = NoArg, hideAxis: OptArg[Boolean] = NoArg,
+                         scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg) = {
 
     val lens = (_encoding composePrism _orElse(Encoding()) composeLens l)
     baseEncodePCD(lens)(field, dataType, value, aggregate, axis, hideAxis, scale, timeUnit, title)
@@ -51,14 +51,22 @@ trait EncoderDSL[T] extends BaseEncoderDSL[T] {
   @alias_with_lens("encodeSize", _size)
   @alias_with_lens("encodeShape", _shape)
   private def encodeCDWL_(l: Lens[Encoding, Option[ChannelDefWithLegend]])
-    (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
-     aggregate: OptArg[AggregateOp] = NoArg, scale:OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg,
-     title: OptArg[String] = NoArg, legend: OptArg[Legend] = NoArg) = {
+                         (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
+                          aggregate: OptArg[AggregateOp] = NoArg, scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg,
+                          title: OptArg[String] = NoArg, legend: OptArg[Legend] = NoArg) = {
 
     val lens = (_encoding composePrism _orElse(Encoding()) composeLens l)
     baseEncodeCDWL(lens)(field, dataType, value, aggregate, scale, timeUnit, title, legend)
   }
 
+  private def encodeFD_(l: Lens[Encoding, Option[FieldDef]])
+                       (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
+                        timeUnit: OptArg[TimeUnit] = NoArg, bin: OptArg[Bin] = NoArg, aggregate: OptArg[AggregateOp] = NoArg,
+                        title: OptArg[String] = NoArg) = {
+
+    val lens = (_encoding composePrism _orElse(Encoding()) composeLens l)
+    basedEncoderFD(lens)(field, dataType, value, timeUnit, bin, aggregate, title)
+  }
 }
 
 
@@ -114,6 +122,15 @@ trait UnitEncoderDSL[T] extends BaseEncoderDSL[T] {
     baseEncodeCDWL(lens)(field, dataType, value, aggregate, scale, timeUnit, title, legend)
   }
 
+  private def encodeFD_(l: Lens[Encoding, Option[FieldDef]])
+                       (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
+                        timeUnit: OptArg[TimeUnit] = NoArg, bin: OptArg[Bin] = NoArg, aggregate: OptArg[AggregateOp] = NoArg,
+                        title: OptArg[String] = NoArg) = {
+
+    val lens = (_encoding composePrism _orElse(Encoding()) composeLens l)
+    baseEncoderFD(lens)(field, dataType, value, timeUnit, bin, aggregate, title)
+  }
+
 }
 
 trait BaseEncoderDSL[T] {
@@ -158,4 +175,16 @@ trait BaseEncoderDSL[T] {
 
     lens.set(Some(cd))(this)
   }
+
+  protected def basedEncoderFD(lens: Optional[T, Option[ChannelDefWithLegend]])
+                              (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
+                               timeUnit: OptArg[TimeUnit] = NoArg, bin: OptArg[Bin] = NoArg, aggregate: OptArg[AggregateOp] = NoArg,
+                               title: OptArg[String] = NoArg)
+  val valueU = value.map {
+    case b: Boolean => ChannelDefWithLegend.ValueBoolean(b)
+    case s: String => ChannelDefWithLegend.ValueString(s)
+    case x@_ => toDouble(x).map(ChannelDefWithLegend.ValueDouble(_))
+      .getOrElse(throw new Exception("Value must be AnyVal, Boolean, or String"))
+  }
+
 }
