@@ -65,13 +65,17 @@ trait EncoderDSL[T] extends BaseEncoderDSL[T] {
       sortField, sortOrder)
   }
 
+
+  @alias_with_lens("encodeText", _text)
+  @alias_with_lens("encodeLabel", _label)
   private def encodeFD_(l: Lens[Encoding, Option[FieldDef]])
                        (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
-                        timeUnit: OptArg[TimeUnit] = NoArg, bin: OptArg[Bin] = NoArg, aggregate: OptArg[AggregateOp] = NoArg,
+                        timeUnit: OptArg[TimeUnit] = NoArg, bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg,
+                        aggregate: OptArg[AggregateOp] = NoArg,
                         title: OptArg[String] = NoArg) = {
 
     val lens = (_encoding composePrism _orElse(Encoding()) composeLens l)
-    basedEncoderFD(lens)(field, dataType, value, timeUnit, bin, aggregate, title)
+    baseEncoderFD(lens)(field, dataType, value, timeUnit, bin, enableBin, aggregate, title)
   }
 }
 
@@ -132,14 +136,18 @@ trait UnitEncoderDSL[T] extends BaseEncoderDSL[T] {
       sortField, sortOrder)
   }
 
-  private def encodeFD_(l: Lens[Encoding, Option[FieldDef]])
+
+  @alias_with_lens("encodeText", _text)
+  @alias_with_lens("encodeLabel", _label)
+  private def encodeFD_(l: Lens[UnitEncoding, Option[FieldDef]])
                        (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
-                        timeUnit: OptArg[TimeUnit] = NoArg, bin: OptArg[Bin] = NoArg, aggregate: OptArg[AggregateOp] = NoArg,
+                        timeUnit: OptArg[TimeUnit] = NoArg, bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg,
+                        aggregate: OptArg[AggregateOp] = NoArg,
                         title: OptArg[String] = NoArg) = {
 
-    val lens = (_encoding composePrism _orElse(Encoding()) composeLens l)
+    val lens = (_encoding composePrism _orElse(UnitEncoding()) composeLens l)
 
-    baseEncoderFD(lens)(field, dataType, value, timeUnit, bin, aggregate, title)
+    baseEncoderFD(lens)(field, dataType, value, timeUnit, bin, enableBin, aggregate, title)
   }
 
 }
@@ -194,15 +202,26 @@ trait BaseEncoderDSL[T] {
     lens.set(Some(cd))(this)
   }
 
-  protected def basedEncoderFD(lens: Optional[T, Option[ChannelDefWithLegend]])
-                              (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
-                               timeUnit: OptArg[TimeUnit] = NoArg, bin: OptArg[Bin] = NoArg, aggregate: OptArg[AggregateOp] = NoArg,
-                               title: OptArg[String] = NoArg)
-  val valueU = value.map {
-    case b: Boolean => ChannelDefWithLegend.ValueBoolean(b)
-    case s: String => ChannelDefWithLegend.ValueString(s)
-    case x@_ => toDouble(x).map(ChannelDefWithLegend.ValueDouble(_))
-      .getOrElse(throw new Exception("Value must be AnyVal, Boolean, or String"))
+  protected def baseEncoderFD(lens: Optional[T, Option[FieldDef]])
+                              (field: OptArg[String] = NoArg,
+                               dataType: OptArg[Type] = NoArg,
+                               value: OptArg[Any] = NoArg,
+                               timeUnit: OptArg[TimeUnit] = NoArg,
+                               bin: OptArg[Bin] = NoArg,
+                               enableBin: OptArg[Boolean] = NoArg,
+                               aggregate: OptArg[AggregateOp] = NoArg,
+                               title: OptArg[String] = NoArg) = {
+    val valueU = value.map {
+      case b: Boolean => FieldDef.ValueBoolean(b)
+      case s: String => FieldDef.ValueString(s)
+      case x@_ => SimpleTypeUtils.toDouble(x).map(FieldDef.ValueDouble(_))
+        .getOrElse(throw new Exception("Value must be AnyVal, Boolean, or String"))
+    }
+    val binU = (bin.map(FieldDef.BinBin(_)) orElse enableBin.map(b => FieldDef.BinBoolean( b )))
+
+    val fd = FieldDef(field = field, `type` = dataType, aggregate = aggregate, value = valueU, timeUnit = timeUnit,
+      bin = binU, title=title)
+    lens.set(Some(fd))(this)
   }
 
 }
