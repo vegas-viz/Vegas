@@ -16,7 +16,7 @@ object Flink {
         if (count >= limit) ds.first(limit).collect() else ds.collect()
       }
 
-      specBuilder.withReflectData(localData)
+      specBuilder.withCaseClasses(localData)
     }
 
   }

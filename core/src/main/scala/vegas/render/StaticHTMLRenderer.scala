@@ -20,7 +20,7 @@ case class StaticHTMLRenderer(specJson: String) extends BaseHTMLRenderer {
        |  <body>
     """.stripMargin
 
-  def chartHTML(name: String = this.defaultName) =
+  def plotHTML(name: String = this.defaultName) =
     s"""
        | <script>
        |   var embedSpec = {
@@ -39,7 +39,7 @@ case class StaticHTMLRenderer(specJson: String) extends BaseHTMLRenderer {
     """.stripMargin
 
   def pageHTML(name: String = defaultName) = {
-    headerHTML().trim + chartHTML(name) + footerHTML.trim
+    headerHTML().trim + plotHTML(name) + footerHTML.trim
   }
 
   /**
@@ -57,7 +57,7 @@ case class StaticHTMLRenderer(specJson: String) extends BaseHTMLRenderer {
       |    if (typeof resizeIFrame != 'function') {
       |      function resizeIFrame(el, k) {
       |        el.style.height = el.contentWindow.document.body.scrollHeight + 'px';
-      |        if (k <= 3) { setTimeout(function() { resizeIFrame(el, k+1) }, 1000) };
+      |        if (k <= 7) { setTimeout(function() { resizeIFrame(el, k+1) }, 1000) };
       |      }
       |    }
       |    $$().ready( function() { resizeIFrame($$('#${frameName}').get(0), 1); });

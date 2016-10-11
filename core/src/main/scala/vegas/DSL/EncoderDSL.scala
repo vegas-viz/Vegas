@@ -2,6 +2,7 @@ package vegas.DSL
 
 import monocle.{POptional, Lens, Optional}
 import monocle.macros.GenLens
+import vegas.data.SimpleTypeUtils
 import vegas.spec.Spec._
 import vegas.macros.{alias_with_lens, aliased}
 
@@ -37,13 +38,16 @@ trait EncoderDSL[T] extends BaseEncoderDSL[T] {
   @alias_with_lens("encodeX2", _x2)
   @alias_with_lens("encodeY2", _y2)
   private def encodePCD_(l: Lens[Encoding, Option[PositionChannelDef]])
-                        (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg,
-                         value: OptArg[Any] = NoArg,
-                         aggregate: OptArg[AggregateOp] = NoArg, axis: OptArg[Axis] = NoArg, hideAxis: OptArg[Boolean] = NoArg,
-                         scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg) = {
+    (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg,
+     aggregate: OptArg[AggregateOp] = NoArg, value: OptArg[Any] = NoArg,
+     axis: OptArg[Axis] = NoArg, hideAxis: OptArg[Boolean] = NoArg,
+     scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg,
+     bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg,
+     sortField: OptArg[SortField] = NoArg, sortOrder: OptArg[SortOrder] = NoArg) = {
 
     val lens = (_encoding composePrism _orElse(Encoding()) composeLens l)
-    baseEncodePCD(lens)(field, dataType, value, aggregate, axis, hideAxis, scale, timeUnit, title)
+    baseEncodePCD(lens)(field, dataType, aggregate, value, axis, hideAxis, scale, timeUnit, title, bin, enableBin,
+      sortField, sortOrder)
   }
 
   @alias_with_lens("encodeColor", _color)
@@ -51,12 +55,14 @@ trait EncoderDSL[T] extends BaseEncoderDSL[T] {
   @alias_with_lens("encodeSize", _size)
   @alias_with_lens("encodeShape", _shape)
   private def encodeCDWL_(l: Lens[Encoding, Option[ChannelDefWithLegend]])
-                         (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
-                          aggregate: OptArg[AggregateOp] = NoArg, scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg,
-                          title: OptArg[String] = NoArg, legend: OptArg[Legend] = NoArg) = {
-
+    (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg,
+     aggregate: OptArg[AggregateOp] = NoArg, value: OptArg[Any] = NoArg, scale:OptArg[Scale] = NoArg,
+     timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg, legend: OptArg[Legend] = NoArg,
+     bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg,
+     sortField: OptArg[SortField] = NoArg, sortOrder: OptArg[SortOrder] = NoArg) = {
     val lens = (_encoding composePrism _orElse(Encoding()) composeLens l)
-    baseEncodeCDWL(lens)(field, dataType, value, aggregate, scale, timeUnit, title, legend)
+    baseEncodeCDWL(lens)(field, dataType, aggregate, value, scale, timeUnit, title, legend, bin, enableBin,
+      sortField, sortOrder)
   }
 
   private def encodeFD_(l: Lens[Encoding, Option[FieldDef]])
@@ -93,19 +99,21 @@ trait UnitEncoderDSL[T] extends BaseEncoderDSL[T] {
   private val _path = GenLens[UnitEncoding](_.path)
   private val _order = GenLens[UnitEncoding](_.order)
 
-
   @alias_with_lens("encodeX", _x)
   @alias_with_lens("encodeY", _y)
   @alias_with_lens("encodeX2", _x2)
   @alias_with_lens("encodeY2", _y2)
   private def encodePCD_(l: Lens[UnitEncoding, Option[PositionChannelDef]])
                         (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg,
-                         value: OptArg[Any] = NoArg,
-                         aggregate: OptArg[AggregateOp] = NoArg, axis: OptArg[Axis] = NoArg, hideAxis: OptArg[Boolean] = NoArg,
-                         scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg) = {
+                         aggregate: OptArg[AggregateOp] = NoArg, value: OptArg[Any] = NoArg,
+                         axis: OptArg[Axis] = NoArg, hideAxis: OptArg[Boolean] = NoArg,
+                         scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg,
+                         bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg,
+                         sortField: OptArg[SortField] = NoArg, sortOrder: OptArg[SortOrder] = NoArg) = {
 
     val lens = (_encoding composePrism _orElse(UnitEncoding()) composeLens l)
-    baseEncodePCD(lens)(field, dataType, value, aggregate, axis, hideAxis, scale, timeUnit, title)
+    baseEncodePCD(lens)(field, dataType, aggregate, value, axis, hideAxis, scale, timeUnit, title, bin, enableBin,
+      sortField, sortOrder)
   }
 
   @alias_with_lens("encodeColor", _color)
@@ -113,13 +121,15 @@ trait UnitEncoderDSL[T] extends BaseEncoderDSL[T] {
   @alias_with_lens("encodeSize", _size)
   @alias_with_lens("encodeShape", _shape)
   private def encodeCDWL_(l: Lens[UnitEncoding, Option[ChannelDefWithLegend]])
-                         (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
-                          aggregate: OptArg[AggregateOp] = NoArg, scale:OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg,
-                          title: OptArg[String] = NoArg,
-                         legend: OptArg[Legend] = NoArg) = {
+                         (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg,
+                          aggregate: OptArg[AggregateOp] = NoArg, value: OptArg[Any] = NoArg, scale:OptArg[Scale] = NoArg,
+                          timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg, legend: OptArg[Legend] = NoArg,
+                          bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg,
+                          sortField: OptArg[SortField] = NoArg, sortOrder: OptArg[SortOrder] = NoArg) = {
 
     val lens = (_encoding composePrism _orElse(UnitEncoding()) composeLens l)
-    baseEncodeCDWL(lens)(field, dataType, value, aggregate, scale, timeUnit, title, legend)
+    baseEncodeCDWL(lens)(field, dataType, aggregate, value, scale, timeUnit, title, legend, bin, enableBin,
+      sortField, sortOrder)
   }
 
   private def encodeFD_(l: Lens[Encoding, Option[FieldDef]])
@@ -128,6 +138,7 @@ trait UnitEncoderDSL[T] extends BaseEncoderDSL[T] {
                         title: OptArg[String] = NoArg) = {
 
     val lens = (_encoding composePrism _orElse(Encoding()) composeLens l)
+
     baseEncoderFD(lens)(field, dataType, value, timeUnit, bin, aggregate, title)
   }
 
@@ -138,41 +149,48 @@ trait BaseEncoderDSL[T] {
 
   protected def baseEncodePCD(lens: Optional[T, Option[PositionChannelDef]])
                         (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg,
-                         value: OptArg[Any] = NoArg,
-                         aggregate: OptArg[AggregateOp] = NoArg, axis: OptArg[Axis] = NoArg, hideAxis: OptArg[Boolean] = NoArg,
-                         scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg) = {
+                         aggregate: OptArg[AggregateOp] = NoArg, value: OptArg[Any] = NoArg,
+                         axis: OptArg[Axis] = NoArg, hideAxis: OptArg[Boolean] = NoArg,
+                         scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg,
+                         bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg,
+                         sortField: OptArg[SortField] = NoArg, sortOrder: OptArg[SortOrder] = NoArg) = {
 
     val valueU = value.map {
       case b: Boolean => PositionChannelDef.ValueBoolean(b)
       case s: String =>  PositionChannelDef.ValueString(s)
-      case x@_ => toDouble(x).map(PositionChannelDef.ValueDouble(_))
+      case x@_ => SimpleTypeUtils.toDouble(x).map(PositionChannelDef.ValueDouble(_))
         .getOrElse(throw new Exception("Value must be AnyVal, Boolean, or String"))
     }
     val axisU = (axis.map(PositionChannelDef.AxisAxis(_)) orElse hideAxis.map(b => PositionChannelDef.AxisBoolean( !b )))
+    val binU = (bin.map(PositionChannelDef.BinBin(_)) orElse enableBin.map(b => PositionChannelDef.BinBoolean( b )))
+
+    val sortU = (sortField.map(PositionChannelDef.SortSortField(_)) orElse sortOrder.map(PositionChannelDef.SortSortOrder(_)))
 
     val cd = PositionChannelDef(field=field, `type`=dataType, aggregate=aggregate, axis=axisU, scale=scale, value=valueU,
-      timeUnit=timeUnit, title=title)
+      timeUnit=timeUnit, title=title, bin=binU, sort=sortU)
 
     lens.set(Some(cd))(this)
   }
 
   protected def baseEncodeCDWL(lens: Optional[T, Option[ChannelDefWithLegend]])
-                         (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
-                          aggregate: OptArg[AggregateOp] = NoArg, scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg,
-                          title: OptArg[String] = NoArg, legend: OptArg[Legend]= NoArg) = {
-
+                         (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg,
+                          aggregate: OptArg[AggregateOp] = NoArg, value: OptArg[Any] = NoArg,
+                          scale: OptArg[Scale] = NoArg, timeUnit: OptArg[TimeUnit] = NoArg,
+                          title: OptArg[String] = NoArg, legend: OptArg[Legend]= NoArg,
+                          bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg,
+                          sortField: OptArg[SortField] = NoArg, sortOrder: OptArg[SortOrder] = NoArg) = {
 
     val valueU = value.map {
       case b: Boolean => ChannelDefWithLegend.ValueBoolean(b)
       case s: String => ChannelDefWithLegend.ValueString(s)
-      case x@_ => toDouble(x).map(ChannelDefWithLegend.ValueDouble(_))
+      case x@_ => SimpleTypeUtils.toDouble(x).map(ChannelDefWithLegend.ValueDouble(_))
         .getOrElse(throw new Exception("Value must be AnyVal, Boolean, or String"))
     }
-
+    val binU = (bin.map(ChannelDefWithLegend.BinBin(_)) orElse enableBin.map(b => ChannelDefWithLegend.BinBoolean( b )))
+    val sortU = (sortField.map(ChannelDefWithLegend.SortSortField(_)) orElse sortOrder.map(ChannelDefWithLegend.SortSortOrder(_)))
 
     val cd = ChannelDefWithLegend(field = field, `type` = dataType, aggregate = aggregate, value = valueU, scale = scale,
-      timeUnit = timeUnit, title = title, legend=legend)
-
+      timeUnit = timeUnit, title = title, legend=legend, bin=binU, sort=sortU)
     lens.set(Some(cd))(this)
   }
 
