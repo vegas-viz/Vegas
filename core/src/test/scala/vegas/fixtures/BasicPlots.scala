@@ -106,9 +106,19 @@ object BasicPlots {
       encodeY("variety", Ordinal, sortField=Sort("yield", AggOps.Mean), scale=Scale(bandSize = 12.0)).
       encodeColor(field="year", dataType=Nominal)
 
+  val CustomShapePlot =
+    Vegas("A scatterplot with custom star shapes.").
+      withURL(Cars).
+      mark(Point).
+      encodeX("Horsepower", Quant).
+      encodeY("Miles_per_Gallon", Quant).
+      encodeColor("Cylinders", Nom).
+      encodeSize("Weight_in_lbs", Quant).
+      configMark(customShape="M0,0.2L0.2351,0.3236 0.1902,0.0618 0.3804,-0.1236 0.1175,-0.1618 0,-0.4 -0.1175,-0.1618 -0.3804,-0.1236 -0.1902,0.0618 -0.2351,0.3236 0,0.2Z")
+
   val plots: List[SpecBuilder] = SimpleBarChart :: AggregateBarChart :: GroupedBarChart :: AreaChart ::
     NormalizedStackedBarChart :: BinnedChart :: ScatterBinnedPlot :: ScatterColorPlot :: ScatterBinnedColorPlot ::
-    StackedAreaBinnedPlot :: SortColorPlot ::
+    StackedAreaBinnedPlot :: SortColorPlot :: CustomShapePlot ::
     Nil
 
 }

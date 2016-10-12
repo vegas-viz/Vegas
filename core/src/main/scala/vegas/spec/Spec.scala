@@ -162,7 +162,8 @@ object Spec {
         case (j@_) if j.==(parser.parse("\"circle\"").toOption.get) => cats.data.Xor.right(Spec.MarkEnums.Circle)
         case (j@_) if j.==(parser.parse("\"square\"").toOption.get) => cats.data.Xor.right(Spec.MarkEnums.Square)
         case (j@_) if j.==(parser.parse("\"errorBar\"").toOption.get) => cats.data.Xor.right(Spec.MarkEnums.ErrorBar)
-        case _ => throw new Exception("Couldn\'t find enum:".+(json.toString))
+        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+          c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecEncodingEncoder: Encoder[Spec.Encoding] = Encoder.instance(((cc: Spec.Encoding) => Json.obj("row".->(cc.row.asJson),
       "column".->(cc.column.asJson),
@@ -421,7 +422,8 @@ object Spec {
         case (j@_) if j.==(parser.parse("\"right\"").toOption.get) => cats.data.Xor.right(Spec.AxisOrientEnums.Right)
         case (j@_) if j.==(parser.parse("\"left\"").toOption.get) => cats.data.Xor.right(Spec.AxisOrientEnums.Left)
         case (j@_) if j.==(parser.parse("\"bottom\"").toOption.get) => cats.data.Xor.right(Spec.AxisOrientEnums.Bottom)
-        case _ => throw new Exception("Couldn\'t find enum:".+(json.toString))
+        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+          c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecScaleEncoder: Encoder[Spec.Scale] = Encoder.instance(((cc: Spec.Scale) => Json.obj("type".->(cc.`type`.asJson),
       "domain".->(cc.domain.asJson),
@@ -502,13 +504,15 @@ object Spec {
         case (j@_) if j.==(parser.parse("\"ordinal\"").toOption.get) => cats.data.Xor.right(Spec.ScaleTypeEnums.Ordinal)
         case (j@_) if j.==(parser.parse("\"time\"").toOption.get) => cats.data.Xor.right(Spec.ScaleTypeEnums.Time)
         case (j@_) if j.==(parser.parse("\"utc\"").toOption.get) => cats.data.Xor.right(Spec.ScaleTypeEnums.Utc)
-        case _ => throw new Exception("Couldn\'t find enum:".+(json.toString))
+        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+          c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecBandSizeEncoder: Encoder[Spec.BandSize] = Encoder.instance(((e: Spec.BandSize) => parser.parse(e.json).toOption.get));
     implicit val SpecBandSizeDecoder: Decoder[Spec.BandSize] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
         case (j@_) if j.==(parser.parse("\"fit\"").toOption.get) => cats.data.Xor.right(Spec.BandSizeEnums.Fit)
-        case _ => throw new Exception("Couldn\'t find enum:".+(json.toString))
+        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+          c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecNiceTimeEncoder: Encoder[Spec.NiceTime] = Encoder.instance(((e: Spec.NiceTime) => parser.parse(e.json).toOption.get));
     implicit val SpecNiceTimeDecoder: Decoder[Spec.NiceTime] = Decoder.instance(((c: HCursor) => c.as[Json]
@@ -520,7 +524,8 @@ object Spec {
         case (j@_) if j.==(parser.parse("\"week\"").toOption.get) => cats.data.Xor.right(Spec.NiceTimeEnums.Week)
         case (j@_) if j.==(parser.parse("\"month\"").toOption.get) => cats.data.Xor.right(Spec.NiceTimeEnums.Month)
         case (j@_) if j.==(parser.parse("\"year\"").toOption.get) => cats.data.Xor.right(Spec.NiceTimeEnums.Year)
-        case _ => throw new Exception("Couldn\'t find enum:".+(json.toString))
+        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+          c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecSortFieldEncoder: Encoder[Spec.SortField] = Encoder.instance(((cc: Spec.SortField) => Json.obj("field".->(cc.field.asJson),
       "op".->(cc.op.asJson),
@@ -553,7 +558,8 @@ object Spec {
         case (j@_) if j.==(parser.parse("\"max\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Max)
         case (j@_) if j.==(parser.parse("\"argmin\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Argmin)
         case (j@_) if j.==(parser.parse("\"argmax\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Argmax)
-        case _ => throw new Exception("Couldn\'t find enum:".+(json.toString))
+        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+          c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecSortOrderEncoder: Encoder[Spec.SortOrder] = Encoder.instance(((e: Spec.SortOrder) => parser.parse(e.json).toOption.get));
     implicit val SpecSortOrderDecoder: Decoder[Spec.SortOrder] = Decoder.instance(((c: HCursor) => c.as[Json]
@@ -561,7 +567,8 @@ object Spec {
         case (j@_) if j.==(parser.parse("\"ascending\"").toOption.get) => cats.data.Xor.right(Spec.SortOrderEnums.Ascending)
         case (j@_) if j.==(parser.parse("\"descending\"").toOption.get) => cats.data.Xor.right(Spec.SortOrderEnums.Descending)
         case (j@_) if j.==(parser.parse("\"none\"").toOption.get) => cats.data.Xor.right(Spec.SortOrderEnums.None)
-        case _ => throw new Exception("Couldn\'t find enum:".+(json.toString))
+        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+          c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecTypeEncoder: Encoder[Spec.Type] = Encoder.instance(((e: Spec.Type) => parser.parse(e.json).toOption.get));
     implicit val SpecTypeDecoder: Decoder[Spec.Type] = Decoder.instance(((c: HCursor) => c.as[Json]
@@ -570,7 +577,8 @@ object Spec {
         case (j@_) if j.==(parser.parse("\"ordinal\"").toOption.get) => cats.data.Xor.right(Spec.TypeEnums.Ordinal)
         case (j@_) if j.==(parser.parse("\"temporal\"").toOption.get) => cats.data.Xor.right(Spec.TypeEnums.Temporal)
         case (j@_) if j.==(parser.parse("\"nominal\"").toOption.get) => cats.data.Xor.right(Spec.TypeEnums.Nominal)
-        case _ => throw new Exception("Couldn\'t find enum:".+(json.toString))
+        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+          c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecTimeUnitEncoder: Encoder[Spec.TimeUnit] = Encoder.instance(((e: Spec.TimeUnit) => parser.parse(e.json).toOption.get));
     implicit val SpecTimeUnitDecoder: Decoder[Spec.TimeUnit] = Decoder.instance(((c: HCursor) => c.as[Json]
@@ -596,7 +604,8 @@ object Spec {
         case (j@_) if j.==(parser.parse("\"yearquarter\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Yearquarter)
         case (j@_) if j.==(parser.parse("\"quartermonth\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Quartermonth)
         case (j@_) if j.==(parser.parse("\"yearquartermonth\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Yearquartermonth)
-        case _ => throw new Exception("Couldn\'t find enum:".+(json.toString))
+        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+          c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecBinEncoder: Encoder[Spec.Bin] = Encoder.instance(((cc: Spec.Bin) => Json.obj("min".->(cc.min.asJson),
       "max".->(cc.max.asJson),
@@ -870,7 +879,8 @@ object Spec {
         case (j@_) if j.==(parser.parse("\"csv\"").toOption.get) => cats.data.Xor.right(Spec.DataFormatTypeEnums.Csv)
         case (j@_) if j.==(parser.parse("\"tsv\"").toOption.get) => cats.data.Xor.right(Spec.DataFormatTypeEnums.Tsv)
         case (j@_) if j.==(parser.parse("\"topojson\"").toOption.get) => cats.data.Xor.right(Spec.DataFormatTypeEnums.Topojson)
-        case _ => throw new Exception("Couldn\'t find enum:".+(json.toString))
+        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+          c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecTransformEncoder: Encoder[Spec.Transform] = Encoder.instance(((cc: Spec.Transform) => Json.obj("filter".->(cc.filter.asJson),
       "filterInvalid".->(cc.filterInvalid.asJson),
@@ -1207,14 +1217,16 @@ object Spec {
         case (j@_) if j.==(parser.parse("\"center\"").toOption.get) => cats.data.Xor.right(Spec.StackOffsetEnums.Center)
         case (j@_) if j.==(parser.parse("\"normalize\"").toOption.get) => cats.data.Xor.right(Spec.StackOffsetEnums.Normalize)
         case (j@_) if j.==(parser.parse("\"none\"").toOption.get) => cats.data.Xor.right(Spec.StackOffsetEnums.None)
-        case _ => throw new Exception("Couldn\'t find enum:".+(json.toString))
+        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+          c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecOrientEncoder: Encoder[Spec.Orient] = Encoder.instance(((e: Spec.Orient) => parser.parse(e.json).toOption.get));
     implicit val SpecOrientDecoder: Decoder[Spec.Orient] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
         case (j@_) if j.==(parser.parse("\"horizontal\"").toOption.get) => cats.data.Xor.right(Spec.OrientEnums.Horizontal)
         case (j@_) if j.==(parser.parse("\"vertical\"").toOption.get) => cats.data.Xor.right(Spec.OrientEnums.Vertical)
-        case _ => throw new Exception("Couldn\'t find enum:".+(json.toString))
+        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+          c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecInterpolateEncoder: Encoder[Spec.Interpolate] = Encoder.instance(((e: Spec.Interpolate) => parser.parse(e.json).toOption.get));
     implicit val SpecInterpolateDecoder: Decoder[Spec.Interpolate] = Decoder.instance(((c: HCursor) => c.as[Json]
@@ -1232,7 +1244,8 @@ object Spec {
         case (j@_) if j.==(parser.parse("\"cardinal-closed\"").toOption.get) => cats.data.Xor.right(Spec.InterpolateEnums.CardinalClosed)
         case (j@_) if j.==(parser.parse("\"bundle\"").toOption.get) => cats.data.Xor.right(Spec.InterpolateEnums.Bundle)
         case (j@_) if j.==(parser.parse("\"monotone\"").toOption.get) => cats.data.Xor.right(Spec.InterpolateEnums.Monotone)
-        case _ => throw new Exception("Couldn\'t find enum:".+(json.toString))
+        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+          c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecShapeEncoder: Encoder[Spec.Shape] = Encoder.instance(((e: Spec.Shape) => parser.parse(e.json).toOption.get));
     implicit val SpecShapeDecoder: Decoder[Spec.Shape] = Decoder.instance(((c: HCursor) => c.as[Json]
@@ -1243,7 +1256,8 @@ object Spec {
         case (j@_) if j.==(parser.parse("\"diamond\"").toOption.get) => cats.data.Xor.right(Spec.ShapeEnums.Diamond)
         case (j@_) if j.==(parser.parse("\"triangle-up\"").toOption.get) => cats.data.Xor.right(Spec.ShapeEnums.TriangleUp)
         case (j@_) if j.==(parser.parse("\"triangle-down\"").toOption.get) => cats.data.Xor.right(Spec.ShapeEnums.TriangleDown)
-        case _ => throw new Exception("Couldn\'t find enum:".+(json.toString))
+        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+          c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecHorizontalAlignEncoder: Encoder[Spec.HorizontalAlign] = Encoder.instance(((e: Spec.HorizontalAlign) => parser.parse(e.json).toOption.get));
     implicit val SpecHorizontalAlignDecoder: Decoder[Spec.HorizontalAlign] = Decoder.instance(((c: HCursor) => c.as[Json]
@@ -1251,7 +1265,8 @@ object Spec {
         case (j@_) if j.==(parser.parse("\"left\"").toOption.get) => cats.data.Xor.right(Spec.HorizontalAlignEnums.Left)
         case (j@_) if j.==(parser.parse("\"right\"").toOption.get) => cats.data.Xor.right(Spec.HorizontalAlignEnums.Right)
         case (j@_) if j.==(parser.parse("\"center\"").toOption.get) => cats.data.Xor.right(Spec.HorizontalAlignEnums.Center)
-        case _ => throw new Exception("Couldn\'t find enum:".+(json.toString))
+        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+          c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecVerticalAlignEncoder: Encoder[Spec.VerticalAlign] = Encoder.instance(((e: Spec.VerticalAlign) => parser.parse(e.json).toOption.get));
     implicit val SpecVerticalAlignDecoder: Decoder[Spec.VerticalAlign] = Decoder.instance(((c: HCursor) => c.as[Json]
@@ -1259,21 +1274,24 @@ object Spec {
         case (j@_) if j.==(parser.parse("\"top\"").toOption.get) => cats.data.Xor.right(Spec.VerticalAlignEnums.Top)
         case (j@_) if j.==(parser.parse("\"middle\"").toOption.get) => cats.data.Xor.right(Spec.VerticalAlignEnums.Middle)
         case (j@_) if j.==(parser.parse("\"bottom\"").toOption.get) => cats.data.Xor.right(Spec.VerticalAlignEnums.Bottom)
-        case _ => throw new Exception("Couldn\'t find enum:".+(json.toString))
+        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+          c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecFontStyleEncoder: Encoder[Spec.FontStyle] = Encoder.instance(((e: Spec.FontStyle) => parser.parse(e.json).toOption.get));
     implicit val SpecFontStyleDecoder: Decoder[Spec.FontStyle] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
         case (j@_) if j.==(parser.parse("\"normal\"").toOption.get) => cats.data.Xor.right(Spec.FontStyleEnums.Normal)
         case (j@_) if j.==(parser.parse("\"italic\"").toOption.get) => cats.data.Xor.right(Spec.FontStyleEnums.Italic)
-        case _ => throw new Exception("Couldn\'t find enum:".+(json.toString))
+        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+          c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecFontWeightEncoder: Encoder[Spec.FontWeight] = Encoder.instance(((e: Spec.FontWeight) => parser.parse(e.json).toOption.get));
     implicit val SpecFontWeightDecoder: Decoder[Spec.FontWeight] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
         case (j@_) if j.==(parser.parse("\"normal\"").toOption.get) => cats.data.Xor.right(Spec.FontWeightEnums.Normal)
         case (j@_) if j.==(parser.parse("\"bold\"").toOption.get) => cats.data.Xor.right(Spec.FontWeightEnums.Bold)
-        case _ => throw new Exception("Couldn\'t find enum:".+(json.toString))
+        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+          c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecOverlayConfigEncoder: Encoder[Spec.OverlayConfig] = Encoder.instance(((cc: Spec.OverlayConfig) => Json.obj("line".->(cc.line.asJson),
       "area".->(cc.area.asJson),
@@ -1292,7 +1310,8 @@ object Spec {
         case (j@_) if j.==(parser.parse("\"line\"").toOption.get) => cats.data.Xor.right(Spec.AreaOverlayEnums.Line)
         case (j@_) if j.==(parser.parse("\"linepoint\"").toOption.get) => cats.data.Xor.right(Spec.AreaOverlayEnums.Linepoint)
         case (j@_) if j.==(parser.parse("\"none\"").toOption.get) => cats.data.Xor.right(Spec.AreaOverlayEnums.None)
-        case _ => throw new Exception("Couldn\'t find enum:".+(json.toString))
+        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+          c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecScaleConfigEncoder: Encoder[Spec.ScaleConfig] = Encoder.instance(((cc: Spec.ScaleConfig) => Json.obj("round".->(cc.round.asJson),
       "textBandWidth".->(cc.textBandWidth.asJson),

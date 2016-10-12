@@ -11,7 +11,7 @@ object Vegas {
     * Creates a Builder DSL for typical (non-layered) specs
     */
   def apply(description: OptArg[String] = NoArg, name: OptArg[String] = NoArg, width: OptArg[Double] = NoArg,
-            height: OptArg[Double]) = ExtendedUnitSpecBuilder(ExtendedUnitSpec(
+            height: OptArg[Double] = NoArg) = ExtendedUnitSpecBuilder(ExtendedUnitSpec(
     width=width,
     height=height,
     name=name,
@@ -23,7 +23,7 @@ object Vegas {
     * Creates a Builder DSL for LayeredSpecs
     */
   def layered(description: OptArg[String] = NoArg, name: OptArg[String] = NoArg, width: OptArg[Double] = NoArg,
-              height: OptArg[Double]) = LayerSpecBuilder(LayerSpec(
+              height: OptArg[Double] = NoArg) = LayerSpecBuilder(LayerSpec(
     width=width,
     height=height,
     name=name,
