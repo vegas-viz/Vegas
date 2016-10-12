@@ -53,7 +53,16 @@ object VegasPlots {
       encodeX("Worldwide_Gross", Quantitative, bin=Bin(maxbins=20.0), sortOrder=SortOrder.Descending).
       encodeY(field="*", Quantitative, aggregate=AggOps.Count)
 
-  val plots: List[SpecBuilder] = ValuePlot :: IQRPlot :: LegendPlot :: BinnedPlot :: BinnedPlotWithSort :: Nil
+  val ColoredTextScatterPlot =
+    Vegas("Plot to show usage of encodeText").
+    withURL(Cars).addTransformCalculation("OriginInitial", "datum.Origin[0]").
+    mark(Text).
+    encodeX("Horsepower", Quantitative).
+    encodeY("Miles_per_Gallon", Quantitative).
+    encodeColor(field="Origin", dataType= Nominal).
+    encodeText(field="OriginInitial", dataType= Nominal)
+
+  val plots: List[SpecBuilder] = ValuePlot :: IQRPlot :: LegendPlot :: BinnedPlot :: BinnedPlotWithSort :: ColoredTextScatterPlot ::Nil
 
 }
 
