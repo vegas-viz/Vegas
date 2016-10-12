@@ -116,9 +116,25 @@ object BasicPlots {
       encodeSize("Weight_in_lbs", Quant).
       configMark(customShape="M0,0.2L0.2351,0.3236 0.1902,0.0618 0.3804,-0.1236 0.1175,-0.1618 0,-0.4 -0.1175,-0.1618 -0.3804,-0.1236 -0.1902,0.0618 -0.2351,0.3236 0,0.2Z")
 
+  val ScatterAggregateDetail =
+    Vegas("A scatterplot showing average horsepower and displacement for cars from different origins.").
+      withURL(Cars).
+      mark(Point).
+      encodeX("Horsepower", Quant, AggOps.Mean).
+      encodeY("Displacement", Quant, AggOps.Mean).
+      encodeDetail("Origin")
+
+  val LineDetail =
+    Vegas("Stock prices of 5 Tech Companies Over Time.").
+      withURL(Stocks, formatType = DataFormat.Csv).
+      mark(Line).
+      encodeX("date", Temp).
+      encodeY("price", Quant).
+      encodeDetailFields(Field(field="symbol", dataType=Nominal))
+
   val plots: List[SpecBuilder] = SimpleBarChart :: AggregateBarChart :: GroupedBarChart :: AreaChart ::
     NormalizedStackedBarChart :: BinnedChart :: ScatterBinnedPlot :: ScatterColorPlot :: ScatterBinnedColorPlot ::
-    StackedAreaBinnedPlot :: SortColorPlot :: CustomShapePlot ::
+    StackedAreaBinnedPlot :: SortColorPlot :: CustomShapePlot :: ScatterAggregateDetail :: LineDetail ::
     Nil
 
 }
