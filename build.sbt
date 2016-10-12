@@ -106,6 +106,7 @@ lazy val commonSettings = Seq(
     runClean,
     runTest,
     setReleaseVersion,
+    releaseStepInputTask(mkNotebooks in Global),
     commitReleaseVersion,
     tagRelease,
     ReleaseStep(action = Command.process("publishSigned", _)),
@@ -143,7 +144,7 @@ lazy val vegaLiteSpec = project.in(file("spec")).
       "io.circe" %% "circe-core" % circeVersion,
       "io.circe" %% "circe-generic" % circeVersion,
       "io.circe" %% "circe-parser" % circeVersion,
-      "com.github.aishfenton" %% "argus" % "0.2.4-SNAPSHOT",
+      "com.github.aishfenton" %% "argus" % "0.2.3",
       "org.scalactic" %% "scalactic" % "2.2.6" % "test",
       "org.scalatest" %% "scalatest" % "2.2.6" % "test"
     )
@@ -162,7 +163,7 @@ lazy val vegas = project.in(file("core")).
       "com.github.julien-truffaut" %% "monocle-macro" % "1.1.0",
       "com.github.julien-truffaut" %% "monocle-core" % "1.1.0",
       "org.scalafx" %% "scalafx" % "8.0.92-R10",
-      "com.github.aishfenton" %% "argus" % "0.2.4-SNAPSHOT" % "test",
+      "com.github.aishfenton" %% "argus" % "0.2.3" % "test",
       "org.scalactic" %% "scalactic" % "2.2.6" % "test",
       "org.scalatest" %% "scalatest" % "2.2.6" % "test",
       "org.seleniumhq.selenium" % "selenium-java" % "3.0.0-beta2" % "test"
