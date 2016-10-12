@@ -81,6 +81,8 @@ class DataDSLSpec extends FlatSpec with Matchers {
     val time = new GregorianCalendar(refTimeZone)
     time.set(2015, Calendar.DECEMBER, 25, 0, 0, 0)
 
+    // Annoying but necessary to make sure timezones on different machines don't break
+    // the test.
     val localOffset: Int = TimeZone.getDefault.getRawOffset
     val refOffset: Int = refTimeZone.getRawOffset
     time.add(Calendar.MILLISECOND, refOffset - localOffset)

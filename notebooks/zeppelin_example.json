@@ -6,7 +6,7 @@
  {
    "config": { "title": false },
    "title": "",
-   "text": "com.github.aishfenton:vegas-spark_2.10:0.3.1-SNAPSHOT"
+   "text": "com.github.aishfenton:vegas-spark_2.10:0.3.2-SNAPSHOT"
  }
     ,
  {
@@ -24,79 +24,97 @@
  {
    "config": { "title": true },
    "title": "A bar chart showing the US population distribution of age groups in 2000.",
-   "text": "Vegas(\"A bar chart showing the US population distribution of age groups in 2000.\").\n  withDataURL(Population).\n  mark(Bar).\n  transformFilter(\"datum.year == 2000\").\n  encodeY(\"age\", Ordinal, scale=Scale(bandSize=17)).\n  encodeX(\"people\", Quantitative, aggregate=Sum, axis=Axis(title=\"population\")).\n  show"
+   "text": "Vegas(\"A bar chart showing the US population distribution of age groups in 2000.\").\n  withURL(Population).\n  mark(Bar).\n  transformFilter(\"datum.year == 2000\").\n  encodeY(\"age\", Ordinal, scale=Scale(bandSize=17)).\n  encodeX(\"people\", Quantitative, aggregate=AggOps.Sum, axis=Axis(title=\"population\")).\n  show"
  }
     ,
  {
    "config": { "title": false },
    "title": "",
-   "text": "Vegas().\n  withDataURL(Population).\n  mark(Bar).\n  addTransformCalculation(\"gender\", \"\"\"datum.sex == 2 ? \"Female\" : \"Male\"\"\"\").\n  transformFilter(\"datum.year == 2000\").\n  encodeColumn(\"age\", Ordinal, scale=Scale(padding=4.0), axis=Axis(orient=Bottom, axisWidth=1.0, offset= -8.0)).\n  encodeY(\"people\", Quantitative, aggregate=Sum, axis=Axis(title=\"population\", grid=false)).\n  encodeX(\"gender\", Nominal, scale=Scale(bandSize = 6.0), hideAxis=true).\n  encodeColor(\"gender\", Nominal, scale=Scale(rangeNominals=List(\"#EA98D2\", \"#659CCA\"))).\n  configFacet(cell=CellConfig(strokeWidth = 0)).\n  show"
+   "text": "Vegas().\n  withURL(Population).\n  mark(Bar).\n  addTransformCalculation(\"gender\", \"\"\"datum.sex == 2 ? \"Female\" : \"Male\"\"\"\").\n  transformFilter(\"datum.year == 2000\").\n  encodeColumn(\"age\", Ord, scale=Scale(padding=4.0), axis=Axis(orient=Orient.Bottom, axisWidth=1.0, offset= -8.0)).\n  encodeY(\"people\", Quantitative, aggregate=AggOps.Sum, axis=Axis(title=\"population\", grid=false)).\n  encodeX(\"gender\", Nominal, scale=Scale(bandSize = 6.0), hideAxis=true).\n  encodeColor(\"gender\", Nominal, scale=Scale(rangeNominals=List(\"#EA98D2\", \"#659CCA\"))).\n  configFacet(cell=CellConfig(strokeWidth = 0)).\n  show"
  }
     ,
  {
    "config": { "title": false },
    "title": "",
-   "text": "Vegas().\n  withDataURL(Unemployment).\n  mark(Area).\n  encodeX(\"date\", Temporal, timeUnit=YearMonth, scale=Scale(nice=Nice.Month),\n    axis=Axis(axisWidth=0, format=\"%Y\", labelAngle=0)).\n  encodeY(\"count\", Quantitative, aggregate=Sum).\n  configCell(width=300, height=200).\n  show"
+   "text": "Vegas().\n  withURL(Unemployment).\n  mark(Area).\n  encodeX(\"date\", Temp, timeUnit=TimeUnit.Yearmonth, scale=Scale(nice=Nice.Month),\n    axis=Axis(axisWidth=0, format=\"%Y\", labelAngle=0)).\n  encodeY(\"count\", Quantitative, aggregate=AggOps.Sum).\n  configCell(width=300, height=200).\n  show"
  }
     ,
  {
    "config": { "title": false },
    "title": "",
-   "text": "Vegas().\n  withDataURL(Population).\n  transformFilter(\"datum.year == 2000\").\n  addTransformCalculation(\"gender\", \"datum.sex == 2 ? \\\"Female\\\" : \\\"Male\\\"\").\n  mark(Bar).\n  encodeY(\"people\", Quantitative, aggregate=Sum, axis=Axis(title=\"population\")).\n  encodeX(\"age\", Ordinal, scale=Scale(bandSize= 17)).\n  encodeColor(\"gender\", Nominal, scale=Scale(rangeNominals=List(\"#EA98D2\", \"#659CCA\"))).\n  configMark(stacked=StackOffset.Normalize).\n  show"
+   "text": "Vegas().\n  withURL(Population).\n  transformFilter(\"datum.year == 2000\").\n  addTransformCalculation(\"gender\", \"datum.sex == 2 ? \\\"Female\\\" : \\\"Male\\\"\").\n  mark(Bar).\n  encodeY(\"people\", Quant, AggOps.Sum, axis=Axis(title=\"population\")).\n  encodeX(\"age\", Ord, scale=Scale(bandSize= 17)).\n  encodeColor(\"gender\", Nominal, scale=Scale(rangeNominals=List(\"#EA98D2\", \"#659CCA\"))).\n  configMark(stacked=StackOffset.Normalize).\n  show"
  }
     ,
  {
    "config": { "title": true },
    "title": "A trellis scatterplot showing Horsepower and Miles per gallons, faceted by binned values of Acceleration.",
-   "text": "Vegas(\"A trellis scatterplot showing Horsepower and Miles per gallons, faceted by binned values of Acceleration.\").\n  withDataURL(Cars).\n  mark(Point).\n  encodeX(\"Horsepower\", Quantitative).\n  encodeY(\"Miles_per_Gallon\", Quantitative).\n  encodeRow(\"Acceleration\", Quantitative, enableBin=true).\n  show"
+   "text": "Vegas(\"A trellis scatterplot showing Horsepower and Miles per gallons, faceted by binned values of Acceleration.\").\n  withURL(Cars).\n  mark(Point).\n  encodeX(\"Horsepower\", Quantitative).\n  encodeY(\"Miles_per_Gallon\", Quantitative).\n  encodeRow(\"Acceleration\", Quantitative, enableBin=true).\n  show"
  }
     ,
  {
    "config": { "title": false },
    "title": "",
-   "text": "Vegas().\n  withDataURL(Movies).\n  mark(Point).\n  encodeX(\"IMDB_Rating\", Quantitative, bin=Bin(maxbins=10.0)).\n  encodeY(\"Rotten_Tomatoes_Rating\", Quantitative, bin=Bin(maxbins=10.0)).\n  encodeSize(aggregate=Count, field=\"*\", dataType=Quantitative).\n  show"
+   "text": "Vegas().\n  withURL(Movies).\n  mark(Point).\n  encodeX(\"IMDB_Rating\", Quantitative, bin=Bin(maxbins=10.0)).\n  encodeY(\"Rotten_Tomatoes_Rating\", Quantitative, bin=Bin(maxbins=10.0)).\n  encodeSize(aggregate=AggOps.Count, field=\"*\", dataType=Quantitative).\n  show"
  }
     ,
  {
    "config": { "title": false },
    "title": "",
-   "text": "Vegas().\n  withDataURL(Cars).\n  mark(Point).\n  encodeX(\"Horsepower\", Quantitative).\n  encodeY(\"Miles_per_Gallon\", Quantitative).\n  encodeColor(field=\"Origin\", dataType=Nominal).\n  show"
+   "text": "Vegas().\n  withURL(Cars).\n  mark(Point).\n  encodeX(\"Horsepower\", Quantitative).\n  encodeY(\"Miles_per_Gallon\", Quantitative).\n  encodeColor(field=\"Origin\", dataType=Nominal).\n  show"
  }
     ,
  {
    "config": { "title": true },
    "title": "A scatterplot showing horsepower and miles per gallons with binned acceleration on color.",
-   "text": "Vegas(\"A scatterplot showing horsepower and miles per gallons with binned acceleration on color.\").\n  withDataURL(Cars).\n  mark(Point).\n  encodeX(\"Horsepower\", Quantitative).\n  encodeY(\"Miles_per_Gallon\", Quantitative).\n  encodeColor(field=\"Acceleration\", dataType=Quantitative, bin=Bin(maxbins=5.0)).\n  show"
+   "text": "Vegas(\"A scatterplot showing horsepower and miles per gallons with binned acceleration on color.\").\n  withURL(Cars).\n  mark(Point).\n  encodeX(\"Horsepower\", Quantitative).\n  encodeY(\"Miles_per_Gallon\", Quantitative).\n  encodeColor(field=\"Acceleration\", dataType=Quantitative, bin=Bin(maxbins=5.0)).\n  show"
  }
     ,
  {
    "config": { "title": false },
    "title": "",
-   "text": "Vegas().\n  withDataURL(Cars).\n  mark(Area).\n  encodeX(\"Acceleration\", Quantitative, bin=Bin()).\n  encodeY(\"Horsepower\", Quantitative, aggregate=Mean, enableBin=false).\n  encodeColor(field=\"Cylinders\", dataType=Nominal).\n  show"
+   "text": "Vegas().\n  withURL(Cars).\n  mark(Area).\n  encodeX(\"Acceleration\", Quantitative, bin=Bin()).\n  encodeY(\"Horsepower\", Quantitative, AggOps.Mean, enableBin=false).\n  encodeColor(field=\"Cylinders\", dataType=Nominal).\n  show"
+ }
+    ,
+ {
+   "config": { "title": true },
+   "title": "The Trellis display by Becker et al. helped establish small multiples as a “powerful mechanism for understanding interactions in studies of how a response depends on explanatory variables”. Here we reproduce a trellis of Barley yields from the 1930s, complete with main-effects ordering to facilitate comparison.",
+   "text": "Vegas(\"The Trellis display by Becker et al. helped establish small multiples as a “powerful mechanism for understanding interactions in studies of how a response depends on explanatory variables”. Here we reproduce a trellis of Barley yields from the 1930s, complete with main-effects ordering to facilitate comparison.\").\n  withURL(Barley).\n  mark(Point).\n  encodeRow(\"site\", Ordinal).\n  encodeX(\"yield\", Quantitative, aggregate=AggOps.Mean).\n  encodeY(\"variety\", Ordinal, sortField=Sort(\"yield\", AggOps.Mean), scale=Scale(bandSize = 12.0)).\n  encodeColor(field=\"year\", dataType=Nominal).\n  show"
  }
     ,
  {
    "config": { "title": true },
    "title": "Plot with hard-coded size value",
-   "text": "Vegas(\"Plot with hard-coded size value\").\n  withDataURL(Cars).\n  mark(Circle).\n  encodeY(\"Horsepower\", Quantitative).\n  encodeX(\"Miles_per_Gallon\", Quantitative).\n  encodeSize(value=201L).\n  show"
+   "text": "Vegas(\"Plot with hard-coded size value\").\n  withURL(Cars).\n  mark(Circle).\n  encodeY(\"Horsepower\", Quantitative).\n  encodeX(\"Miles_per_Gallon\", Quantitative).\n  encodeSize(value=201L).\n  show"
  }
     ,
  {
    "config": { "title": true },
    "title": "Plots both mean and IQR as a background layer",
-   "text": "Vegas.layered(\"Plots both mean and IQR as a background layer\").\n  withDataURL(Population).\n  withLayers(\n    Layer().\n      mark(Line).\n      encodeX(\"age\", Ordinal).\n      encodeY(\"people\", aggregate=Mean),\n    Layer().\n      mark(Area).\n      encodeX(\"age\", Ordinal).\n      encodeY(\"people\", aggregate=Q1).\n      encodeY2(\"people\", aggregate=Q3)\n  ).\n  show"
+   "text": "Vegas.layered(\"Plots both mean and IQR as a background layer\").\n  withURL(Population).\n  withLayers(\n    Layer().\n      mark(Line).\n      encodeX(\"age\", Ordinal).\n      encodeY(\"people\", aggregate=AggOps.Mean),\n    Layer().\n      mark(Area).\n      encodeX(\"age\", Ordinal).\n      encodeY(\"people\", aggregate=AggOps.Q1).\n      encodeY2(\"people\", aggregate=AggOps.Q3)\n  ).\n  show"
  }
     ,
  {
    "config": { "title": true },
    "title": "Plot with legend on the left and a different title ",
-   "text": "Vegas(\"Plot with legend on the left and a different title \").\n  withDataURL(Cars).\n  mark(Point).\n  encodeY(\"Horsepower\", Quantitative).\n  encodeX(\"Miles_per_Gallon\", Quantitative).\n  encodeColor(field=\"Origin\", dataType=Nominal, legend=Legend(orient = \"left\", title=\"Place of Origin\" )).\n  encodeShape(field=\"Origin\", dataType=Nominal, legend=Legend(orient = \"left\", title=\"Place of Origin\",\n    titleColor=\"red\")).\n  show"
+   "text": "Vegas(\"Plot with legend on the left and a different title \").\n  withURL(Cars).\n  mark(Point).\n  encodeY(\"Horsepower\", Quantitative).\n  encodeX(\"Miles_per_Gallon\", Quantitative).\n  encodeColor(field=\"Origin\", dataType=Nominal, legend=Legend(orient = \"left\", title=\"Place of Origin\" )).\n  encodeShape(field=\"Origin\", dataType=Nominal, legend=Legend(orient = \"left\", title=\"Place of Origin\",\n    titleColor=\"red\")).\n  show"
  }
     ,
  {
    "config": { "title": true },
    "title": "Plot to show Binning options",
-   "text": "Vegas(\"Plot to show Binning options\").\n  withDataURL(Movies).\n  mark(Bar).\n  encodeX(\"IMDB_Rating\", Quantitative, bin=Bin(step=2.0, maxbins=3.0)).\n  encodeY(field=\"*\", Quantitative, aggregate=Count).\n  show"
+   "text": "Vegas(\"Plot to show Binning options\").\n  withURL(Movies).\n  mark(Bar).\n  encodeX(\"IMDB_Rating\", Quantitative, bin=Bin(step=2.0, maxbins=3.0)).\n  encodeY(field=\"*\", Quantitative, aggregate=AggOps.Count).\n  show"
+ }
+    ,
+ {
+   "config": { "title": true },
+   "title": "Plot to show Binning options",
+   "text": "Vegas(\"Plot to show Binning options\").\n  withURL(Movies).\n  mark(Bar).\n  encodeX(\"Worldwide_Gross\", Quantitative, bin=Bin(maxbins=20.0), sortOrder=SortOrder.Descending).\n  encodeY(field=\"*\", Quantitative, aggregate=AggOps.Count).\n  show"
+ }
+    ,
+ {
+   "config": { "title": true },
+   "title": "Plot to show usage of encodeText",
+   "text": "Vegas(\"Plot to show usage of encodeText\").\n  withURL(Cars).addTransformCalculation(\"OriginInitial\", \"datum.Origin[0]\").\n  mark(Text).\n  encodeX(\"Horsepower\", Quantitative).\n  encodeY(\"Miles_per_Gallon\", Quantitative).\n  encodeColor(field=\"Origin\", dataType= Nominal).\n  encodeText(field=\"OriginInitial\", dataType= Nominal).\n  show"
  }
      ]
  }
