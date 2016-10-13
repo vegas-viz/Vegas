@@ -106,7 +106,7 @@ lazy val commonSettings = Seq(
     runClean,
     runTest,
     setReleaseVersion,
-    releaseStepInputTask(mkNotebooks in Global),
+    releaseStepInputTask(mkNotebooks),
     commitReleaseVersion,
     tagRelease,
     ReleaseStep(action = Command.process("publishSigned", _)),
