@@ -16,6 +16,7 @@ package object vegas {
   val Legend = vegas.DSL.LegendDSL
   val Bin = vegas.DSL.BinDSL
   val Sort = vegas.DSL.SortDSL
+  val Field = vegas.DSL.FieldDSL
 
   // -------
   // Core Enums

@@ -24,10 +24,11 @@ trait EncoderDSL[T] extends BaseEncoderDSL[T] {
   private val _size = GenLens[Encoding](_.size)
   private val _shape = GenLens[Encoding](_.shape)
 
-  // TODO
-  private val _detail = GenLens[Encoding](_.detail)
   private val _text = GenLens[Encoding](_.text)
   private val _label = GenLens[Encoding](_.label)
+  private val _detail = GenLens[Encoding](_.detail)
+
+  // TODO
   private val _path = GenLens[Encoding](_.path)
   private val _order = GenLens[Encoding](_.order)
 
@@ -83,6 +84,14 @@ trait EncoderDSL[T] extends BaseEncoderDSL[T] {
     baseEncoderFD(lens)(field, dataType, value, timeUnit, bin, enableBin, aggregate, title)
 
   }
+
+  def encodeDetailFields(fields: FieldDef*): T = {
+    val detailU = if (fields.size == 1) Encoding.DetailFieldDef(fields.head) else Encoding.DetailListFieldDef(fields.toList)
+    val lens = (_encoding composePrism _orElse(Encoding()) composeLens _detail)
+    lens.set(Some(detailU))(this)
+  }
+
+
 }
 
 
@@ -102,10 +111,11 @@ trait UnitEncoderDSL[T] extends BaseEncoderDSL[T] {
   private val _size = GenLens[UnitEncoding](_.size)
   private val _shape = GenLens[UnitEncoding](_.shape)
 
-  // TODO
-  private val _detail = GenLens[UnitEncoding](_.detail)
   private val _text = GenLens[UnitEncoding](_.text)
   private val _label = GenLens[UnitEncoding](_.label)
+  private val _detail = GenLens[UnitEncoding](_.detail)
+
+  // TODO
   private val _path = GenLens[UnitEncoding](_.path)
   private val _order = GenLens[UnitEncoding](_.order)
 
@@ -140,7 +150,6 @@ trait UnitEncoderDSL[T] extends BaseEncoderDSL[T] {
       sortField, sortOrder)
   }
 
-
   @alias_with_lens("encodeText", _text)
   @alias_with_lens("encodeLabel", _label)
   @alias_with_lens("encodeX2", _x2)
@@ -154,6 +163,12 @@ trait UnitEncoderDSL[T] extends BaseEncoderDSL[T] {
     val lens = (_encoding composePrism _orElse(UnitEncoding()) composeLens l)
 
     baseEncoderFD(lens)(field, dataType, value, timeUnit, bin, enableBin, aggregate, title)
+  }
+
+  def encodeDetailFields(fields: FieldDef*): T = {
+    val detailU = if (fields.size == 1) UnitEncoding.DetailFieldDef(fields.head) else UnitEncoding.DetailListFieldDef(fields.toList)
+    val lens = (_encoding composePrism _orElse(UnitEncoding()) composeLens _detail)
+    lens.set(Some(detailU))(this)
   }
 
 }
@@ -230,6 +245,46 @@ trait BaseEncoderDSL[T] {
       bin = binU, title=title)
 
     lens.set(Some(fd))(this)
+
+  }
+
+  def encodeDetailFields(fields: FieldDef*): T
+
+  def encodeDetail(fields: String*): T = {
+    val fieldDefs = fields.map { f => FieldDef.apply(field = Some(f)) }
+    encodeDetailFields(fieldDefs: _*)
+  }
+
+}
+
+object FieldDSL {
+
+  def apply(field: OptArg[String] = NoArg,
+            dataType: OptArg[Type] = NoArg,
+            value: OptArg[Any] = NoArg,
+            timeUnit: OptArg[TimeUnit] = NoArg,
+            bin: OptArg[Bin] = NoArg,
+            enableBin: OptArg[Boolean] = NoArg,
+            aggregate: OptArg[AggregateOp] = NoArg,
+            title: OptArg[String] = NoArg) = {
+
+    val valueU = value.map {
+      case b: Boolean => FieldDef.ValueBoolean(b)
+      case s: String => FieldDef.ValueString(s)
+      case x@_ => SimpleTypeUtils.toDouble(x).map(FieldDef.ValueDouble(_))
+        .getOrElse(throw new Exception("Value must be AnyVal, Boolean, or String"))
+    }
+
+    val binU = (bin.map(FieldDef.BinBin(_)) orElse enableBin.map(b => FieldDef.BinBoolean( b )))
+
+    FieldDef(
+      field = field,
+      `type` = dataType,
+      value = valueU,
+      timeUnit = timeUnit,
+      bin = binU,
+      aggregate = aggregate
+    )
 
   }
 
