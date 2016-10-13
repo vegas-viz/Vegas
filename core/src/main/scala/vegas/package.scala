@@ -53,7 +53,6 @@ package object vegas {
   val Category20b = "category20b"
   val Category20c = "category20c"
 
-
   // ---
   // Config Enums
   // ---
@@ -66,6 +65,7 @@ package object vegas {
   val Shape = Spec.ShapeEnums
   val FontStyle = Spec.FontStyleEnums
   val FontWeight = Spec.FontWeightEnums
+  val BandSize = Spec.BandSizeEnums
 
   val AreaOverlay = Spec.AreaOverlayEnums
 

@@ -54,7 +54,7 @@ trait ConfigDSL[T] {
                  strokeDashOffset: OptArg[Double] = NoArg, stacked: OptArg[StackOffset] = NoArg, orient: OptArg[Orient] = NoArg,
                  interpolate: OptArg[Interpolate] = NoArg, tension: OptArg[Double] = NoArg, lineSize: OptArg[Double] = NoArg,
                  ruleSize: OptArg[Double] = NoArg, barSize: OptArg[Double] = NoArg, barThinSize: OptArg[Double] = NoArg,
-                 shape: OptArg[Shape] = NoArg, size: OptArg[Double] = NoArg, tickSize: OptArg[Double] = NoArg,
+                 shape: OptArg[Shape] = NoArg, customShape: OptArg[String] = NoArg, size: OptArg[Double] = NoArg, tickSize: OptArg[Double] = NoArg,
                  tickThickness: OptArg[Double] = NoArg, align: OptArg[HorizontalAlign] = NoArg, angle: OptArg[Double] = NoArg,
                  baseline: OptArg[VerticalAlign] = NoArg, dx: OptArg[Double] = NoArg, dy: OptArg[Double] = NoArg,
                  radius: OptArg[Double] = NoArg, theta: OptArg[Double] = NoArg, font: OptArg[String] = NoArg,
@@ -62,10 +62,12 @@ trait ConfigDSL[T] {
                  format: OptArg[String] = NoArg, shortTimeLabels: OptArg[Boolean] = NoArg, text: OptArg[String] = NoArg,
                  applyColorToBackground: OptArg[Boolean] = NoArg) = {
 
+    val shapeU = (shape.map(MarkConfig.ShapeShape(_)) orElse customShape.map(MarkConfig.ShapeString(_)))
+
     val mark = MarkConfig(filled=filled, color=color, fill=fill, stroke=stroke, opacity=opacity, fillOpacity=fillOpacity,
       strokeOpacity=strokeOpacity, strokeWidth=strokeWidth, strokeDash=strokeDash, strokeDashOffset=strokeDashOffset, stacked=stacked,
       orient=orient, interpolate=interpolate, tension=tension, lineSize=lineSize, ruleSize=ruleSize, barSize=barSize, barThinSize=barThinSize,
-      shape=shape, size=size, tickSize=tickSize, tickThickness=tickThickness, align=align, angle=angle, baseline=baseline,
+      shape=shapeU, size=size, tickSize=tickSize, tickThickness=tickThickness, align=align, angle=angle, baseline=baseline,
       dx=dx, dy=dy, radius=radius, theta=theta, font=font, fontSize=fontSize, fontStyle=fontStyle, fontWeight=fontWeight, format=format,
       shortTimeLabels=shortTimeLabels, text=text, applyColorToBackground=applyColorToBackground)
 
@@ -82,7 +84,8 @@ trait ConfigDSL[T] {
   }
 
 
-  def configScale(round: OptArg[Boolean] = NoArg, textBandWidth: OptArg[Double] = NoArg, bandSize: OptArg[Double] = NoArg,
+  def configScale(round: OptArg[Boolean] = NoArg, textBandWidth: OptArg[Double] = NoArg,
+                  bandSize: OptArg[Double] = NoArg, bandSizePreset: OptArg[BandSize] = NoArg,
                   opacity: OptArg[List[Double]] = NoArg, padding: OptArg[Double] = NoArg, useRawDomain: OptArg[Boolean] = NoArg,
                   nominalColorRange: OptArg[ScaleConfig.NominalColorRangeListString] = NoArg,
                   sequentialColorRange: OptArg[ScaleConfig.SequentialColorRangeListString] = NoArg,
@@ -92,7 +95,9 @@ trait ConfigDSL[T] {
                   pointSizeRange: OptArg[List[Double]] = NoArg) = {
 
 
-    val scale = ScaleConfig(round=round, textBandWidth=textBandWidth, bandSize=bandSize, opacity=opacity, padding=padding,
+    val bandSizeU = (bandSize.map(ScaleConfig.BandSizeDouble(_)) orElse bandSizePreset.map(ScaleConfig.BandSizeBandSize(_)))
+
+    val scale = ScaleConfig(round=round, textBandWidth=textBandWidth, bandSize=bandSizeU, opacity=opacity, padding=padding,
       useRawDomain=useRawDomain, nominalColorRange=nominalColorRange, sequentialColorRange=sequentialColorRange, shapeRange=shapeRange,
       barSizeRange=barSizeRange, fontSizeRange=fontSizeRange, ruleSizeRange=ruleSizeRange, tickSizeRange=tickSizeRange,
       pointSizeRange=pointSizeRange)
@@ -100,7 +105,7 @@ trait ConfigDSL[T] {
     (_config composePrism _orElse(Config()) composeLens _scale).set(Some(scale))(this)
 
   }
-  // 35
+
   def configAxis(axisWidth: OptArg[Double] = NoArg, layer: OptArg[String] = NoArg, offset: OptArg[Double] = NoArg,
                  axisColor: OptArg[String] = NoArg, grid: OptArg[Boolean] = NoArg, gridColor: OptArg[String] = NoArg,
                  gridDash: OptArg[List[Double]] = NoArg, gridOpacity: OptArg[Double] = NoArg, gridWidth: OptArg[Double] = NoArg,
@@ -201,7 +206,7 @@ object AxisConfigDSL {
             titleOffset: OptArg[Double] = NoArg,
             titleMaxLength: OptArg[Double] = NoArg,
             characterWidth: OptArg[Double] = NoArg,
-            properties: OptArg[AxisConfig.Properties] = NoArg) =
+            properties: OptArg[AxisConfig.Properties] = NoArg) = {
 
     AxisConfig(
       axisWidth = axisWidth,
@@ -240,6 +245,7 @@ object AxisConfigDSL {
       characterWidth = characterWidth,
       properties = properties)
 
+  }
 }
 
 object MarkConfigDSL {
@@ -263,6 +269,7 @@ object MarkConfigDSL {
             barSize: OptArg[Double] = NoArg,
             barThinSize: OptArg[Double] = NoArg,
             shape: OptArg[Shape] = NoArg,
+            customShape: OptArg[String] = NoArg,
             size: OptArg[Double] = NoArg,
             tickSize: OptArg[Double] = NoArg,
             tickThickness: OptArg[Double] = NoArg,
@@ -280,7 +287,9 @@ object MarkConfigDSL {
             format: OptArg[String] = NoArg,
             shortTimeLabels: OptArg[Boolean] = NoArg,
             text: OptArg[String] = NoArg,
-            applyColorToBackground: OptArg[Boolean] = NoArg) =
+            applyColorToBackground: OptArg[Boolean] = NoArg) = {
+
+    val shapeU = (shape.map(MarkConfig.ShapeShape(_)) orElse customShape.map(MarkConfig.ShapeString(_)))
 
     MarkConfig(
       filled = filled,
@@ -301,7 +310,7 @@ object MarkConfigDSL {
       ruleSize = ruleSize,
       barSize = barSize,
       barThinSize = barThinSize,
-      shape = shape,
+      shape = shapeU,
       size = size,
       tickSize = tickSize,
       tickThickness = tickThickness,
@@ -320,6 +329,7 @@ object MarkConfigDSL {
       shortTimeLabels = shortTimeLabels,
       text = text,
       applyColorToBackground = applyColorToBackground)
+  }
 
 }
 
@@ -334,19 +344,21 @@ object CellConfigDSL {
             strokeOpacity: OptArg[Double] = NoArg,
             strokeWidth: OptArg[Double] = NoArg,
             strokeDash: OptArg[List[Double]] = NoArg,
-            strokeDashOffset: OptArg[Double] = NoArg) =
+            strokeDashOffset: OptArg[Double] = NoArg) = {
 
     CellConfig(
-      width=width,
-      height=height,
-      clip=clip,
-      fill=fill,
-      fillOpacity=fillOpacity,
-      stroke=stroke,
-      strokeOpacity=strokeOpacity,
-      strokeWidth=strokeWidth,
-      strokeDash=strokeDash,
-      strokeDashOffset=strokeDashOffset
+      width = width,
+      height = height,
+      clip = clip,
+      fill = fill,
+      fillOpacity = fillOpacity,
+      stroke = stroke,
+      strokeOpacity = strokeOpacity,
+      strokeWidth = strokeWidth,
+      strokeDash = strokeDash,
+      strokeDashOffset = strokeDashOffset
     )
+
+  }
 }
 

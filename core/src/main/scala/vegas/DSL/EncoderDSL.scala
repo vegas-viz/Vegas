@@ -35,8 +35,6 @@ trait EncoderDSL[T] extends BaseEncoderDSL[T] {
   @alias_with_lens("encodeRow", _row)
   @alias_with_lens("encodeX", _x)
   @alias_with_lens("encodeY", _y)
-  @alias_with_lens("encodeX2", _x2)
-  @alias_with_lens("encodeY2", _y2)
   private def encodePCD_(l: Lens[Encoding, Option[PositionChannelDef]])
     (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg,
      aggregate: OptArg[AggregateOp] = NoArg, value: OptArg[Any] = NoArg,
@@ -46,8 +44,10 @@ trait EncoderDSL[T] extends BaseEncoderDSL[T] {
      sortField: OptArg[SortField] = NoArg, sortOrder: OptArg[SortOrder] = NoArg) = {
 
     val lens = (_encoding composePrism _orElse(Encoding()) composeLens l)
+
     baseEncodePCD(lens)(field, dataType, aggregate, value, axis, hideAxis, scale, timeUnit, title, bin, enableBin,
       sortField, sortOrder)
+
   }
 
   @alias_with_lens("encodeColor", _color)
@@ -60,14 +60,18 @@ trait EncoderDSL[T] extends BaseEncoderDSL[T] {
      timeUnit: OptArg[TimeUnit] = NoArg, title: OptArg[String] = NoArg, legend: OptArg[Legend] = NoArg,
      bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg,
      sortField: OptArg[SortField] = NoArg, sortOrder: OptArg[SortOrder] = NoArg) = {
+
     val lens = (_encoding composePrism _orElse(Encoding()) composeLens l)
+
     baseEncodeCDWL(lens)(field, dataType, aggregate, value, scale, timeUnit, title, legend, bin, enableBin,
       sortField, sortOrder)
-  }
 
+  }
 
   @alias_with_lens("encodeText", _text)
   @alias_with_lens("encodeLabel", _label)
+  @alias_with_lens("encodeX2", _x2)
+  @alias_with_lens("encodeY2", _y2)
   private def encodeFD_(l: Lens[Encoding, Option[FieldDef]])
                        (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
                         timeUnit: OptArg[TimeUnit] = NoArg, bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg,
@@ -75,7 +79,9 @@ trait EncoderDSL[T] extends BaseEncoderDSL[T] {
                         title: OptArg[String] = NoArg) = {
 
     val lens = (_encoding composePrism _orElse(Encoding()) composeLens l)
+
     baseEncoderFD(lens)(field, dataType, value, timeUnit, bin, enableBin, aggregate, title)
+
   }
 }
 
@@ -105,8 +111,6 @@ trait UnitEncoderDSL[T] extends BaseEncoderDSL[T] {
 
   @alias_with_lens("encodeX", _x)
   @alias_with_lens("encodeY", _y)
-  @alias_with_lens("encodeX2", _x2)
-  @alias_with_lens("encodeY2", _y2)
   private def encodePCD_(l: Lens[UnitEncoding, Option[PositionChannelDef]])
                         (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg,
                          aggregate: OptArg[AggregateOp] = NoArg, value: OptArg[Any] = NoArg,
@@ -139,6 +143,8 @@ trait UnitEncoderDSL[T] extends BaseEncoderDSL[T] {
 
   @alias_with_lens("encodeText", _text)
   @alias_with_lens("encodeLabel", _label)
+  @alias_with_lens("encodeX2", _x2)
+  @alias_with_lens("encodeY2", _y2)
   private def encodeFD_(l: Lens[UnitEncoding, Option[FieldDef]])
                        (field: OptArg[String] = NoArg, dataType: OptArg[Type] = NoArg, value: OptArg[Any] = NoArg,
                         timeUnit: OptArg[TimeUnit] = NoArg, bin: OptArg[Bin] = NoArg, enableBin: OptArg[Boolean] = NoArg,
@@ -217,11 +223,14 @@ trait BaseEncoderDSL[T] {
       case x@_ => SimpleTypeUtils.toDouble(x).map(FieldDef.ValueDouble(_))
         .getOrElse(throw new Exception("Value must be AnyVal, Boolean, or String"))
     }
+
     val binU = (bin.map(FieldDef.BinBin(_)) orElse enableBin.map(b => FieldDef.BinBoolean( b )))
 
     val fd = FieldDef(field = field, `type` = dataType, aggregate = aggregate, value = valueU, timeUnit = timeUnit,
       bin = binU, title=title)
+
     lens.set(Some(fd))(this)
+
   }
 
 }

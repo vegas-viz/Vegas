@@ -12,13 +12,13 @@ class AllDSLSpec extends FlatSpec with Matchers with JsonMatchers {
 
   val examples = new File("core/src/test/resources/example-specs")
     .listFiles.toList
-    .filterNot(_.isDirectory)
+    .filter(_.getName.endsWith("json"))
     .map { file =>
       val json = Source.fromFile(file)
         .getLines.mkString
         // Make URLs absolute
         .replaceAll("data/.*.json", "https://vega.github.io/vega-editor/app/$0")
-      (file.getName.stripSuffix(".json"), json)
+      (file.getName.stripSuffix(".vl.json"), json)
     }
     .toMap
 
@@ -39,6 +39,7 @@ class AllDSLSpec extends FlatSpec with Matchers with JsonMatchers {
     StackedAreaBinnedPlot.asCirceJson should beSameJsonAs(examples("stacked_area_binned"))
     SortColorPlot.asCirceJson should beSameJsonAs(examples("trellis_barley"))
     BinnedChart.asCirceJson should beSameJsonAs(examples("trellis_scatter_binned_row"))
+    CustomShapePlot.asCirceJson should beSameJsonAs(examples("scatter_shape_custom"))
 
   }
 
