@@ -50,8 +50,8 @@ object VegasPlots {
     Vegas("Plot to show Binning options").
       withURL(Movies).
       mark(Bar).
-      encodeX("Worldwide_Gross", Quantitative, bin=Bin(maxbins=20.0), sortOrder=SortOrder.Descending).
-      encodeY(field="*", Quantitative, aggregate=AggOps.Count)
+      encodeX("Worldwide_Gross", Quant, bin=Bin(maxbins=20.0), sortOrder=SortOrder.Desc).
+      encodeY(field="*", Quant, aggregate=AggOps.Count)
 
   val ColoredTextScatterPlot =
     Vegas("Plot to show usage of encodeText").

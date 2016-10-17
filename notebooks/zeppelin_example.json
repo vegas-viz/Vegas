@@ -6,7 +6,7 @@
  {
    "config": { "title": false },
    "title": "",
-   "text": "com.github.aishfenton:vegas-spark_2.10:0.3.2-SNAPSHOT"
+   "text": "\n%dep\nz.load(\"com.github.aishfenton:vegas-spark_2.11:0.3.3-SNAPSHOT\")"
  }
     ,
  {
@@ -85,6 +85,18 @@
    "config": { "title": true },
    "title": "A scatterplot with custom star shapes.",
    "text": "Vegas(\"A scatterplot with custom star shapes.\").\n  withURL(Cars).\n  mark(Point).\n  encodeX(\"Horsepower\", Quant).\n  encodeY(\"Miles_per_Gallon\", Quant).\n  encodeColor(\"Cylinders\", Nom).\n  encodeSize(\"Weight_in_lbs\", Quant).\n  configMark(customShape=\"M0,0.2L0.2351,0.3236 0.1902,0.0618 0.3804,-0.1236 0.1175,-0.1618 0,-0.4 -0.1175,-0.1618 -0.3804,-0.1236 -0.1902,0.0618 -0.2351,0.3236 0,0.2Z\").\n  show"
+ }
+    ,
+ {
+   "config": { "title": true },
+   "title": "A scatterplot showing average horsepower and displacement for cars from different origins.",
+   "text": "Vegas(\"A scatterplot showing average horsepower and displacement for cars from different origins.\").\n  withURL(Cars).\n  mark(Point).\n  encodeX(\"Horsepower\", Quant, AggOps.Mean).\n  encodeY(\"Displacement\", Quant, AggOps.Mean).\n  encodeDetail(\"Origin\").\n  show"
+ }
+    ,
+ {
+   "config": { "title": true },
+   "title": "Stock prices of 5 Tech Companies Over Time.",
+   "text": "Vegas(\"Stock prices of 5 Tech Companies Over Time.\").\n  withURL(Stocks, formatType = DataFormat.Csv).\n  mark(Line).\n  encodeX(\"date\", Temp).\n  encodeY(\"price\", Quant).\n  encodeDetailFields(Field(field=\"symbol\", dataType=Nominal)).\n  show"
  }
     ,
  {

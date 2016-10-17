@@ -56,8 +56,10 @@ case class StaticHTMLRenderer(specJson: String) extends BaseHTMLRenderer {
       |  <script>
       |    if (typeof resizeIFrame != 'function') {
       |      function resizeIFrame(el, k) {
-      |        el.style.height = el.contentWindow.document.body.scrollHeight + 'px';
-      |        if (k <= 7) { setTimeout(function() { resizeIFrame(el, k+1) }, 1000) };
+      |        $$(el.contentWindow.document).ready(function() {
+      |          el.style.height = el.contentWindow.document.body.scrollHeight + 'px';
+      |        });
+      |        if (k <= 10) { setTimeout(function() { resizeIFrame(el, k+1) }, 1000 + (k * 250)) };
       |      }
       |    }
       |    $$().ready( function() { resizeIFrame($$('#${frameName}').get(0), 1); });
