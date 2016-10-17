@@ -1,16 +1,14 @@
-package vegas.spark
+package vegas
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.DataFrame
-
-import vegas.DSL._
 import vegas.DSL.DataDSL
 
-object Spark {
+package object sparkExt {
 
-  implicit class SparkExt(val specBuilder: DataDSL[_]) {
+  implicit class VegasSpark[T](val specBuilder: DataDSL[T]) {
 
-    def withDataFrame(df: DataFrame, limit: Int = 1000) = {
+    def withDataFrame(df: DataFrame, limit: Int = 1000): T = {
       val columns: Array[String] = df.columns
       val count: Double = df.count
       val localData = {
@@ -23,7 +21,7 @@ object Spark {
       specBuilder.withData(data)
     }
 
-    def withRDD(rdd: RDD[Product], limit: Int = 1000) = {
+    def withRDD(rdd: RDD[Product], limit: Int = 1000): T = {
       val count = rdd.count
       val localData: Array[Product] = {
         if (count >= limit) rdd.sample(false, limit / count).collect() else rdd.collect()

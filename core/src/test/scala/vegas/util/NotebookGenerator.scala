@@ -119,7 +119,9 @@ class JupyterGenerator extends NotebookGenerator {
 class ZeppelinGenerator extends NotebookGenerator {
 
   def preamble(version: String) =
-    ("", s"""com.github.aishfenton:vegas-spark_2.10:${version}""") ::
+    ("", s"""
+     |%dep
+     |z.load("com.github.aishfenton:vegas-spark_2.11:${version}")""".stripMargin) ::
     ("", """
      |import vegas._
      |import vegas.data.External._

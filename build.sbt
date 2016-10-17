@@ -176,7 +176,7 @@ lazy val spark = project.
   settings(commonSettings: _*).
   settings(
     libraryDependencies ++= Seq(
-      "org.apache.spark" %% "spark-sql" % "[1.5,)" % "provided"
+      "org.apache.spark" %% "spark-sql" % "[2.0,)" % "provided"
     )
   )
 
