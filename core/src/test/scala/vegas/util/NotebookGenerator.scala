@@ -126,7 +126,7 @@ class ZeppelinGenerator extends NotebookGenerator {
      |import vegas._
      |import vegas.data.External._
      |import vegas.render.HTMLRenderer._
-     |implicit val displayer: String => Unit = (s) => s"%html + $s" """.stripMargin) ::
+     |implicit val displayer: String => Unit = (s) => println(s"%html $s")""".stripMargin) ::
     Nil
 
   def mkNotebook(plots: List[(String, String)]) = {
