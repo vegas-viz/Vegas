@@ -47,7 +47,12 @@ package object vegas {
   val TimeUnit = Spec.TimeUnitEnums
   val Nice = Spec.NiceTimeEnums
 
-  val SortOrder = Spec.SortOrderEnums
+  object SortOrder {
+    val Ascending = Spec.SortOrderEnums.Ascending
+    val Asc = Spec.SortOrderEnums.Ascending
+    val Descending = Spec.SortOrderEnums.Descending
+    val Desc = Spec.SortOrderEnums.Descending
+  }
 
   val Category10 = "category10"
   val Category20 = "category20"
