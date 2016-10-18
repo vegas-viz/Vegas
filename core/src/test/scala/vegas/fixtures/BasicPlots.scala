@@ -21,7 +21,7 @@ object BasicPlots {
     Vegas("A bar chart showing the US population distribution of age groups in 2000.").
       withURL(Population).
       mark(Bar).
-      transformFilter("datum.year == 2000").
+      filter("datum.year == 2000").
       encodeY("age", Ordinal, scale=Scale(bandSize=17)).
       encodeX("people", Quantitative, aggregate=AggOps.Sum, axis=Axis(title="population"))
 
@@ -30,7 +30,7 @@ object BasicPlots {
       withURL(Population).
       mark(Bar).
       addTransformCalculation("gender", """datum.sex == 2 ? "Female" : "Male"""").
-      transformFilter("datum.year == 2000").
+      filter("datum.year == 2000").
       encodeColumn("age", Ord, scale=Scale(padding=4.0), axis=Axis(orient=Orient.Bottom, axisWidth=1.0, offset= -8.0)).
       encodeY("people", Quantitative, aggregate=AggOps.Sum, axis=Axis(title="population", grid=false)).
       encodeX("gender", Nominal, scale=Scale(bandSize = 6.0), hideAxis=true).
@@ -49,8 +49,8 @@ object BasicPlots {
   val NormalizedStackedBarChart =
     Vegas().
       withURL(Population).
-      transformFilter("datum.year == 2000").
-      addTransformCalculation("gender", "datum.sex == 2 ? \"Female\" : \"Male\"").
+      filter("datum.year == 2000").
+      addTransform("gender", "datum.sex == 2 ? \"Female\" : \"Male\"").
       mark(Bar).
       encodeY("people", Quant, AggOps.Sum, axis=Axis(title="population")).
       encodeX("age", Ord, scale=Scale(bandSize= 17)).

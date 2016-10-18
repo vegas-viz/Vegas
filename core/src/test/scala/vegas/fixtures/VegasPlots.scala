@@ -55,7 +55,8 @@ object VegasPlots {
 
   val ColoredTextScatterPlot =
     Vegas("Plot to show usage of encodeText").
-    withURL(Cars).addTransformCalculation("OriginInitial", "datum.Origin[0]").
+    withURL(Cars).
+    addTransform("OriginInitial", "datum.Origin[0]").
     mark(Text).
     encodeX("Horsepower", Quantitative).
     encodeY("Miles_per_Gallon", Quantitative).
