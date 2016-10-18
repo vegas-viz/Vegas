@@ -20,15 +20,5 @@ package object sparkExt {
       }
       specBuilder.withData(data)
     }
-
-    def withRDD(rdd: RDD[Product], limit: Int = 1000): T = {
-      val count = rdd.count
-      val localData: Array[Product] = {
-        if (count >= limit) rdd.sample(false, limit / count).collect() else rdd.collect()
-      }
-      specBuilder.withCaseClasses(localData)
-    }
-
   }
-
 }
