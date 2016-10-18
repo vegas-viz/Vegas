@@ -19,7 +19,7 @@ class SparkExtSpec extends FlatSpec with BeforeAndAfterAll with Matchers {
     sparkSession = SparkSession.builder
       .master("local[*]")
       .appName("test")
-      .set("spark.ui.enabled", "false")
+      .config("spark.ui.enabled", false)
       .getOrCreate()
 
     largeDataDF = sparkSession.sqlContext.createDataFrame(
