@@ -7,9 +7,10 @@ import vegas.spec.Spec.ExtendedUnitSpec
   * @author Aish Fenton.
   */
 case class StaticHTMLRenderer(specJson: String) extends BaseHTMLRenderer {
-  import vegas.spec.Spec.Implicits._
 
-  def importsHTML(additionalImports: String*) = (JSImports.values ++ additionalImports).map { s => "<script src=\"" + s + "\" charset=\"utf-8\"></script>" }.mkString("\n")
+  def importsHTML(additionalImports: String*) = (JSImports ++ additionalImports).map { s =>
+    "<script src=\"" + s + "\" charset=\"utf-8\"></script>"
+  }.mkString("\n")
 
   def headerHTML(additionalImports: String*) =
     s"""

@@ -2,16 +2,22 @@ package vegas.render
 
 import vegas.spec.Spec.ExtendedUnitSpec
 
-/**
-  * @author Aish Fenton.
-  */
+import scala.io.Source
+
 trait BaseHTMLRenderer {
 
-  def JSImports = collection.immutable.ListMap(
-    "d3" -> "https:////d3js.org/d3.v3.min.js",
-    "vg" -> "https://vega.github.io/vega/vega.js",
-    "vl" -> "https://vega.github.io/vega-lite/vega-lite.js",
-    "vg_embed" -> "https://vega.github.io/vega-editor/vendor/vega-embed.js"
+  private val WebJars = Source.fromInputStream(getClass.getResourceAsStream("/webjars.csv"))
+    .getLines
+    .map { l => val row = l.split(","); (row(0), row(1)) }
+    .toMap
+
+  private def CDN(artifact: String, file: String) = s"http://cdn.jsdelivr.net/webjars/org.webjars.bower/$artifact/${WebJars(artifact)}/$file"
+
+  def JSImports = List(
+    CDN("d3", "d3.min.js"),
+    CDN("vega", "vega.min.js"),
+    CDN("vega-lite", "vega-lite.min.js"),
+    "https://vega.github.io/vega-editor/vendor/vega-embed.js"
   )
 
   def defaultName = {

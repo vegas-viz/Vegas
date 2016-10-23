@@ -8,13 +8,27 @@ lazy val vegaLiteVersion = settingKey[String]("The release version of vega-lite 
 
 lazy val updateVegaDeps = taskKey[Unit]("Download and replace the vega-lite json schema and examples with the latest versions from their github repo")
 updateVegaDeps := {
-  val schemaFile = file("spec/src/main/resources/vega-lite-schema.json")
-  val examples = file("core/src/test/resources/example-specs/")
+  val specResources = (resourceDirectory in Compile in vegaLiteSpec).value
+  val coreResources = (resourceDirectory in Compile in vegas).value
+  val coreTestResources = (resourceDirectory in Test in vegas).value
 
   val vegaDir = target.value / ("vega-lite-" + vegaLiteVersion.value)
   IO.unzipURL(new URL("https://github.com/vega/vega-lite/archive/v" + vegaLiteVersion.value + ".zip"), target.value)
-  IO.copyDirectory(vegaDir / "examples" / "specs", examples, true)
-  IO.copyFile(vegaDir / "vega-lite-schema.json", schemaFile)
+  IO.copyDirectory(vegaDir / "examples" / "specs", coreTestResources / "example-specs", true)
+  IO.copyFile(vegaDir / "vega-lite-schema.json", specResources / "vega-lite-schema.json")
+
+  // Write WebJar.csv to resources, based on ivy-deps
+  val deps = (externalDependencyClasspath in vegas in Compile).value
+  val webJars = deps
+    .map { artifact =>
+      val m = artifact.get(Keys.moduleID.key).get
+      (m.organization, m.name, m.revision)
+    }
+    .filter(_._1 == "org.webjars.bower")
+    .map { case(_,n,v) => s"$n,$v" }
+    .mkString("\n")
+  IO.write(coreResources / "webjars.csv", webJars)
+
 }
 
 addCommandAlias("look", "vegas/test:runMain vegas.util.Look")
@@ -28,7 +42,6 @@ mkVegaModel := {
 }
 mkVegaModel <<= mkVegaModel
   .dependsOn(compile in vegaLiteSpec in Compile)
-//  .dependsOn(clean in vegaLiteSpec in Compile)
 
 lazy val lastReleaseVersion = taskKey[String]("Gets (using git tag) the version number of the last release")
 lastReleaseVersion := {
@@ -163,6 +176,11 @@ lazy val vegas = project.in(file("core")).
       "com.github.julien-truffaut" %% "monocle-macro" % "1.1.0",
       "com.github.julien-truffaut" %% "monocle-core" % "1.1.0",
       "org.scalafx" %% "scalafx" % "8.0.92-R10",
+
+      // JS deps. Also used to generate "webjars.csv" file for CDN loading.
+      "org.webjars.bower" % "vega-lite" % vegaLiteVersion.value,
+
+      // Test deps
       "com.github.aishfenton" %% "argus" % "0.2.3" % "test",
       "org.scalactic" %% "scalactic" % "2.2.6" % "test",
       "org.scalatest" %% "scalatest" % "2.2.6" % "test",
