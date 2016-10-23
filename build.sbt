@@ -67,12 +67,12 @@ mkNotebooks := (Def.inputTaskDyn {
 lazy val circeVersion = "0.4.1"
 
 lazy val commonSettings = Seq(
-  description := "The missing MatPlotLib for Scala and Spark",
-  organization := "com.github.aishfenton",
+  description := "The missing matplotlib for Scala and Spark",
+  organization := "com.github.vegas-viz",
   scalaVersion := "2.11.8",
   vegaLiteVersion := "1.2.0",
   scalacOptions += "-target:jvm-1.7",
-  homepage := Some(url("https://github.com/aishfenton/Vegas")),
+  homepage := Some(url("http://vegas-viz.org")),
   licenses := Seq("MIT License" -> url("http://www.opensource.org/licenses/MIT")),
 //  parallelExecution in Test := false,
 
@@ -87,11 +87,11 @@ lazy val commonSettings = Seq(
   },
   publishArtifact in Test := false,
   pomIncludeRepository := { _ => false },
-  sonatypeProfileName := "com.github.aishfenton",
+  sonatypeProfileName := "com.github.vegas-viz",
   pomExtra := (
     <scm>
-      <url>git@github.com:aishfenton/Vegas.git</url>
-      <connection>scm:git:git@github.com:aishfenton/Vegas.git</connection>
+      <url>git@github.com:vegas-viz/Vegas.git</url>
+      <connection>scm:git:git@github.com:vegas-viz/Vegas.git</connection>
     </scm>
       <developers>
         <developer>
