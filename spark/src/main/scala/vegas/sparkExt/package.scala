@@ -12,7 +12,20 @@ package object sparkExt {
       val count: Double = df.count
       val localData = {
         if (count >= limit) df.sample(false, limit / count).collect() else df.collect()
-      }.map { row => row.toSeq.map { value => if (value != null) value.toString else "null" } }.toSeq
+      }.map { row => row.toSeq.map { value =>
+        if (value != null) {
+          if (value.isInstanceOf[String]) {
+            // If the value is type of String, the return should have " in the beginning and the end
+            // of the return since it's not primitive type in JSON.
+            s"\"${value.toString}\""
+          } else {
+            value.toString
+          }
+        } else {
+          "null"
+        }
+      }
+      }.toSeq
 
       val data = localData.map { point =>
         columns.zip(point).map { case (name, value) => name -> value }.toMap
