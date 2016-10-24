@@ -151,11 +151,11 @@ libraryDependencies += "com.github.vegas-viz" % "vegas-spark_{scala-version}" % 
 import vegas.sparkExt._
 ```
 
-This adds the following new methods: 
+This adds the following new method:
 
 * withDataFrame(df: DataFrame)
 
-In the first case, each DataFrame column is exposed as a field keyed using the column's name.
+Each DataFrame column is exposed as a field keyed using the column's name.
 
 ### Flink integration
 ---
