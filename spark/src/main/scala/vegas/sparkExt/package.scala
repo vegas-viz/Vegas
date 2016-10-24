@@ -17,7 +17,7 @@ package object sparkExt {
           if (value.isInstanceOf[String]) {
             // If the value is type of String, the return should have " in the beginning and the end
             // of the return since it's not primitive type in JSON.
-            s"\"${value.toString}\""
+            "\"" + value.toString + "\""
           } else {
             value.toString
           }
