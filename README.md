@@ -14,7 +14,7 @@ Vegas aims to be the missing MatPlotLib for the Scala and Spark world. Vegas wra
 Add the following jar as an SBT dependacy
 
 ```sbt
-libraryDependencies += "com.github.aishfenton" %% "vegas_2.11" % "0.2.3"
+libraryDependencies += "com.github.vegas-viz" %% "vegas_2.11" % "0.3.5"
 ```
 
 And then use the following code to render a plot into a pop-up window (see below for more details on controlling how and where Vegas renders).
@@ -51,7 +51,7 @@ Vegas provides a number of options for rendering charts out to. The primary focu
 If you're using [jupyter-scala](https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=jupyter%20scala), then you must incldue the following in your notebook before using Vegas.
 
 ```scala
-classpath.add("com.github.aishfenton" %% "vegas" % "{vegas-version}")
+classpath.add("com.github.vegas-viz" %% "vegas" % "{vegas-version}")
 ```
 
 ```
@@ -65,7 +65,7 @@ implicit val displayer: String => Unit = display.html(_)
 And if you're using [Apache Toree](https://toree.incubator.apache.org/), then this:
 
 ```
-%AddDeps com.github.aishfenton vegas_{scala-version} {vegas-version} --transitive
+%AddDeps com.github.vegas-viz vegas_{scala-version} {vegas-version} --transitive
 ```
 
 ```scala
@@ -80,7 +80,7 @@ And lastly if you're using Apache Zeppelin [Zeppelin](https://zeppelin.incubator
 
 ```
 %dep
-z.load("com.github.aishfenton:vegas_{scala-version}:{vegas-version}")
+z.load("com.github.vegas-viz:vegas_{scala-version}:{vegas-version}")
 ```
 ```
 import vegas._
@@ -141,28 +141,27 @@ chart.show
 
 ## Spark integration
 
-Vegas comes with an optional extension package that makes it easier to work with Spark DataFrames and RDDs. First you'll need an extra import
+Vegas comes with an optional extension package that makes it easier to work with Spark DataFrames. First you'll need an extra import
 
 ```sbt
-libraryDependencies += "com.github.aishfenton" % "vegas-spark_{scala-version}" % "{vegas-version}"
+libraryDependencies += "com.github.vegas-viz" % "vegas-spark_{scala-version}" % "{vegas-version}"
 ```
 
 ```scala
-import vegas.spark.Spark._
+import vegas.sparkExt._
 ```
 
 This adds the following new methods: 
 
 * withDataFrame(df: DataFrame)
-* withRDD(rdd: RDD[Product])
 
-In the first case, each DataFrame column is exposed as a field keyed using the column's name. In the second case, an RDD of _case classes_ is expected, and reflection is used to map the case class's fields to fields within Vegas.   
+In the first case, each DataFrame column is exposed as a field keyed using the column's name.
 
 ### Flink integration
 ---
 Vegas also comes with an optional extension package that makes it easier to work with Flink DataSets. You'll also need to import:
 ```sbt
-libraryDependencies += "com.github.aishfenton % "vegas-flink_{scala-version} % "{vegas-version}"
+libraryDependencies += "com.github.vegas-viz % "vegas-flink_{scala-version} % "{vegas-version}"
 ```
 
 To use:

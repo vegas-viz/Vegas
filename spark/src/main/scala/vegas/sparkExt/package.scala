@@ -1,6 +1,5 @@
 package vegas
 
-import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.DataFrame
 import vegas.DSL.DataDSL
 
@@ -13,12 +12,14 @@ package object sparkExt {
       val count: Double = df.count
       val localData = {
         if (count >= limit) df.sample(false, limit / count).collect() else df.collect()
-      }.map { row => row.toSeq.map(_.toString) }.toSeq
+      }.map { row => row.toSeq.map { value => if (value != null) value.toString else "null" } }.toSeq
 
       val data = localData.map { point =>
         columns.zip(point).map { case (name, value) => name -> value }.toMap
       }
+
       specBuilder.withData(data)
     }
   }
+
 }
