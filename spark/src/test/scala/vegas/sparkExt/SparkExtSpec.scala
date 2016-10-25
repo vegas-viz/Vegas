@@ -48,9 +48,9 @@ class SparkExtSpec extends FlatSpec with BeforeAndAfterAll with Matchers {
     val data = Vegas().withDataFrame(largeDataDF).spec.data.get.values.get
     assert((data.size - 1000.0) / 1000 < 0.05, "data.size should be around 1k")
 
-    data.foreach { case Values(point: Map[String, String]) =>
-      val x = point.get("x").get.toDouble
-      val y = point.get("y").get.toDouble
+    data.foreach { case Values(point: Map[String, Double]) =>
+      val x = point.get("x").get
+      val y = point.get("y").get
       y shouldEqual 1.5 * x + 3
     }
   }
@@ -59,8 +59,8 @@ class SparkExtSpec extends FlatSpec with BeforeAndAfterAll with Matchers {
     val data = Vegas().withDataFrame(smallDataDF).spec.data.get.values.get
     data.size shouldEqual 235
 
-    data.map { case Values(point: Map[String, String]) =>
-      XYPair(point.get("x").get.toDouble, point.get("y").get.toDouble)
+    data.map { case Values(point: Map[String, Double]) =>
+      XYPair(point.get("x").get, point.get("y").get)
     }.zip(1 to 235).foreach { case (pair, index) =>
       pair.x shouldEqual index / 235.0
       pair.y shouldEqual 1.5 * pair.x + 3
