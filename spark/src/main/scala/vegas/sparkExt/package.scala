@@ -10,27 +10,16 @@ package object sparkExt {
     def withDataFrame(df: DataFrame, limit: Int = 1000): T = {
       val columns: Array[String] = df.columns
       val count: Double = df.count
-      val localData = {
+      val data = {
         if (count >= limit) df.sample(false, limit / count).collect() else df.collect()
-      }.map { row => row.toSeq.map { value =>
-        if (value != null) {
-          if (value.isInstanceOf[String]) {
-            // If the value is type of String, the return should have " in the beginning and the end
-            // of the return since it's not primitive type in JSON.
-            "\"" + value.toString + "\""
-          } else {
-            value.toString
-          }
-        } else {
-          "null"
-        }
+      }.map { row =>
+        columns.zipWithIndex.map { case (name: String, index: Int) =>
+          // We should be able to pass in the required columns into here, so we don't need
+          // to create a map containing all the columns.
+          val value = row.get(index)
+          name -> value
+        }.toMap
       }
-      }.toSeq
-
-      val data = localData.map { point =>
-        columns.zip(point).map { case (name, value) => name -> value }.toMap
-      }
-
       specBuilder.withData(data)
     }
   }
