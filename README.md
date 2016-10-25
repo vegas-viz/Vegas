@@ -5,7 +5,7 @@
 [![TravisCI](https://travis-ci.org/vegas-viz/Vegas.svg?branch=master)](https://travis-ci.org/vegas-viz/Vegas)
 [![codecov](https://codecov.io/gh/vegas-viz/Vegas/branch/master/graph/badge.svg)](https://codecov.io/gh/vegas-viz/Vegas)
 
-Vegas aims to be the missing MatPlotLib for the Scala and Spark world. Vegas wraps around [Vega-Lite](https://vega.github.io/vega-lite/) but provides syntax more familar (and type checked) for use within Scala.
+Vegas aims to be the missing MatPlotLib for the Scala and Spark world. Vegas wraps around [Vega-Lite](https://vega.github.io/vega-lite/) but provides syntax more familiar (and type checked) for use within Scala.
 
 <img src="https://dl.dropboxusercontent.com/u/8245460/vegas/gallary.png" width="1021">
 
