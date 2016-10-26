@@ -14,7 +14,7 @@ Vegas aims to be the missing MatPlotLib for the Scala and Spark world. Vegas wra
 Add the following jar as an SBT dependacy
 
 ```sbt
-libraryDependencies += "com.github.vegas-viz" %% "vegas_2.11" % "0.3.5"
+libraryDependencies += “org.vegas-viz" %% "vegas_2.11" % {vegas-version}
 ```
 
 And then use the following code to render a plot into a pop-up window (see below for more details on controlling how and where Vegas renders).
@@ -23,17 +23,17 @@ And then use the following code to render a plot into a pop-up window (see below
 import vegas._
 import vegas.render.WindowRenderer._
 
-val chart = Vegas("Country Pop").
+val plot = Vegas("Country Pop").
   withData(
     Map("country" -> "USA", "population" -> 314),
     Map("country" -> "UK", "population" -> 64),
     Map("country" -> "DK", "population" -> 80)
   ).
-  encodeX("country", Nominal).
-  encodeY("population", Quantitative).
+  encodeX("country", Nom).
+  encodeY("population", Quant).
   mark(Bar)
 
-chart.show
+plot.show
 ```
 
 !["Readme Chart 1"](https://dl.dropboxusercontent.com/u/8245460/vegas/readme-chart-1.png)
@@ -42,7 +42,7 @@ See further examples [here](http://nbviewer.jupyter.org/github/aishfenton/Vegas/
 
 ## Rendering
 
-Vegas provides a number of options for rendering charts out to. The primary focus is using Vegas within interactive notebook environments, such as Jupyter and Zeppelin.
+Vegas provides a number of options for rendering plots out to. The primary focus is using Vegas within interactive notebook environments, such as Jupyter and Zeppelin.
 
 ### Notebooks
 
@@ -51,7 +51,7 @@ Vegas provides a number of options for rendering charts out to. The primary focu
 If you're using [jupyter-scala](https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=jupyter%20scala), then you must incldue the following in your notebook before using Vegas.
 
 ```scala
-classpath.add("com.github.vegas-viz" %% "vegas" % "{vegas-version}")
+classpath.add(“org.vegas-viz" %% "vegas" % "{vegas-version}")
 ```
 
 ```
@@ -65,7 +65,7 @@ implicit val displayer: String => Unit = display.html(_)
 And if you're using [Apache Toree](https://toree.incubator.apache.org/), then this:
 
 ```
-%AddDeps com.github.vegas-viz vegas_{scala-version} {vegas-version} --transitive
+%AddDeps com.github.vegas-viz vegas_2.11 {vegas-version} --transitive
 ```
 
 ```scala
@@ -80,7 +80,7 @@ And lastly if you're using Apache Zeppelin [Zeppelin](https://zeppelin.incubator
 
 ```
 %dep
-z.load("com.github.vegas-viz:vegas_{scala-version}:{vegas-version}")
+z.load(“org.vegas-viz:vegas_2.11:{vegas-version}")
 ```
 ```
 import vegas._
@@ -94,7 +94,7 @@ See a comprehensive list example notebook of plots  [here](http://nbviewer.jupyt
 
 ### Standalone
 
-Vegas can also be used to produce standalone HTML or even render plots within a built-in display app (useful if you wanted to display charts for a command-line-app).
+Vegas can also be used to produce standalone HTML or even render plots within a built-in display app (useful if you wanted to display plots for a command-line-app).
 
 #### HTML or JSON
 
@@ -104,7 +104,7 @@ The following renders the plot as both HTML (which is printed to the console), a
 import vegas._
 import vegas.render.HTMLRenderer._
 
-val chart = Vegas("Country Pop").
+val plot = Vegas("Country Pop").
   withData(
     Map("country" -> "USA", "population" -> 314),
     Map("country" -> "UK", "population" -> 64),
@@ -114,8 +114,8 @@ val chart = Vegas("Country Pop").
   encodeY("population", Quantitative).
   mark(Bar)
 
-println(chart.pageHTML())
-println(chart.spec.toJson())
+println(plot.pageHTML())
+println(plot.spec.toJson())
 ```
 
 #### Window
@@ -126,7 +126,7 @@ Vegas also contains a self-contained display app for displaying plots (internall
 import vegas._
 import vegas.render.WindowRenderer._
 
-val chart = Vegas("Country Pop").
+val plot = Vegas("Country Pop").
   withData(
     Map("country" -> "USA", "population" -> 314),
     Map("country" -> "UK", "population" -> 64),
@@ -136,7 +136,7 @@ val chart = Vegas("Country Pop").
   encodeY("population", Quantitative).
   mark(Bar)
 
-chart.show
+plot.show
 ```
 
 ## Spark integration
@@ -144,7 +144,7 @@ chart.show
 Vegas comes with an optional extension package that makes it easier to work with Spark DataFrames. First you'll need an extra import
 
 ```sbt
-libraryDependencies += "com.github.vegas-viz" % "vegas-spark_{scala-version}" % "{vegas-version}"
+libraryDependencies += “org.vegas-viz" %% "vegas-spark" % "{vegas-version}"
 ```
 
 ```scala
@@ -161,7 +161,7 @@ Each DataFrame column is exposed as a field keyed using the column's name.
 ---
 Vegas also comes with an optional extension package that makes it easier to work with Flink DataSets. You'll also need to import:
 ```sbt
-libraryDependencies += "com.github.vegas-viz % "vegas-flink_{scala-version} % "{vegas-version}"
+libraryDependencies += “org.vegas-viz %% "vegas-flink % "{vegas-version}"
 ```
 
 To use:
