@@ -68,7 +68,7 @@ lazy val circeVersion = "0.4.1"
 
 lazy val commonSettings = Seq(
   description := "The missing matplotlib for Scala and Spark",
-  organization := "com.github.vegas-viz",
+  organization := "org.vegas-viz",
   scalaVersion := "2.11.8",
   vegaLiteVersion := "1.2.0",
   scalacOptions += "-target:jvm-1.7",
@@ -87,7 +87,7 @@ lazy val commonSettings = Seq(
   },
   publishArtifact in Test := false,
   pomIncludeRepository := { _ => false },
-  sonatypeProfileName := "com.github.vegas-viz",
+  sonatypeProfileName := "org.vegas-viz",
   pomExtra := (
     <scm>
       <url>git@github.com:vegas-viz/Vegas.git</url>
