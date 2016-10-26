@@ -1,11 +1,10 @@
 package vegas.DSL
 
-import java.util.{Calendar, GregorianCalendar, TimeZone}
-
 import org.scalatest.{FlatSpec, Matchers}
 import vegas._
 import vegas.data.ValueTransformer
 import vegas.spec.Spec._
+import vegas.util.Time
 
 /**
   * @author Aish Fenton.
@@ -13,7 +12,7 @@ import vegas.spec.Spec._
 class DataDSLSpec extends FlatSpec with Matchers {
 
   case class Ex(a: Int, b: String)
-  val testValueTransformer = new ValueTransformer { def transform(v: Any) = "ok" }
+  val testValueTransformer = new ValueTransformer { def transformValue(v: Any) = "ok" }
 
 
   "DataDSL Trait" should "wire in data from Seq of Maps" in {
@@ -76,24 +75,13 @@ class DataDSLSpec extends FlatSpec with Matchers {
   }
 
   it should "transform values to 'SimpleTypes' that can be handled by vega-lite" in {
-
-    val refTimeZone = TimeZone.getTimeZone("PST")
-    val time = new GregorianCalendar(refTimeZone)
-    time.set(2015, Calendar.DECEMBER, 25, 0, 0, 0)
-
-    // Annoying but necessary to make sure timezones on different machines don't break
-    // the test.
-    val localOffset: Int = TimeZone.getDefault.getRawOffset
-    val refOffset: Int = refTimeZone.getRawOffset
-    time.add(Calendar.MILLISECOND, refOffset - localOffset)
-
-    val data = Seq(time.getTime, Ex(4, "a"), 3.14)
+    val data = Seq(Time.mkDate(2015, 12, 25), Ex(4, "a"), 3.14)
 
     val specBuilder = Vegas()
       .withValues(data)
 
     val expectedData = List(
-      Map("x" -> 0, "y" -> "2015-12-25T00:00"),
+      Map("x" -> 0, "y" -> "2015-12-25T00:00:00"),
       Map("x" -> 1, "y" -> "Ex(4,a)"),
       Map("x" -> 2, "y" -> 3.14)
     )

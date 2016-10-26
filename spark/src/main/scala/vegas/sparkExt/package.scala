@@ -5,9 +5,11 @@ import vegas.DSL.DataDSL
 
 package object sparkExt {
 
+  val DefaultLimit = 10000
+
   implicit class VegasSpark[T](val specBuilder: DataDSL[T]) {
 
-    def withDataFrame(df: DataFrame, limit: Int = 1000): T = {
+    def withDataFrame(df: DataFrame, limit: Int = DefaultLimit): T = {
       val columns: Array[String] = df.columns
       val count: Double = df.count
       val data = {
