@@ -190,7 +190,7 @@ lazy val vegas = project.in(file("core")).
 
 lazy val spark = project.
   settings(moduleName := "vegas-spark").
-  dependsOn(vegas).
+  dependsOn(vegas % "compile->compile; test->test").
   settings(commonSettings: _*).
   settings(
     libraryDependencies ++= Seq(
