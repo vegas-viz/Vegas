@@ -14,7 +14,7 @@ Vegas aims to be the missing MatPlotLib for the Scala and Spark world. Vegas wra
 Add the following jar as an SBT dependacy
 
 ```sbt
-libraryDependencies += "org.vegas-viz" %% "vegas_2.11" % {vegas-version}
+libraryDependencies += "org.vegas-viz" %% "vegas" % {vegas-version}
 ```
 
 And then use the following code to render a plot into a pop-up window (see below for more details on controlling how and where Vegas renders).
