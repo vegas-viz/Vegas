@@ -48,7 +48,7 @@ Vegas provides a number of options for rendering plots out to. The primary focus
 
 #### Jupyter - Scala
 
-If you're using [jupyter-scala](https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=jupyter%20scala), then you must incldue the following in your notebook before using Vegas.
+If you're using [jupyter-scala](https://github.com/alexarchambault/jupyter-scala), then you must incldue the following in your notebook before using Vegas.
 
 ```scala
 classpath.add("org.vegas-viz" %% "vegas" % "{vegas-version}")
