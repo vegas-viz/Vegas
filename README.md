@@ -78,7 +78,7 @@ implicit val displayer: String => Unit = { s => kernel.display.content("text/htm
 
 #### Zeppelin
 
-And lastly if you're using Apache Zeppelin [Zeppelin](https://zeppelin.incubator.apache.org/) then use the following to initialize the notebook.
+And lastly if you're using [Apache Zeppelin](https://zeppelin.incubator.apache.org/) then use the following to initialize the notebook.
 
 ```
 %dep
