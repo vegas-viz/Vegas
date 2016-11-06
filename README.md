@@ -180,7 +180,7 @@ Each DataFrame column is exposed as a field keyed using the column's name.
 
 Vegas also comes with an optional extension package that makes it easier to work with Flink DataSets. You'll also need to import:
 ```sbt
-libraryDependencies += "org.vegas-viz %% "vegas-flink % "{vegas-version}"
+libraryDependencies += "org.vegas-viz" %% "vegas-flink" % "{vegas-version}"
 ```
 
 To use:
