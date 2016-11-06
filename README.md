@@ -56,7 +56,7 @@ If you're using [jupyter-scala](https://github.com/alexarchambault/jupyter-scala
 classpath.add("org.vegas-viz" %% "vegas" % "{vegas-version}")
 ```
 
-```
+```scala
 import vegas._
 import vegas.render.HTMLRenderer._
 implicit val displayer: String => Unit = display.html(_)
@@ -84,7 +84,7 @@ And lastly if you're using [Apache Zeppelin](https://zeppelin.incubator.apache.o
 %dep
 z.load("org.vegas-viz:vegas_2.11:{vegas-version}")
 ```
-```
+```scala
 import vegas._
 import vegas.render.HTMLRenderer._
 implicit val displayer: String => Unit = { s => print("%html " + s) }
@@ -96,28 +96,40 @@ See a comprehensive list example notebook of plots  [here](http://nbviewer.jupyt
 
 ### Standalone
 
-Vegas can also be used to produce standalone HTML or even render plots within a built-in display app (useful if you wanted to display plots for a command-line-app).
+Vegas can also be used to produce standalone HTML or even render plots within a built-in display app (useful if you wanted to display plots for a command-line-app). 
 
-#### HTML or JSON
+The construction of the plot is **independent from the rendering strategy**: the same plot can be rendered as HTML or in a Window simply by importing a different renderer in the scope. 
 
-The following renders the plot as both HTML (which is printed to the console), and as JSON containing the Vega-lite spec, which can copy-and-pasted into the Vega-lite [editor](https://vega.github.io/vega-editor/?mode=vega-lite&spec=bar).
+*Note that the renderering examples below are wrapped in separate functions to avoid ambiguous implicit conversions if they were imported in the same scope.*
+
+A plot is defined as:
 
 ```scala
 import vegas._
-import vegas.render.HTMLRenderer._
 
 val plot = Vegas("Country Pop").
   withData(
-    Map("country" -> "USA", "population" -> 314),
-    Map("country" -> "UK", "population" -> 64),
-    Map("country" -> "DK", "population" -> 80)
+    Seq(
+      Map("country" -> "USA", "population" -> 314),
+      Map("country" -> "UK", "population" -> 64),
+      Map("country" -> "DK", "population" -> 80)
+    )
   ).
-  encodeX("country", Nominal).
-  encodeY("population", Quantitative).
+  encodeX("country", Nom).
+  encodeY("population", Quant).
   mark(Bar)
+```
 
-println(plot.pageHTML())
-println(plot.spec.toJson())
+#### HTML
+
+The following renders the plot as HTML (which is printed to the console).
+
+```scala
+def renderHTML = {
+  import vegas.render.HTMLRenderer._
+
+  println(plot.pageHTML())
+}
 ```
 
 #### Window
@@ -125,21 +137,24 @@ println(plot.spec.toJson())
 Vegas also contains a self-contained display app for displaying plots (internally JavaFX's HTML renderer is used). The following demonstrates this and can be used from the command line. 
 
 ```scala
-import vegas._
-import vegas.render.WindowRenderer._
+def renderWindow = {
+  import vegas.render.WindowRenderer._
 
-val plot = Vegas("Country Pop").
-  withData(
-    Map("country" -> "USA", "population" -> 314),
-    Map("country" -> "UK", "population" -> 64),
-    Map("country" -> "DK", "population" -> 80)
-  ).
-  encodeX("country", Nominal).
-  encodeY("population", Quantitative).
-  mark(Bar)
-
-plot.show
+  plot.show
+}
 ```
+
+Make sure JavaFX is installed on your system along or ships with your JDK distribution.
+
+#### JSON 
+
+You can print the JSON containing the Vega-lite spec, without importing any renderer in the scope.
+
+```scala
+println(plot.toJson)
+```
+
+The output JSON can be copy-pasted into the Vega-lite [editor](https://vega.github.io/vega-editor/?mode=vega-lite&spec=bar).
 
 ## Spark integration
 
@@ -155,12 +170,14 @@ import vegas.sparkExt._
 
 This adds the following new method:
 
-* `withDataFrame(df: DataFrame)`
+```scala
+withDataFrame(df: DataFrame)
+```
 
 Each DataFrame column is exposed as a field keyed using the column's name.
 
-### Flink integration
----
+## Flink integration
+
 Vegas also comes with an optional extension package that makes it easier to work with Flink DataSets. You'll also need to import:
 ```sbt
 libraryDependencies += "org.vegas-viz %% "vegas-flink % "{vegas-version}"
