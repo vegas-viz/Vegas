@@ -11,7 +11,7 @@ Vegas aims to be the missing MatPlotLib for the Scala and Spark world. Vegas wra
 
 ## Quick start
 
-Add the following jar as an SBT dependacy
+Add the following jar as an SBT dependency
 
 ```sbt
 libraryDependencies += "org.vegas-viz" %% "vegas" % {vegas-version}
@@ -92,7 +92,7 @@ implicit val displayer: String => Unit = { s => print("%html " + s) }
 
 The last line in each of the above is required to connect Vegas to the notebook's HTML renderer (so that the returned HTML is rendered instead of displayed as a string). 
 
-See a comprehensive list example notebook of plots  [here](http://nbviewer.jupyter.org/github/aishfenton/Vegas/blob/master/docs/ExampleJupyterScala.ipynb)
+See a comprehensive list example notebook of plots  [here](http://nbviewer.jupyter.org/github/aishfenton/Vegas/blob/master/notebooks/jupyter_example.ipynb)
 
 ### Standalone
 
@@ -155,7 +155,7 @@ import vegas.sparkExt._
 
 This adds the following new method:
 
-* withDataFrame(df: DataFrame)
+* `withDataFrame(df: DataFrame)`
 
 Each DataFrame column is exposed as a field keyed using the column's name.
 
@@ -173,8 +173,8 @@ import vegas.flink.Flink._
 
 This adds the following method:
 
-```text
-* withData[T <: Product](ds: DataSet[T])
+```scala
+withData[T <: Product](ds: DataSet[T])
 ```
 Similarly, to the RDD concept in Spark, a DataSet of _case classes_ or _tuples_ is expected and reflection is used to map the case class' fields to fields within Vegas. In the case of tuples you can encode the fields using `"_1", "_2"` and so on.
 
