@@ -11,10 +11,10 @@ Vegas aims to be the missing MatPlotLib for the Scala and Spark world. Vegas wra
 
 ## Quick start
 
-Add the following jar as an SBT dependacy
+Add the following jar as an SBT dependency
 
 ```sbt
-libraryDependencies += “org.vegas-viz" %% "vegas_2.11" % {vegas-version}
+libraryDependencies += "org.vegas-viz" %% "vegas" % {vegas-version}
 ```
 
 And then use the following code to render a plot into a pop-up window (see below for more details on controlling how and where Vegas renders).
@@ -25,9 +25,11 @@ import vegas.render.WindowRenderer._
 
 val plot = Vegas("Country Pop").
   withData(
-    Map("country" -> "USA", "population" -> 314),
-    Map("country" -> "UK", "population" -> 64),
-    Map("country" -> "DK", "population" -> 80)
+    Seq(
+      Map("country" -> "USA", "population" -> 314),
+      Map("country" -> "UK", "population" -> 64),
+      Map("country" -> "DK", "population" -> 80)
+    )
   ).
   encodeX("country", Nom).
   encodeY("population", Quant).
@@ -38,7 +40,7 @@ plot.show
 
 !["Readme Chart 1"](https://dl.dropboxusercontent.com/u/8245460/vegas/readme-chart-1.png)
 
-See further examples [here](http://nbviewer.jupyter.org/github/aishfenton/Vegas/blob/master/docs/ExampleJupyterScala.ipynb)
+See further examples [here](http://nbviewer.jupyter.org/github/aishfenton/Vegas/blob/master/notebooks/jupyter_example.ipynb)
 
 ## Rendering
 
@@ -48,13 +50,13 @@ Vegas provides a number of options for rendering plots out to. The primary focus
 
 #### Jupyter - Scala
 
-If you're using [jupyter-scala](https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=jupyter%20scala), then you must incldue the following in your notebook before using Vegas.
+If you're using [jupyter-scala](https://github.com/alexarchambault/jupyter-scala), then you must incldue the following in your notebook before using Vegas.
 
 ```scala
-classpath.add(“org.vegas-viz" %% "vegas" % "{vegas-version}")
+classpath.add("org.vegas-viz" %% "vegas" % "{vegas-version}")
 ```
 
-```
+```scala
 import vegas._
 import vegas.render.HTMLRenderer._
 implicit val displayer: String => Unit = display.html(_)
@@ -76,13 +78,13 @@ implicit val displayer: String => Unit = { s => kernel.display.content("text/htm
 
 #### Zeppelin
 
-And lastly if you're using Apache Zeppelin [Zeppelin](https://zeppelin.incubator.apache.org/) then use the following to initialize the notebook.
+And lastly if you're using [Apache Zeppelin](https://zeppelin.incubator.apache.org/) then use the following to initialize the notebook.
 
 ```
 %dep
-z.load(“org.vegas-viz:vegas_2.11:{vegas-version}")
+z.load("org.vegas-viz:vegas_2.11:{vegas-version}")
 ```
-```
+```scala
 import vegas._
 import vegas.render.HTMLRenderer._
 implicit val displayer: String => Unit = { s => print("%html " + s) }
@@ -90,32 +92,44 @@ implicit val displayer: String => Unit = { s => print("%html " + s) }
 
 The last line in each of the above is required to connect Vegas to the notebook's HTML renderer (so that the returned HTML is rendered instead of displayed as a string). 
 
-See a comprehensive list example notebook of plots  [here](http://nbviewer.jupyter.org/github/aishfenton/Vegas/blob/master/docs/ExampleJupyterScala.ipynb)
+See a comprehensive list example notebook of plots  [here](http://nbviewer.jupyter.org/github/aishfenton/Vegas/blob/master/notebooks/jupyter_example.ipynb)
 
 ### Standalone
 
-Vegas can also be used to produce standalone HTML or even render plots within a built-in display app (useful if you wanted to display plots for a command-line-app).
+Vegas can also be used to produce standalone HTML or even render plots within a built-in display app (useful if you wanted to display plots for a command-line-app). 
 
-#### HTML or JSON
+The construction of the plot is **independent from the rendering strategy**: the same plot can be rendered as HTML or in a Window simply by importing a different renderer in the scope. 
 
-The following renders the plot as both HTML (which is printed to the console), and as JSON containing the Vega-lite spec, which can copy-and-pasted into the Vega-lite [editor](https://vega.github.io/vega-editor/?mode=vega-lite&spec=bar).
+*Note that the renderering examples below are wrapped in separate functions to avoid ambiguous implicit conversions if they were imported in the same scope.*
+
+A plot is defined as:
 
 ```scala
 import vegas._
-import vegas.render.HTMLRenderer._
 
 val plot = Vegas("Country Pop").
   withData(
-    Map("country" -> "USA", "population" -> 314),
-    Map("country" -> "UK", "population" -> 64),
-    Map("country" -> "DK", "population" -> 80)
+    Seq(
+      Map("country" -> "USA", "population" -> 314),
+      Map("country" -> "UK", "population" -> 64),
+      Map("country" -> "DK", "population" -> 80)
+    )
   ).
-  encodeX("country", Nominal).
-  encodeY("population", Quantitative).
+  encodeX("country", Nom).
+  encodeY("population", Quant).
   mark(Bar)
+```
 
-println(plot.pageHTML())
-println(plot.spec.toJson())
+#### HTML
+
+The following renders the plot as HTML (which is printed to the console).
+
+```scala
+def renderHTML = {
+  import vegas.render.HTMLRenderer._
+
+  println(plot.pageHTML())
+}
 ```
 
 #### Window
@@ -123,28 +137,31 @@ println(plot.spec.toJson())
 Vegas also contains a self-contained display app for displaying plots (internally JavaFX's HTML renderer is used). The following demonstrates this and can be used from the command line. 
 
 ```scala
-import vegas._
-import vegas.render.WindowRenderer._
+def renderWindow = {
+  import vegas.render.WindowRenderer._
 
-val plot = Vegas("Country Pop").
-  withData(
-    Map("country" -> "USA", "population" -> 314),
-    Map("country" -> "UK", "population" -> 64),
-    Map("country" -> "DK", "population" -> 80)
-  ).
-  encodeX("country", Nominal).
-  encodeY("population", Quantitative).
-  mark(Bar)
-
-plot.show
+  plot.show
+}
 ```
+
+Make sure JavaFX is installed on your system along or ships with your JDK distribution.
+
+#### JSON 
+
+You can print the JSON containing the Vega-lite spec, without importing any renderer in the scope.
+
+```scala
+println(plot.toJson)
+```
+
+The output JSON can be copy-pasted into the Vega-lite [editor](https://vega.github.io/vega-editor/?mode=vega-lite&spec=bar).
 
 ## Spark integration
 
 Vegas comes with an optional extension package that makes it easier to work with Spark DataFrames. First you'll need an extra import
 
 ```sbt
-libraryDependencies += “org.vegas-viz" %% "vegas-spark" % "{vegas-version}"
+libraryDependencies += "org.vegas-viz" %% "vegas-spark" % "{vegas-version}"
 ```
 
 ```scala
@@ -153,15 +170,17 @@ import vegas.sparkExt._
 
 This adds the following new method:
 
-* withDataFrame(df: DataFrame)
+```scala
+withDataFrame(df: DataFrame)
+```
 
 Each DataFrame column is exposed as a field keyed using the column's name.
 
-### Flink integration
----
+## Flink integration
+
 Vegas also comes with an optional extension package that makes it easier to work with Flink DataSets. You'll also need to import:
 ```sbt
-libraryDependencies += “org.vegas-viz %% "vegas-flink % "{vegas-version}"
+libraryDependencies += "org.vegas-viz" %% "vegas-flink" % "{vegas-version}"
 ```
 
 To use:
@@ -171,8 +190,8 @@ import vegas.flink.Flink._
 
 This adds the following method:
 
-```text
-* withData[T <: Product](ds: DataSet[T])
+```scala
+withData[T <: Product](ds: DataSet[T])
 ```
 Similarly, to the RDD concept in Spark, a DataSet of _case classes_ or _tuples_ is expected and reflection is used to map the case class' fields to fields within Vegas. In the case of tuples you can encode the fields using `"_1", "_2"` and so on.
 
