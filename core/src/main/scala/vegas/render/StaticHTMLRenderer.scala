@@ -68,13 +68,4 @@ case class StaticHTMLRenderer(specJson: String) extends BaseHTMLRenderer {
     """.stripMargin
     }
 
-  // Continence method
-  def show(implicit fn: String => Unit) = fn(frameHTML())
-
-}
-
-object StaticHTMLRenderer {
-
-  implicit def toStaticHTMLRenderer(sb: SpecBuilder): StaticHTMLRenderer = { new StaticHTMLRenderer(sb.toJson) }
-
 }

@@ -2,12 +2,13 @@ package vegas.render
 
 import vegas._
 import vegas.data.External._
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
+import vegas.DSL.SpecBuilder
 
 class WindowRendererSpec extends FlatSpec with Matchers {
   import vegas.render.WindowRenderer._
 
-  val specBuilder =
+  val specBuilder: SpecBuilder =
     Vegas("Country Pop")
       .withURL(Population)
       .encodeX("age", Quant)
@@ -15,7 +16,7 @@ class WindowRendererSpec extends FlatSpec with Matchers {
       .mark(Bar)
 
   "WindowRenderer.show" should "render plots without JS errors" in {
-    val wr = WindowRenderer.toWindow(specBuilder)
+    val wr = specBuilder.window
     wr.show
     Thread.sleep(1000)
     wr.errors shouldBe (empty)

@@ -73,12 +73,14 @@ case class WindowRenderer(specJson: String) {
 
   def close = onUIThread { window.close }
 
-  def show = Platform.runLater { window.load(specJson) }
+  def show = {
+    val _ = WindowRenderer.init
+    Platform.runLater { window.load(specJson) }
+  }
 
 }
 
 object WindowRenderer {
-  new JFXPanel()
-  implicit def toWindow(sb: SpecBuilder): WindowRenderer = { WindowRenderer(sb.toJson) }
+  lazy val init = new JFXPanel()
 }
 
