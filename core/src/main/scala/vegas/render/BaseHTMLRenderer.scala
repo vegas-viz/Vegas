@@ -11,7 +11,7 @@ trait BaseHTMLRenderer {
     .map { l => val row = l.split(","); (row(0), row(1)) }
     .toMap
 
-  private def CDN(artifact: String, file: String) = s"http://cdn.jsdelivr.net/webjars/org.webjars.bower/$artifact/${WebJars(artifact)}/$file"
+  private def CDN(artifact: String, file: String) = s"https://cdn.jsdelivr.net/webjars/org.webjars.bower/$artifact/${WebJars(artifact)}/$file"
 
   def JSImports = List(
     CDN("d3", "d3.min.js"),
