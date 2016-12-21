@@ -53,13 +53,14 @@ Vegas provides a number of options for rendering plots out to. The primary focus
 If you're using [jupyter-scala](https://github.com/alexarchambault/jupyter-scala), then you must incldue the following in your notebook before using Vegas.
 
 ```scala
-classpath.add("org.vegas-viz" %% "vegas" % "{vegas-version}")
+import $ivy.`org.vegas-viz::vegas:{vegas-version}`
 ```
 
 ```scala
 import vegas._
 import vegas.render.HTMLRenderer._
-implicit val displayer: String => Unit = display.html(_)
+
+implicit val displayer: String => Unit = publish.html(_)
 ``` 
 
 #### Jupyter - Apache Toree
