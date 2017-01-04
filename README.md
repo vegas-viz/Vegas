@@ -44,13 +44,13 @@ See further examples [here](http://nbviewer.jupyter.org/github/aishfenton/Vegas/
 
 ## Rendering
 
-Vegas provides a number of options for rendering plots out to. The primary focus is using Vegas within interactive notebook environments, such as Jupyter and Zeppelin.
+Vegas provides several options for rendering plots. The primary focus is using Vegas within interactive notebook environments, such as Jupyter and Zeppelin.
 
 ### Notebooks
 
 #### Jupyter - Scala
 
-If you're using [jupyter-scala](https://github.com/alexarchambault/jupyter-scala), then you must incldue the following in your notebook before using Vegas.
+If you're using [jupyter-scala](https://github.com/alexarchambault/jupyter-scala), then you must include the following in your notebook before using Vegas.
 
 ```scala
 import $ivy.`org.vegas-viz::vegas:{vegas-version}`
@@ -79,7 +79,7 @@ implicit val displayer: String => Unit = { s => kernel.display.content("text/htm
 
 #### Zeppelin
 
-And lastly if you're using [Apache Zeppelin](https://zeppelin.incubator.apache.org/) then use the following to initialize the notebook.
+Lastly, if you're using [Apache Zeppelin](https://zeppelin.incubator.apache.org/) then use the following to initialize the notebook.
 
 ```
 %dep
@@ -101,7 +101,7 @@ Vegas can also be used to produce standalone HTML or even render plots within a 
 
 The construction of the plot is **independent from the rendering strategy**: the same plot can be rendered as HTML or in a Window simply by importing a different renderer in the scope. 
 
-*Note that the renderering examples below are wrapped in separate functions to avoid ambiguous implicit conversions if they were imported in the same scope.*
+*Note that the rendering examples below are wrapped in separate functions to avoid ambiguous implicit conversions if they were imported in the same scope.*
 
 A plot is defined as:
 
@@ -123,7 +123,7 @@ val plot = Vegas("Country Pop").
 
 #### HTML
 
-The following renders the plot as HTML (which is printed to the console).
+The following renders the plot as HTML (which prints to the console).
 
 ```scala
 def renderHTML = {
@@ -135,7 +135,7 @@ def renderHTML = {
 
 #### Window
 
-Vegas also contains a self-contained display app for displaying plots (internally JavaFX's HTML renderer is used). The following demonstrates this and can be used from the command line. 
+Vegas also contains a self-contained display app for displaying plots (internally it uses JavaFX's HTML renderer). The following demonstrates this and can be used from the command line. 
 
 ```scala
 def renderWindow = {
@@ -145,7 +145,7 @@ def renderWindow = {
 }
 ```
 
-Make sure JavaFX is installed on your system along or ships with your JDK distribution.
+Make sure JavaFX is installed on your system or ships with your JDK distribution.
 
 #### JSON 
 
@@ -159,7 +159,7 @@ The output JSON can be copy-pasted into the Vega-lite [editor](https://vega.gith
 
 ## Spark integration
 
-Vegas comes with an optional extension package that makes it easier to work with Spark DataFrames. First you'll need an extra import
+Vegas comes with an optional extension package that makes it easier to work with Spark DataFrames. First, you'll need an extra import
 
 ```sbt
 libraryDependencies += "org.vegas-viz" %% "vegas-spark" % "{vegas-version}"
@@ -202,6 +202,5 @@ TODO
 
 ## Contributing
 
-See [here](CONTRIB.md) for more information on contributing bug fixes and features.
-
+See [the contributing guide](CONTRIB.md) for more information on contributing bug fixes and features.
 
