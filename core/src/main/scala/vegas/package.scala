@@ -52,6 +52,7 @@ package object vegas {
     val Asc = Spec.SortOrderEnums.Ascending
     val Descending = Spec.SortOrderEnums.Descending
     val Desc = Spec.SortOrderEnums.Descending
+    val None = Spec.SortOrderEnums.None
   }
 
   val Category10 = "category10"
