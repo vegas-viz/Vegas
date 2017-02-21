@@ -68,7 +68,7 @@ implicit val displayer: String => Unit = publish.html(_)
 And if you're using [Apache Toree](https://toree.incubator.apache.org/), then this:
 
 ```
-%AddDeps com.github.vegas-viz vegas_2.11 {vegas-version} --transitive
+%AddDeps org.vegas-viz vegas_2.11 {vegas-version} --transitive
 ```
 
 ```scala
