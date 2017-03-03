@@ -26,6 +26,5 @@ trait BaseHTMLRenderer {
 
   def specJson: String
 
-  def show(implicit fn: String => Unit)
 
 }

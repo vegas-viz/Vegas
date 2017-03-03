@@ -4,6 +4,7 @@ import monocle.macros.GenLens
 import vegas.spec.Spec._
 import io.circe.Json
 import io.circe.syntax._
+import vegas.render.{ShowRender, StaticHTMLRenderer, WindowRenderer}
 
 object Vegas {
 
@@ -87,6 +88,22 @@ trait SpecBuilder {
     * Returns a Circe Json object that represents the spec. Also see [[toJson]]
     */
   def asCirceJson: Json
+
+}
+
+object SpecBuilder {
+
+  implicit class SpecBuilderRenderOps(val sb: SpecBuilder) extends AnyVal {
+
+    // directly show by having ShowRender guess which display mechanism is appropriate
+    def show(implicit showRender: ShowRender): Unit = showRender(sb)
+
+    // give a window rendered
+    def window: WindowRenderer = new WindowRenderer(sb.toJson)
+
+    // give an HTML renderer
+    def html: StaticHTMLRenderer = new StaticHTMLRenderer(sb.toJson)
+  }
 
 }
 

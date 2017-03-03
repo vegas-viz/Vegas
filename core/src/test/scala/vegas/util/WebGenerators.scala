@@ -16,7 +16,7 @@ trait WebGenerators {
     val writer = new FileWriter(file)
 
     val body = plots.map { plot =>
-      HTMLRenderer.toStaticHTMLRenderer(plot).frameHTML()
+      plot.html.frameHTML()
     }.mkString
 
     writer.write(s"""
@@ -33,7 +33,7 @@ trait WebGenerators {
     val file = File.createTempFile("vegas", ".html")
     val writer = new FileWriter(file)
 
-    val html = HTMLRenderer.toStaticHTMLRenderer(plot).pageHTML()
+    val html = plot.html.pageHTML()
     writer.write(html)
     writer.close
 
