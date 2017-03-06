@@ -56,12 +56,11 @@ class JupyterGenerator extends NotebookGenerator {
     filterNot(_.isEmpty)
 
   def preamble(version: String) =
-    ("", s"""load.ivy("com.github.aishfenton" %% "vegas" % "$version")""") ::
+    ("", "import $ivy.`org.vegas-viz::vegas:" + s"$version`") ::
     ("", """
       |import vegas._
       |import vegas.data.External._
-      |import vegas.render.HTMLRenderer._
-      |implicit val displayer: String => Unit = display.html(_)""".stripMargin
+      |implicit val render = vegas.render.ShowHTML(publish.html(_))""".stripMargin
     ) ::
     Nil
 
