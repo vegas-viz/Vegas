@@ -12,7 +12,7 @@ class ShowRenderMacros(val c: whitebox.Context) {
 
   def materializeDefault: Tree = {
     val possibilities: Try[Tree] =
-      html(q"""(str: String) => { org.apache.zeppelin.spark.utils.DisplayUtils.html(str) }""") orElse
+      html(q"""(str: String) => { println(org.apache.zeppelin.spark.utils.DisplayUtils.html(str)) }""") orElse
       html(q"""(str: String) => { publish.html(str) }""") orElse
       html(q"""(str: String) => { display.html(str) }""") orElse
       html(q"""(str: String) => { kernel.display.content("text/html", str) }""") orElse

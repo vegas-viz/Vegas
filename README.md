@@ -45,22 +45,33 @@ See further examples [here](http://nbviewer.jupyter.org/github/aishfenton/Vegas/
 ## Rendering
 
 Vegas provides several options for rendering plots. The primary focus is using Vegas within interactive notebook environments, such as Jupyter and Zeppelin.
+Rendering is provided via an implicit instance of `ShowRender`, which tells Vegas how to display the plot in a particular environment. The default instance
+of `ShowRender` uses a macro which attempts to guess your environment, but if for some reason that fails, you can specify your own instance:
+
+```scala
+// for outputting HTML, provide a function String => Unit which will receive the HTML for the plot
+// and use vegas.render.ShowHTML to create an instance for it
+implicit val renderer = vegas.render.ShowHTML(str => println(s"The HTML is $str"))
+
+// to specify a function that receives the SpecBuilder instead, use vegas.render.ShowRender.using
+implicit val renderer = vegas.render.ShowRender.using(sb => println(s"The SpecBuilder is $sb"))
+```
+
+The following examples describe some common cases; these *should* be handled by the default macro, but are useful to
+see (in case you need to construct your own instance of `ShowRender`):
 
 ### Notebooks
 
 #### Jupyter - Scala
 
-If you're using [jupyter-scala](https://github.com/alexarchambault/jupyter-scala), then you must include the following in your notebook before using Vegas.
+If you're using [jupyter-scala](https://github.com/alexarchambault/jupyter-scala), then can include the following in your notebook before using Vegas.
 
 ```scala
 import $ivy.`org.vegas-viz::vegas:{vegas-version}`
 ```
 
 ```scala
-import vegas._
-import vegas.render.HTMLRenderer._
-
-implicit val displayer: String => Unit = publish.html(_)
+implicit val render = vegas.render.ShowHTML(publish(_))
 ``` 
 
 #### Jupyter - Apache Toree
@@ -72,23 +83,19 @@ And if you're using [Apache Toree](https://toree.incubator.apache.org/), then th
 ```
 
 ```scala
-import vegas._
-import vegas.render.HTMLRenderer._
-implicit val displayer: String => Unit = { s => kernel.display.content("text/html", s) }
+implicit val render = vegas.render.ShowHTML(kernel.display.content("text/html", _))
 ``` 
 
 #### Zeppelin
 
-Lastly, if you're using [Apache Zeppelin](https://zeppelin.incubator.apache.org/) then use the following to initialize the notebook.
+If you're using [Apache Zeppelin](https://zeppelin.incubator.apache.org/):
 
 ```
 %dep
 z.load("org.vegas-viz:vegas_2.11:{vegas-version}")
 ```
 ```scala
-import vegas._
-import vegas.render.HTMLRenderer._
-implicit val displayer: String => Unit = { s => print("%html " + s) }
+implicit val render = vegas.render.ShowHTML(s => print("%html " + s))
 ```
 
 The last line in each of the above is required to connect Vegas to the notebook's HTML renderer (so that the returned HTML is rendered instead of displayed as a string). 
@@ -127,9 +134,8 @@ The following renders the plot as HTML (which prints to the console).
 
 ```scala
 def renderHTML = {
-  import vegas.render.HTMLRenderer._
-
-  println(plot.pageHTML())
+  println(plot.html.pageHTML) // a complete HTML page containing the plot
+  println(plot.html.frameHTML("foo")) // an iframe containing the plot
 }
 ```
 
@@ -139,9 +145,7 @@ Vegas also contains a self-contained display app for displaying plots (internall
 
 ```scala
 def renderWindow = {
-  import vegas.render.WindowRenderer._
-
-  plot.show
+  plot.window.show
 }
 ```
 

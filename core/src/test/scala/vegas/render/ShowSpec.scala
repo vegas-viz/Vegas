@@ -22,8 +22,9 @@ class ShowSpec extends FlatSpec with Matchers {
           object spark {
             object utils {
               object DisplayUtils {
-                def html(str: String) = {
+                def html(str: String): String = {
                   called = str
+                  s"%html $str"
                 }
               }
             }
