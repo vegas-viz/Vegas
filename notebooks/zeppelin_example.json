@@ -6,13 +6,13 @@
  {
    "config": { "title": false },
    "title": "",
-   "text": "\n%dep\nz.load(\"com.github.aishfenton:vegas-spark_2.11:0.3.6\")"
+   "text": "\n%dep\nz.load(\"org.vegas-viz:vegas-spark_2.11:0.3.8-SNAPSHOT\")"
  }
     ,
  {
    "config": { "title": false },
    "title": "",
-   "text": "\nimport vegas._\nimport vegas.data.External._\nimport vegas.render.HTMLRenderer._\nimplicit val displayer: String => Unit = (s) => println(s\"%html $s\")"
+   "text": "\nimport vegas._\nimport vegas.data.External._\nimplicit val render = vegas.render.ShowHTML(s => print(\"%html \" + s))"
  }
     ,
  {

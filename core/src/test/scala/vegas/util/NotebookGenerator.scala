@@ -121,12 +121,11 @@ class ZeppelinGenerator extends NotebookGenerator {
   def preamble(version: String) =
     ("", s"""
      |%dep
-     |z.load("com.github.aishfenton:vegas-spark_2.11:${version}")""".stripMargin) ::
+     |z.load("org.vegas-viz:vegas-spark_2.11:${version}")""".stripMargin) ::
     ("", """
      |import vegas._
      |import vegas.data.External._
-     |import vegas.render.HTMLRenderer._
-     |implicit val displayer: String => Unit = (s) => println(s"%html $s")""".stripMargin) ::
+     |implicit val render = vegas.render.ShowHTML(s => print("%html " + s))""".stripMargin) ::
     Nil
 
   def mkNotebook(plots: List[(String, String)]) = {
