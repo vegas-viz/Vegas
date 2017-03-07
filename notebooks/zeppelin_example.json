@@ -6,7 +6,7 @@
  {
    "config": { "title": false },
    "title": "",
-   "text": "\n%dep\nz.load(\"org.vegas-viz:vegas-spark_2.11:0.3.8-SNAPSHOT\")"
+   "text": "\n%dep\nz.load(\"org.vegas-viz:vegas-spark_2.11:0.3.8\")"
  }
     ,
  {
