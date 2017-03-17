@@ -7,7 +7,7 @@
 
 Vegas aims to be the missing MatPlotLib for the Scala and Spark world. Vegas wraps around [Vega-Lite](https://vega.github.io/vega-lite/) but provides syntax more familiar (and type checked) for use within Scala.
 
-<img src="https://www.vegas-viz.org/images/gallery.png" width="1021">
+<img src="https://www.vegas-viz.org/images/gallery.png?true" width="1021">
 
 ## Quick start
 
