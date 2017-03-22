@@ -4,6 +4,7 @@ import java.io.File
 
 import io.circe._
 import io.circe.syntax._
+import cats.syntax.either._
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.io.Source
