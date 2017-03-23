@@ -3,6 +3,7 @@ package vegas
 import argus.json.JsonDiff
 import org.scalactic.Equality
 import io.circe._
+import cats.syntax.either._
 import org.scalatest.matchers.{ MatchResult, Matcher }
 
 // TODO This is copy-and-pasted from argus. Really needs to be put somewhere shared.

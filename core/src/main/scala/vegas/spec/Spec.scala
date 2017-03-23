@@ -84,6 +84,7 @@ object Spec {
 
     import io.circe._;
     import io.circe.syntax._;
+    import cats.syntax.either._
 
     def anyEncoder: Encoder[Any] = Encoder.instance(((a: Any) => a match {
       case null => Json.Null
@@ -111,7 +112,7 @@ object Spec {
     anyEncoder) )
     }));
 
-    def anyDecoder: Decoder[Any] = Decoder.instance(((h: HCursor) => h.focus match {
+    def anyDecoder: Decoder[Any] = Decoder.instance(((h: HCursor) => h.value match {
       case (n@_) if n.isNull => null
       case (n@_) if n.isNumber => n.as[Double]
       case (b@_) if b.isBoolean => b.as[Boolean]
@@ -152,17 +153,17 @@ object Spec {
     implicit val SpecMarkEncoder: Encoder[Spec.Mark] = Encoder.instance(((e: Spec.Mark) => parser.parse(e.json).toOption.get));
     implicit val SpecMarkDecoder: Decoder[Spec.Mark] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
-        case (j@_) if j.==(parser.parse("\"area\"").toOption.get) => cats.data.Xor.right(Spec.MarkEnums.Area)
-        case (j@_) if j.==(parser.parse("\"bar\"").toOption.get) => cats.data.Xor.right(Spec.MarkEnums.Bar)
-        case (j@_) if j.==(parser.parse("\"line\"").toOption.get) => cats.data.Xor.right(Spec.MarkEnums.Line)
-        case (j@_) if j.==(parser.parse("\"point\"").toOption.get) => cats.data.Xor.right(Spec.MarkEnums.Point)
-        case (j@_) if j.==(parser.parse("\"text\"").toOption.get) => cats.data.Xor.right(Spec.MarkEnums.Text)
-        case (j@_) if j.==(parser.parse("\"tick\"").toOption.get) => cats.data.Xor.right(Spec.MarkEnums.Tick)
-        case (j@_) if j.==(parser.parse("\"rule\"").toOption.get) => cats.data.Xor.right(Spec.MarkEnums.Rule)
-        case (j@_) if j.==(parser.parse("\"circle\"").toOption.get) => cats.data.Xor.right(Spec.MarkEnums.Circle)
-        case (j@_) if j.==(parser.parse("\"square\"").toOption.get) => cats.data.Xor.right(Spec.MarkEnums.Square)
-        case (j@_) if j.==(parser.parse("\"errorBar\"").toOption.get) => cats.data.Xor.right(Spec.MarkEnums.ErrorBar)
-        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+        case (j@_) if j.==(parser.parse("\"area\"").toOption.get) => Either.right(Spec.MarkEnums.Area)
+        case (j@_) if j.==(parser.parse("\"bar\"").toOption.get) => Either.right(Spec.MarkEnums.Bar)
+        case (j@_) if j.==(parser.parse("\"line\"").toOption.get) => Either.right(Spec.MarkEnums.Line)
+        case (j@_) if j.==(parser.parse("\"point\"").toOption.get) => Either.right(Spec.MarkEnums.Point)
+        case (j@_) if j.==(parser.parse("\"text\"").toOption.get) => Either.right(Spec.MarkEnums.Text)
+        case (j@_) if j.==(parser.parse("\"tick\"").toOption.get) => Either.right(Spec.MarkEnums.Tick)
+        case (j@_) if j.==(parser.parse("\"rule\"").toOption.get) => Either.right(Spec.MarkEnums.Rule)
+        case (j@_) if j.==(parser.parse("\"circle\"").toOption.get) => Either.right(Spec.MarkEnums.Circle)
+        case (j@_) if j.==(parser.parse("\"square\"").toOption.get) => Either.right(Spec.MarkEnums.Square)
+        case (j@_) if j.==(parser.parse("\"errorBar\"").toOption.get) => Either.right(Spec.MarkEnums.ErrorBar)
+        case _ => Either.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
           c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecEncodingEncoder: Encoder[Spec.Encoding] = Encoder.instance(((cc: Spec.Encoding) => Json.obj("row".->(cc.row.asJson),
@@ -418,11 +419,11 @@ object Spec {
     implicit val SpecAxisOrientEncoder: Encoder[Spec.AxisOrient] = Encoder.instance(((e: Spec.AxisOrient) => parser.parse(e.json).toOption.get));
     implicit val SpecAxisOrientDecoder: Decoder[Spec.AxisOrient] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
-        case (j@_) if j.==(parser.parse("\"top\"").toOption.get) => cats.data.Xor.right(Spec.AxisOrientEnums.Top)
-        case (j@_) if j.==(parser.parse("\"right\"").toOption.get) => cats.data.Xor.right(Spec.AxisOrientEnums.Right)
-        case (j@_) if j.==(parser.parse("\"left\"").toOption.get) => cats.data.Xor.right(Spec.AxisOrientEnums.Left)
-        case (j@_) if j.==(parser.parse("\"bottom\"").toOption.get) => cats.data.Xor.right(Spec.AxisOrientEnums.Bottom)
-        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+        case (j@_) if j.==(parser.parse("\"top\"").toOption.get) => Either.right(Spec.AxisOrientEnums.Top)
+        case (j@_) if j.==(parser.parse("\"right\"").toOption.get) => Either.right(Spec.AxisOrientEnums.Right)
+        case (j@_) if j.==(parser.parse("\"left\"").toOption.get) => Either.right(Spec.AxisOrientEnums.Left)
+        case (j@_) if j.==(parser.parse("\"bottom\"").toOption.get) => Either.right(Spec.AxisOrientEnums.Bottom)
+        case _ => Either.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
           c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecScaleEncoder: Encoder[Spec.Scale] = Encoder.instance(((cc: Spec.Scale) => Json.obj("type".->(cc.`type`.asJson),
@@ -495,36 +496,36 @@ object Spec {
     implicit val SpecScaleTypeEncoder: Encoder[Spec.ScaleType] = Encoder.instance(((e: Spec.ScaleType) => parser.parse(e.json).toOption.get));
     implicit val SpecScaleTypeDecoder: Decoder[Spec.ScaleType] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
-        case (j@_) if j.==(parser.parse("\"linear\"").toOption.get) => cats.data.Xor.right(Spec.ScaleTypeEnums.Linear)
-        case (j@_) if j.==(parser.parse("\"log\"").toOption.get) => cats.data.Xor.right(Spec.ScaleTypeEnums.Log)
-        case (j@_) if j.==(parser.parse("\"pow\"").toOption.get) => cats.data.Xor.right(Spec.ScaleTypeEnums.Pow)
-        case (j@_) if j.==(parser.parse("\"sqrt\"").toOption.get) => cats.data.Xor.right(Spec.ScaleTypeEnums.Sqrt)
-        case (j@_) if j.==(parser.parse("\"quantile\"").toOption.get) => cats.data.Xor.right(Spec.ScaleTypeEnums.Quantile)
-        case (j@_) if j.==(parser.parse("\"quantize\"").toOption.get) => cats.data.Xor.right(Spec.ScaleTypeEnums.Quantize)
-        case (j@_) if j.==(parser.parse("\"ordinal\"").toOption.get) => cats.data.Xor.right(Spec.ScaleTypeEnums.Ordinal)
-        case (j@_) if j.==(parser.parse("\"time\"").toOption.get) => cats.data.Xor.right(Spec.ScaleTypeEnums.Time)
-        case (j@_) if j.==(parser.parse("\"utc\"").toOption.get) => cats.data.Xor.right(Spec.ScaleTypeEnums.Utc)
-        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+        case (j@_) if j.==(parser.parse("\"linear\"").toOption.get) => Either.right(Spec.ScaleTypeEnums.Linear)
+        case (j@_) if j.==(parser.parse("\"log\"").toOption.get) => Either.right(Spec.ScaleTypeEnums.Log)
+        case (j@_) if j.==(parser.parse("\"pow\"").toOption.get) => Either.right(Spec.ScaleTypeEnums.Pow)
+        case (j@_) if j.==(parser.parse("\"sqrt\"").toOption.get) => Either.right(Spec.ScaleTypeEnums.Sqrt)
+        case (j@_) if j.==(parser.parse("\"quantile\"").toOption.get) => Either.right(Spec.ScaleTypeEnums.Quantile)
+        case (j@_) if j.==(parser.parse("\"quantize\"").toOption.get) => Either.right(Spec.ScaleTypeEnums.Quantize)
+        case (j@_) if j.==(parser.parse("\"ordinal\"").toOption.get) => Either.right(Spec.ScaleTypeEnums.Ordinal)
+        case (j@_) if j.==(parser.parse("\"time\"").toOption.get) => Either.right(Spec.ScaleTypeEnums.Time)
+        case (j@_) if j.==(parser.parse("\"utc\"").toOption.get) => Either.right(Spec.ScaleTypeEnums.Utc)
+        case _ => Either.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
           c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecBandSizeEncoder: Encoder[Spec.BandSize] = Encoder.instance(((e: Spec.BandSize) => parser.parse(e.json).toOption.get));
     implicit val SpecBandSizeDecoder: Decoder[Spec.BandSize] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
-        case (j@_) if j.==(parser.parse("\"fit\"").toOption.get) => cats.data.Xor.right(Spec.BandSizeEnums.Fit)
-        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+        case (j@_) if j.==(parser.parse("\"fit\"").toOption.get) => Either.right(Spec.BandSizeEnums.Fit)
+        case _ => Either.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
           c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecNiceTimeEncoder: Encoder[Spec.NiceTime] = Encoder.instance(((e: Spec.NiceTime) => parser.parse(e.json).toOption.get));
     implicit val SpecNiceTimeDecoder: Decoder[Spec.NiceTime] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
-        case (j@_) if j.==(parser.parse("\"second\"").toOption.get) => cats.data.Xor.right(Spec.NiceTimeEnums.Second)
-        case (j@_) if j.==(parser.parse("\"minute\"").toOption.get) => cats.data.Xor.right(Spec.NiceTimeEnums.Minute)
-        case (j@_) if j.==(parser.parse("\"hour\"").toOption.get) => cats.data.Xor.right(Spec.NiceTimeEnums.Hour)
-        case (j@_) if j.==(parser.parse("\"day\"").toOption.get) => cats.data.Xor.right(Spec.NiceTimeEnums.Day)
-        case (j@_) if j.==(parser.parse("\"week\"").toOption.get) => cats.data.Xor.right(Spec.NiceTimeEnums.Week)
-        case (j@_) if j.==(parser.parse("\"month\"").toOption.get) => cats.data.Xor.right(Spec.NiceTimeEnums.Month)
-        case (j@_) if j.==(parser.parse("\"year\"").toOption.get) => cats.data.Xor.right(Spec.NiceTimeEnums.Year)
-        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+        case (j@_) if j.==(parser.parse("\"second\"").toOption.get) => Either.right(Spec.NiceTimeEnums.Second)
+        case (j@_) if j.==(parser.parse("\"minute\"").toOption.get) => Either.right(Spec.NiceTimeEnums.Minute)
+        case (j@_) if j.==(parser.parse("\"hour\"").toOption.get) => Either.right(Spec.NiceTimeEnums.Hour)
+        case (j@_) if j.==(parser.parse("\"day\"").toOption.get) => Either.right(Spec.NiceTimeEnums.Day)
+        case (j@_) if j.==(parser.parse("\"week\"").toOption.get) => Either.right(Spec.NiceTimeEnums.Week)
+        case (j@_) if j.==(parser.parse("\"month\"").toOption.get) => Either.right(Spec.NiceTimeEnums.Month)
+        case (j@_) if j.==(parser.parse("\"year\"").toOption.get) => Either.right(Spec.NiceTimeEnums.Year)
+        case _ => Either.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
           c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecSortFieldEncoder: Encoder[Spec.SortField] = Encoder.instance(((cc: Spec.SortField) => Json.obj("field".->(cc.field.asJson),
@@ -538,73 +539,73 @@ object Spec {
     implicit val SpecAggregateOpEncoder: Encoder[Spec.AggregateOp] = Encoder.instance(((e: Spec.AggregateOp) => parser.parse(e.json).toOption.get));
     implicit val SpecAggregateOpDecoder: Decoder[Spec.AggregateOp] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
-        case (j@_) if j.==(parser.parse("\"values\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Values)
-        case (j@_) if j.==(parser.parse("\"count\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Count)
-        case (j@_) if j.==(parser.parse("\"valid\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Valid)
-        case (j@_) if j.==(parser.parse("\"missing\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Missing)
-        case (j@_) if j.==(parser.parse("\"distinct\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Distinct)
-        case (j@_) if j.==(parser.parse("\"sum\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Sum)
-        case (j@_) if j.==(parser.parse("\"mean\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Mean)
-        case (j@_) if j.==(parser.parse("\"average\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Average)
-        case (j@_) if j.==(parser.parse("\"variance\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Variance)
-        case (j@_) if j.==(parser.parse("\"variancep\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Variancep)
-        case (j@_) if j.==(parser.parse("\"stdev\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Stdev)
-        case (j@_) if j.==(parser.parse("\"stdevp\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Stdevp)
-        case (j@_) if j.==(parser.parse("\"median\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Median)
-        case (j@_) if j.==(parser.parse("\"q1\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Q1)
-        case (j@_) if j.==(parser.parse("\"q3\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Q3)
-        case (j@_) if j.==(parser.parse("\"modeskew\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Modeskew)
-        case (j@_) if j.==(parser.parse("\"min\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Min)
-        case (j@_) if j.==(parser.parse("\"max\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Max)
-        case (j@_) if j.==(parser.parse("\"argmin\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Argmin)
-        case (j@_) if j.==(parser.parse("\"argmax\"").toOption.get) => cats.data.Xor.right(Spec.AggregateOpEnums.Argmax)
-        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+        case (j@_) if j.==(parser.parse("\"values\"").toOption.get) => Either.right(Spec.AggregateOpEnums.Values)
+        case (j@_) if j.==(parser.parse("\"count\"").toOption.get) => Either.right(Spec.AggregateOpEnums.Count)
+        case (j@_) if j.==(parser.parse("\"valid\"").toOption.get) => Either.right(Spec.AggregateOpEnums.Valid)
+        case (j@_) if j.==(parser.parse("\"missing\"").toOption.get) => Either.right(Spec.AggregateOpEnums.Missing)
+        case (j@_) if j.==(parser.parse("\"distinct\"").toOption.get) => Either.right(Spec.AggregateOpEnums.Distinct)
+        case (j@_) if j.==(parser.parse("\"sum\"").toOption.get) => Either.right(Spec.AggregateOpEnums.Sum)
+        case (j@_) if j.==(parser.parse("\"mean\"").toOption.get) => Either.right(Spec.AggregateOpEnums.Mean)
+        case (j@_) if j.==(parser.parse("\"average\"").toOption.get) => Either.right(Spec.AggregateOpEnums.Average)
+        case (j@_) if j.==(parser.parse("\"variance\"").toOption.get) => Either.right(Spec.AggregateOpEnums.Variance)
+        case (j@_) if j.==(parser.parse("\"variancep\"").toOption.get) => Either.right(Spec.AggregateOpEnums.Variancep)
+        case (j@_) if j.==(parser.parse("\"stdev\"").toOption.get) => Either.right(Spec.AggregateOpEnums.Stdev)
+        case (j@_) if j.==(parser.parse("\"stdevp\"").toOption.get) => Either.right(Spec.AggregateOpEnums.Stdevp)
+        case (j@_) if j.==(parser.parse("\"median\"").toOption.get) => Either.right(Spec.AggregateOpEnums.Median)
+        case (j@_) if j.==(parser.parse("\"q1\"").toOption.get) => Either.right(Spec.AggregateOpEnums.Q1)
+        case (j@_) if j.==(parser.parse("\"q3\"").toOption.get) => Either.right(Spec.AggregateOpEnums.Q3)
+        case (j@_) if j.==(parser.parse("\"modeskew\"").toOption.get) => Either.right(Spec.AggregateOpEnums.Modeskew)
+        case (j@_) if j.==(parser.parse("\"min\"").toOption.get) => Either.right(Spec.AggregateOpEnums.Min)
+        case (j@_) if j.==(parser.parse("\"max\"").toOption.get) => Either.right(Spec.AggregateOpEnums.Max)
+        case (j@_) if j.==(parser.parse("\"argmin\"").toOption.get) => Either.right(Spec.AggregateOpEnums.Argmin)
+        case (j@_) if j.==(parser.parse("\"argmax\"").toOption.get) => Either.right(Spec.AggregateOpEnums.Argmax)
+        case _ => Either.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
           c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecSortOrderEncoder: Encoder[Spec.SortOrder] = Encoder.instance(((e: Spec.SortOrder) => parser.parse(e.json).toOption.get));
     implicit val SpecSortOrderDecoder: Decoder[Spec.SortOrder] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
-        case (j@_) if j.==(parser.parse("\"ascending\"").toOption.get) => cats.data.Xor.right(Spec.SortOrderEnums.Ascending)
-        case (j@_) if j.==(parser.parse("\"descending\"").toOption.get) => cats.data.Xor.right(Spec.SortOrderEnums.Descending)
-        case (j@_) if j.==(parser.parse("\"none\"").toOption.get) => cats.data.Xor.right(Spec.SortOrderEnums.None)
-        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+        case (j@_) if j.==(parser.parse("\"ascending\"").toOption.get) => Either.right(Spec.SortOrderEnums.Ascending)
+        case (j@_) if j.==(parser.parse("\"descending\"").toOption.get) => Either.right(Spec.SortOrderEnums.Descending)
+        case (j@_) if j.==(parser.parse("\"none\"").toOption.get) => Either.right(Spec.SortOrderEnums.None)
+        case _ => Either.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
           c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecTypeEncoder: Encoder[Spec.Type] = Encoder.instance(((e: Spec.Type) => parser.parse(e.json).toOption.get));
     implicit val SpecTypeDecoder: Decoder[Spec.Type] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
-        case (j@_) if j.==(parser.parse("\"quantitative\"").toOption.get) => cats.data.Xor.right(Spec.TypeEnums.Quantitative)
-        case (j@_) if j.==(parser.parse("\"ordinal\"").toOption.get) => cats.data.Xor.right(Spec.TypeEnums.Ordinal)
-        case (j@_) if j.==(parser.parse("\"temporal\"").toOption.get) => cats.data.Xor.right(Spec.TypeEnums.Temporal)
-        case (j@_) if j.==(parser.parse("\"nominal\"").toOption.get) => cats.data.Xor.right(Spec.TypeEnums.Nominal)
-        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+        case (j@_) if j.==(parser.parse("\"quantitative\"").toOption.get) => Either.right(Spec.TypeEnums.Quantitative)
+        case (j@_) if j.==(parser.parse("\"ordinal\"").toOption.get) => Either.right(Spec.TypeEnums.Ordinal)
+        case (j@_) if j.==(parser.parse("\"temporal\"").toOption.get) => Either.right(Spec.TypeEnums.Temporal)
+        case (j@_) if j.==(parser.parse("\"nominal\"").toOption.get) => Either.right(Spec.TypeEnums.Nominal)
+        case _ => Either.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
           c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecTimeUnitEncoder: Encoder[Spec.TimeUnit] = Encoder.instance(((e: Spec.TimeUnit) => parser.parse(e.json).toOption.get));
     implicit val SpecTimeUnitDecoder: Decoder[Spec.TimeUnit] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
-        case (j@_) if j.==(parser.parse("\"year\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Year)
-        case (j@_) if j.==(parser.parse("\"month\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Month)
-        case (j@_) if j.==(parser.parse("\"day\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Day)
-        case (j@_) if j.==(parser.parse("\"date\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Date)
-        case (j@_) if j.==(parser.parse("\"hours\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Hours)
-        case (j@_) if j.==(parser.parse("\"minutes\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Minutes)
-        case (j@_) if j.==(parser.parse("\"seconds\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Seconds)
-        case (j@_) if j.==(parser.parse("\"milliseconds\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Milliseconds)
-        case (j@_) if j.==(parser.parse("\"yearmonth\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Yearmonth)
-        case (j@_) if j.==(parser.parse("\"yearmonthdate\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Yearmonthdate)
-        case (j@_) if j.==(parser.parse("\"yearmonthdatehours\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Yearmonthdatehours)
-        case (j@_) if j.==(parser.parse("\"yearmonthdatehoursminutes\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Yearmonthdatehoursminutes)
-        case (j@_) if j.==(parser.parse("\"yearmonthdatehoursminutesseconds\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Yearmonthdatehoursminutesseconds)
-        case (j@_) if j.==(parser.parse("\"hoursminutes\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Hoursminutes)
-        case (j@_) if j.==(parser.parse("\"hoursminutesseconds\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Hoursminutesseconds)
-        case (j@_) if j.==(parser.parse("\"minutesseconds\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Minutesseconds)
-        case (j@_) if j.==(parser.parse("\"secondsmilliseconds\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Secondsmilliseconds)
-        case (j@_) if j.==(parser.parse("\"quarter\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Quarter)
-        case (j@_) if j.==(parser.parse("\"yearquarter\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Yearquarter)
-        case (j@_) if j.==(parser.parse("\"quartermonth\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Quartermonth)
-        case (j@_) if j.==(parser.parse("\"yearquartermonth\"").toOption.get) => cats.data.Xor.right(Spec.TimeUnitEnums.Yearquartermonth)
-        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+        case (j@_) if j.==(parser.parse("\"year\"").toOption.get) => Either.right(Spec.TimeUnitEnums.Year)
+        case (j@_) if j.==(parser.parse("\"month\"").toOption.get) => Either.right(Spec.TimeUnitEnums.Month)
+        case (j@_) if j.==(parser.parse("\"day\"").toOption.get) => Either.right(Spec.TimeUnitEnums.Day)
+        case (j@_) if j.==(parser.parse("\"date\"").toOption.get) => Either.right(Spec.TimeUnitEnums.Date)
+        case (j@_) if j.==(parser.parse("\"hours\"").toOption.get) => Either.right(Spec.TimeUnitEnums.Hours)
+        case (j@_) if j.==(parser.parse("\"minutes\"").toOption.get) => Either.right(Spec.TimeUnitEnums.Minutes)
+        case (j@_) if j.==(parser.parse("\"seconds\"").toOption.get) => Either.right(Spec.TimeUnitEnums.Seconds)
+        case (j@_) if j.==(parser.parse("\"milliseconds\"").toOption.get) => Either.right(Spec.TimeUnitEnums.Milliseconds)
+        case (j@_) if j.==(parser.parse("\"yearmonth\"").toOption.get) => Either.right(Spec.TimeUnitEnums.Yearmonth)
+        case (j@_) if j.==(parser.parse("\"yearmonthdate\"").toOption.get) => Either.right(Spec.TimeUnitEnums.Yearmonthdate)
+        case (j@_) if j.==(parser.parse("\"yearmonthdatehours\"").toOption.get) => Either.right(Spec.TimeUnitEnums.Yearmonthdatehours)
+        case (j@_) if j.==(parser.parse("\"yearmonthdatehoursminutes\"").toOption.get) => Either.right(Spec.TimeUnitEnums.Yearmonthdatehoursminutes)
+        case (j@_) if j.==(parser.parse("\"yearmonthdatehoursminutesseconds\"").toOption.get) => Either.right(Spec.TimeUnitEnums.Yearmonthdatehoursminutesseconds)
+        case (j@_) if j.==(parser.parse("\"hoursminutes\"").toOption.get) => Either.right(Spec.TimeUnitEnums.Hoursminutes)
+        case (j@_) if j.==(parser.parse("\"hoursminutesseconds\"").toOption.get) => Either.right(Spec.TimeUnitEnums.Hoursminutesseconds)
+        case (j@_) if j.==(parser.parse("\"minutesseconds\"").toOption.get) => Either.right(Spec.TimeUnitEnums.Minutesseconds)
+        case (j@_) if j.==(parser.parse("\"secondsmilliseconds\"").toOption.get) => Either.right(Spec.TimeUnitEnums.Secondsmilliseconds)
+        case (j@_) if j.==(parser.parse("\"quarter\"").toOption.get) => Either.right(Spec.TimeUnitEnums.Quarter)
+        case (j@_) if j.==(parser.parse("\"yearquarter\"").toOption.get) => Either.right(Spec.TimeUnitEnums.Yearquarter)
+        case (j@_) if j.==(parser.parse("\"quartermonth\"").toOption.get) => Either.right(Spec.TimeUnitEnums.Quartermonth)
+        case (j@_) if j.==(parser.parse("\"yearquartermonth\"").toOption.get) => Either.right(Spec.TimeUnitEnums.Yearquartermonth)
+        case _ => Either.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
           c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecBinEncoder: Encoder[Spec.Bin] = Encoder.instance(((cc: Spec.Bin) => Json.obj("min".->(cc.min.asJson),
@@ -875,11 +876,11 @@ object Spec {
     implicit val SpecDataFormatTypeEncoder: Encoder[Spec.DataFormatType] = Encoder.instance(((e: Spec.DataFormatType) => parser.parse(e.json).toOption.get));
     implicit val SpecDataFormatTypeDecoder: Decoder[Spec.DataFormatType] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
-        case (j@_) if j.==(parser.parse("\"json\"").toOption.get) => cats.data.Xor.right(Spec.DataFormatTypeEnums.Json)
-        case (j@_) if j.==(parser.parse("\"csv\"").toOption.get) => cats.data.Xor.right(Spec.DataFormatTypeEnums.Csv)
-        case (j@_) if j.==(parser.parse("\"tsv\"").toOption.get) => cats.data.Xor.right(Spec.DataFormatTypeEnums.Tsv)
-        case (j@_) if j.==(parser.parse("\"topojson\"").toOption.get) => cats.data.Xor.right(Spec.DataFormatTypeEnums.Topojson)
-        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+        case (j@_) if j.==(parser.parse("\"json\"").toOption.get) => Either.right(Spec.DataFormatTypeEnums.Json)
+        case (j@_) if j.==(parser.parse("\"csv\"").toOption.get) => Either.right(Spec.DataFormatTypeEnums.Csv)
+        case (j@_) if j.==(parser.parse("\"tsv\"").toOption.get) => Either.right(Spec.DataFormatTypeEnums.Tsv)
+        case (j@_) if j.==(parser.parse("\"topojson\"").toOption.get) => Either.right(Spec.DataFormatTypeEnums.Topojson)
+        case _ => Either.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
           c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecTransformEncoder: Encoder[Spec.Transform] = Encoder.instance(((cc: Spec.Transform) => Json.obj("filter".->(cc.filter.asJson),
@@ -1213,84 +1214,84 @@ object Spec {
     implicit val SpecStackOffsetEncoder: Encoder[Spec.StackOffset] = Encoder.instance(((e: Spec.StackOffset) => parser.parse(e.json).toOption.get));
     implicit val SpecStackOffsetDecoder: Decoder[Spec.StackOffset] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
-        case (j@_) if j.==(parser.parse("\"zero\"").toOption.get) => cats.data.Xor.right(Spec.StackOffsetEnums.Zero)
-        case (j@_) if j.==(parser.parse("\"center\"").toOption.get) => cats.data.Xor.right(Spec.StackOffsetEnums.Center)
-        case (j@_) if j.==(parser.parse("\"normalize\"").toOption.get) => cats.data.Xor.right(Spec.StackOffsetEnums.Normalize)
-        case (j@_) if j.==(parser.parse("\"none\"").toOption.get) => cats.data.Xor.right(Spec.StackOffsetEnums.None)
-        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+        case (j@_) if j.==(parser.parse("\"zero\"").toOption.get) => Either.right(Spec.StackOffsetEnums.Zero)
+        case (j@_) if j.==(parser.parse("\"center\"").toOption.get) => Either.right(Spec.StackOffsetEnums.Center)
+        case (j@_) if j.==(parser.parse("\"normalize\"").toOption.get) => Either.right(Spec.StackOffsetEnums.Normalize)
+        case (j@_) if j.==(parser.parse("\"none\"").toOption.get) => Either.right(Spec.StackOffsetEnums.None)
+        case _ => Either.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
           c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecOrientEncoder: Encoder[Spec.Orient] = Encoder.instance(((e: Spec.Orient) => parser.parse(e.json).toOption.get));
     implicit val SpecOrientDecoder: Decoder[Spec.Orient] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
-        case (j@_) if j.==(parser.parse("\"horizontal\"").toOption.get) => cats.data.Xor.right(Spec.OrientEnums.Horizontal)
-        case (j@_) if j.==(parser.parse("\"vertical\"").toOption.get) => cats.data.Xor.right(Spec.OrientEnums.Vertical)
-        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+        case (j@_) if j.==(parser.parse("\"horizontal\"").toOption.get) => Either.right(Spec.OrientEnums.Horizontal)
+        case (j@_) if j.==(parser.parse("\"vertical\"").toOption.get) => Either.right(Spec.OrientEnums.Vertical)
+        case _ => Either.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
           c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecInterpolateEncoder: Encoder[Spec.Interpolate] = Encoder.instance(((e: Spec.Interpolate) => parser.parse(e.json).toOption.get));
     implicit val SpecInterpolateDecoder: Decoder[Spec.Interpolate] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
-        case (j@_) if j.==(parser.parse("\"linear\"").toOption.get) => cats.data.Xor.right(Spec.InterpolateEnums.Linear)
-        case (j@_) if j.==(parser.parse("\"linear-closed\"").toOption.get) => cats.data.Xor.right(Spec.InterpolateEnums.LinearClosed)
-        case (j@_) if j.==(parser.parse("\"step\"").toOption.get) => cats.data.Xor.right(Spec.InterpolateEnums.Step)
-        case (j@_) if j.==(parser.parse("\"step-before\"").toOption.get) => cats.data.Xor.right(Spec.InterpolateEnums.StepBefore)
-        case (j@_) if j.==(parser.parse("\"step-after\"").toOption.get) => cats.data.Xor.right(Spec.InterpolateEnums.StepAfter)
-        case (j@_) if j.==(parser.parse("\"basis\"").toOption.get) => cats.data.Xor.right(Spec.InterpolateEnums.Basis)
-        case (j@_) if j.==(parser.parse("\"basis-open\"").toOption.get) => cats.data.Xor.right(Spec.InterpolateEnums.BasisOpen)
-        case (j@_) if j.==(parser.parse("\"basis-closed\"").toOption.get) => cats.data.Xor.right(Spec.InterpolateEnums.BasisClosed)
-        case (j@_) if j.==(parser.parse("\"cardinal\"").toOption.get) => cats.data.Xor.right(Spec.InterpolateEnums.Cardinal)
-        case (j@_) if j.==(parser.parse("\"cardinal-open\"").toOption.get) => cats.data.Xor.right(Spec.InterpolateEnums.CardinalOpen)
-        case (j@_) if j.==(parser.parse("\"cardinal-closed\"").toOption.get) => cats.data.Xor.right(Spec.InterpolateEnums.CardinalClosed)
-        case (j@_) if j.==(parser.parse("\"bundle\"").toOption.get) => cats.data.Xor.right(Spec.InterpolateEnums.Bundle)
-        case (j@_) if j.==(parser.parse("\"monotone\"").toOption.get) => cats.data.Xor.right(Spec.InterpolateEnums.Monotone)
-        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+        case (j@_) if j.==(parser.parse("\"linear\"").toOption.get) => Either.right(Spec.InterpolateEnums.Linear)
+        case (j@_) if j.==(parser.parse("\"linear-closed\"").toOption.get) => Either.right(Spec.InterpolateEnums.LinearClosed)
+        case (j@_) if j.==(parser.parse("\"step\"").toOption.get) => Either.right(Spec.InterpolateEnums.Step)
+        case (j@_) if j.==(parser.parse("\"step-before\"").toOption.get) => Either.right(Spec.InterpolateEnums.StepBefore)
+        case (j@_) if j.==(parser.parse("\"step-after\"").toOption.get) => Either.right(Spec.InterpolateEnums.StepAfter)
+        case (j@_) if j.==(parser.parse("\"basis\"").toOption.get) => Either.right(Spec.InterpolateEnums.Basis)
+        case (j@_) if j.==(parser.parse("\"basis-open\"").toOption.get) => Either.right(Spec.InterpolateEnums.BasisOpen)
+        case (j@_) if j.==(parser.parse("\"basis-closed\"").toOption.get) => Either.right(Spec.InterpolateEnums.BasisClosed)
+        case (j@_) if j.==(parser.parse("\"cardinal\"").toOption.get) => Either.right(Spec.InterpolateEnums.Cardinal)
+        case (j@_) if j.==(parser.parse("\"cardinal-open\"").toOption.get) => Either.right(Spec.InterpolateEnums.CardinalOpen)
+        case (j@_) if j.==(parser.parse("\"cardinal-closed\"").toOption.get) => Either.right(Spec.InterpolateEnums.CardinalClosed)
+        case (j@_) if j.==(parser.parse("\"bundle\"").toOption.get) => Either.right(Spec.InterpolateEnums.Bundle)
+        case (j@_) if j.==(parser.parse("\"monotone\"").toOption.get) => Either.right(Spec.InterpolateEnums.Monotone)
+        case _ => Either.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
           c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecShapeEncoder: Encoder[Spec.Shape] = Encoder.instance(((e: Spec.Shape) => parser.parse(e.json).toOption.get));
     implicit val SpecShapeDecoder: Decoder[Spec.Shape] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
-        case (j@_) if j.==(parser.parse("\"circle\"").toOption.get) => cats.data.Xor.right(Spec.ShapeEnums.Circle)
-        case (j@_) if j.==(parser.parse("\"square\"").toOption.get) => cats.data.Xor.right(Spec.ShapeEnums.Square)
-        case (j@_) if j.==(parser.parse("\"cross\"").toOption.get) => cats.data.Xor.right(Spec.ShapeEnums.Cross)
-        case (j@_) if j.==(parser.parse("\"diamond\"").toOption.get) => cats.data.Xor.right(Spec.ShapeEnums.Diamond)
-        case (j@_) if j.==(parser.parse("\"triangle-up\"").toOption.get) => cats.data.Xor.right(Spec.ShapeEnums.TriangleUp)
-        case (j@_) if j.==(parser.parse("\"triangle-down\"").toOption.get) => cats.data.Xor.right(Spec.ShapeEnums.TriangleDown)
-        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+        case (j@_) if j.==(parser.parse("\"circle\"").toOption.get) => Either.right(Spec.ShapeEnums.Circle)
+        case (j@_) if j.==(parser.parse("\"square\"").toOption.get) => Either.right(Spec.ShapeEnums.Square)
+        case (j@_) if j.==(parser.parse("\"cross\"").toOption.get) => Either.right(Spec.ShapeEnums.Cross)
+        case (j@_) if j.==(parser.parse("\"diamond\"").toOption.get) => Either.right(Spec.ShapeEnums.Diamond)
+        case (j@_) if j.==(parser.parse("\"triangle-up\"").toOption.get) => Either.right(Spec.ShapeEnums.TriangleUp)
+        case (j@_) if j.==(parser.parse("\"triangle-down\"").toOption.get) => Either.right(Spec.ShapeEnums.TriangleDown)
+        case _ => Either.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
           c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecHorizontalAlignEncoder: Encoder[Spec.HorizontalAlign] = Encoder.instance(((e: Spec.HorizontalAlign) => parser.parse(e.json).toOption.get));
     implicit val SpecHorizontalAlignDecoder: Decoder[Spec.HorizontalAlign] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
-        case (j@_) if j.==(parser.parse("\"left\"").toOption.get) => cats.data.Xor.right(Spec.HorizontalAlignEnums.Left)
-        case (j@_) if j.==(parser.parse("\"right\"").toOption.get) => cats.data.Xor.right(Spec.HorizontalAlignEnums.Right)
-        case (j@_) if j.==(parser.parse("\"center\"").toOption.get) => cats.data.Xor.right(Spec.HorizontalAlignEnums.Center)
-        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+        case (j@_) if j.==(parser.parse("\"left\"").toOption.get) => Either.right(Spec.HorizontalAlignEnums.Left)
+        case (j@_) if j.==(parser.parse("\"right\"").toOption.get) => Either.right(Spec.HorizontalAlignEnums.Right)
+        case (j@_) if j.==(parser.parse("\"center\"").toOption.get) => Either.right(Spec.HorizontalAlignEnums.Center)
+        case _ => Either.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
           c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecVerticalAlignEncoder: Encoder[Spec.VerticalAlign] = Encoder.instance(((e: Spec.VerticalAlign) => parser.parse(e.json).toOption.get));
     implicit val SpecVerticalAlignDecoder: Decoder[Spec.VerticalAlign] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
-        case (j@_) if j.==(parser.parse("\"top\"").toOption.get) => cats.data.Xor.right(Spec.VerticalAlignEnums.Top)
-        case (j@_) if j.==(parser.parse("\"middle\"").toOption.get) => cats.data.Xor.right(Spec.VerticalAlignEnums.Middle)
-        case (j@_) if j.==(parser.parse("\"bottom\"").toOption.get) => cats.data.Xor.right(Spec.VerticalAlignEnums.Bottom)
-        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+        case (j@_) if j.==(parser.parse("\"top\"").toOption.get) => Either.right(Spec.VerticalAlignEnums.Top)
+        case (j@_) if j.==(parser.parse("\"middle\"").toOption.get) => Either.right(Spec.VerticalAlignEnums.Middle)
+        case (j@_) if j.==(parser.parse("\"bottom\"").toOption.get) => Either.right(Spec.VerticalAlignEnums.Bottom)
+        case _ => Either.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
           c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecFontStyleEncoder: Encoder[Spec.FontStyle] = Encoder.instance(((e: Spec.FontStyle) => parser.parse(e.json).toOption.get));
     implicit val SpecFontStyleDecoder: Decoder[Spec.FontStyle] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
-        case (j@_) if j.==(parser.parse("\"normal\"").toOption.get) => cats.data.Xor.right(Spec.FontStyleEnums.Normal)
-        case (j@_) if j.==(parser.parse("\"italic\"").toOption.get) => cats.data.Xor.right(Spec.FontStyleEnums.Italic)
-        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+        case (j@_) if j.==(parser.parse("\"normal\"").toOption.get) => Either.right(Spec.FontStyleEnums.Normal)
+        case (j@_) if j.==(parser.parse("\"italic\"").toOption.get) => Either.right(Spec.FontStyleEnums.Italic)
+        case _ => Either.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
           c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecFontWeightEncoder: Encoder[Spec.FontWeight] = Encoder.instance(((e: Spec.FontWeight) => parser.parse(e.json).toOption.get));
     implicit val SpecFontWeightDecoder: Decoder[Spec.FontWeight] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
-        case (j@_) if j.==(parser.parse("\"normal\"").toOption.get) => cats.data.Xor.right(Spec.FontWeightEnums.Normal)
-        case (j@_) if j.==(parser.parse("\"bold\"").toOption.get) => cats.data.Xor.right(Spec.FontWeightEnums.Bold)
-        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+        case (j@_) if j.==(parser.parse("\"normal\"").toOption.get) => Either.right(Spec.FontWeightEnums.Normal)
+        case (j@_) if j.==(parser.parse("\"bold\"").toOption.get) => Either.right(Spec.FontWeightEnums.Bold)
+        case _ => Either.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
           c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecOverlayConfigEncoder: Encoder[Spec.OverlayConfig] = Encoder.instance(((cc: Spec.OverlayConfig) => Json.obj("line".->(cc.line.asJson),
@@ -1307,10 +1308,10 @@ object Spec {
     implicit val SpecAreaOverlayEncoder: Encoder[Spec.AreaOverlay] = Encoder.instance(((e: Spec.AreaOverlay) => parser.parse(e.json).toOption.get));
     implicit val SpecAreaOverlayDecoder: Decoder[Spec.AreaOverlay] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
-        case (j@_) if j.==(parser.parse("\"line\"").toOption.get) => cats.data.Xor.right(Spec.AreaOverlayEnums.Line)
-        case (j@_) if j.==(parser.parse("\"linepoint\"").toOption.get) => cats.data.Xor.right(Spec.AreaOverlayEnums.Linepoint)
-        case (j@_) if j.==(parser.parse("\"none\"").toOption.get) => cats.data.Xor.right(Spec.AreaOverlayEnums.None)
-        case _ => cats.data.Xor.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
+        case (j@_) if j.==(parser.parse("\"line\"").toOption.get) => Either.right(Spec.AreaOverlayEnums.Line)
+        case (j@_) if j.==(parser.parse("\"linepoint\"").toOption.get) => Either.right(Spec.AreaOverlayEnums.Linepoint)
+        case (j@_) if j.==(parser.parse("\"none\"").toOption.get) => Either.right(Spec.AreaOverlayEnums.None)
+        case _ => Either.left(DecodingFailure("Couldn\'t find enum:".+(json.toString),
           c.history))
       }).map(((singleton) => singleton))))));
     implicit val SpecScaleConfigEncoder: Encoder[Spec.ScaleConfig] = Encoder.instance(((cc: Spec.ScaleConfig) => Json.obj("round".->(cc.round.asJson),

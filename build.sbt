@@ -64,7 +64,7 @@ mkNotebooks := (Def.inputTaskDyn {
 // Build Config
 // -------
 
-lazy val circeVersion = "0.4.1"
+lazy val circeVersion = "0.7.0"
 
 lazy val commonSettings = Seq(
   description := "The missing matplotlib for Scala and Spark",
@@ -157,7 +157,7 @@ lazy val vegaLiteSpec = project.in(file("spec")).
       "io.circe" %% "circe-core" % circeVersion,
       "io.circe" %% "circe-generic" % circeVersion,
       "io.circe" %% "circe-parser" % circeVersion,
-      "com.github.aishfenton" %% "argus" % "0.2.3",
+      "com.github.aishfenton" %% "argus" % "0.2.7",
       "org.scalactic" %% "scalactic" % "2.2.6" % "test",
       "org.scalatest" %% "scalatest" % "2.2.6" % "test"
     )
@@ -181,7 +181,7 @@ lazy val vegas = project.in(file("core")).
       "org.webjars.bower" % "vega-lite" % vegaLiteVersion.value,
 
       // Test deps
-      "com.github.aishfenton" %% "argus" % "0.2.3" % "test",
+      "com.github.aishfenton" %% "argus" % "0.2.7" % "test",
       "org.scalactic" %% "scalactic" % "2.2.6" % "test",
       "org.scalatest" %% "scalatest" % "2.2.6" % "test",
       "org.seleniumhq.selenium" % "selenium-java" % "3.0.0-beta2" % "test"
