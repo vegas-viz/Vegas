@@ -10,7 +10,7 @@ trait JsonMatchers {
 
   def beSameJsonAs(jrStr: String): Matcher[Json] = new Matcher[Json] {
     def apply(jl: Json) = {
-      val jr = parser.parse(jrStr).toOption.get
+      val jr = parser.parse(jrStr).right.get
       beSameJsonAs(jr)(jl)
     }
   }
@@ -26,7 +26,7 @@ trait JsonMatchers {
     def areEqual(a: Json, b: Any): Boolean =
       b match {
         case c: Json => JsonDiff.diff(a, c) == Nil
-        case c: String => JsonDiff.diff(a, parser.parse(c).toOption.get) == Nil
+        case c: String => JsonDiff.diff(a, parser.parse(c).right.get) == Nil
         case _ => false
       }
   }
