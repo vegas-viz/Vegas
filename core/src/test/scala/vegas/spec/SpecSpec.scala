@@ -34,7 +34,7 @@ class SpecSpec extends FlatSpec with Matchers with JsonMatchers {
       val spec = parser.decode[VegaUnion](json)
 
       spec should be ('isRight)
-      spec.toOption.get.asJson should beSameJsonAs(json)
+      spec.right.get.asJson should beSameJsonAs(json)
     }
   }
 
