@@ -12,7 +12,7 @@
  {
    "config": { "title": false },
    "title": "",
-   "text": "\nimport vegas._\nimport vegas.data.External._\nimplicit val render = vegas.render.ShowHTML(s => print(\"%html \" + s))"
+   "text": "\nimport vegas._\nimport vegas.data.External._"
  }
     ,
  {

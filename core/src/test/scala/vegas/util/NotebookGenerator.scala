@@ -59,8 +59,7 @@ class JupyterGenerator extends NotebookGenerator {
     ("", "import $ivy.`org.vegas-viz::vegas:" + s"$version`") ::
     ("", """
       |import vegas._
-      |import vegas.data.External._
-      |implicit val render = vegas.render.ShowHTML(publish.html(_))""".stripMargin
+      |import vegas.data.External._""".stripMargin
     ) ::
     Nil
 
@@ -123,8 +122,7 @@ class ZeppelinGenerator extends NotebookGenerator {
      |z.load("org.vegas-viz:vegas-spark_2.11:${version}")""".stripMargin) ::
     ("", """
      |import vegas._
-     |import vegas.data.External._
-     |implicit val render = vegas.render.ShowHTML(s => print("%html " + s))""".stripMargin) ::
+     |import vegas.data.External._""".stripMargin) ::
     Nil
 
   def mkNotebook(plots: List[(String, String)]) = {
