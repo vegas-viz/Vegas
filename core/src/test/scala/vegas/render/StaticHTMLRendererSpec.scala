@@ -28,7 +28,7 @@ class StaticHTMLRendererSpec extends FlatSpec with Matchers {
     val html = specBuilder.html.plotHTML("test")
 
     html shouldBe a [String]
-    html.trim should startWith ("<script>")
+    html.trim should startWith ("<div id=")
     html should include (specBuilder.toJson)
     html.trim should include ("</script>")
   }
