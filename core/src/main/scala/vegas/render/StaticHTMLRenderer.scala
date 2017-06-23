@@ -23,6 +23,7 @@ case class StaticHTMLRenderer(specJson: String) extends BaseHTMLRenderer {
 
   def plotHTML(name: String = this.defaultName) =
     s"""
+       | <div id='$name'></div>
        | <script>
        |   var embedSpec = {
        |     mode: "vega-lite",
@@ -30,7 +31,7 @@ case class StaticHTMLRenderer(specJson: String) extends BaseHTMLRenderer {
        |   }
        |   vg.embed("#$name", embedSpec, function(error, result) {});
        | </script>
-       | <div id='$name'></div>
+
     """.stripMargin
 
   val footerHTML =
