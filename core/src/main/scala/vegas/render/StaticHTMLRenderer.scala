@@ -56,15 +56,14 @@ case class StaticHTMLRenderer(specJson: String) extends BaseHTMLRenderer {
     s"""
       |  <iframe id="${frameName}" sandbox="allow-scripts allow-same-origin" style="border: none; width: 100%" srcdoc="${xml.Utility.escape(pageHTML(name))}"></iframe>
       |  <script>
-      |    if (typeof resizeIFrame != 'function') {
+      |    (function() {
       |      function resizeIFrame(el, k) {
-      |        $$(el.contentWindow.document).ready(function() {
-      |          el.style.height = el.contentWindow.document.body.scrollHeight + 'px';
-      |        });
+      |        var height = el.contentWindow.document.body.scrollHeight || '400'; // Fallback in case of no scroll height
+      |        el.style.height = height + 'px';
       |        if (k <= 10) { setTimeout(function() { resizeIFrame(el, k+1) }, 1000 + (k * 250)) };
       |      }
-      |    }
-      |    $$().ready( function() { resizeIFrame($$('#${frameName}').get(0), 1); });
+      |      resizeIFrame(document.querySelector('#${frameName}'), 1);
+      |    })(); // IIFE
       |  </script>
     """.stripMargin
     }
