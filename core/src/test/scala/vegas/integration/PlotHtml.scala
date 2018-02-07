@@ -3,10 +3,10 @@ package vegas.integration
 import org.openqa.selenium.WebDriver
 import vegas.WebMatchers
 import vegas.fixtures.{BasicPlots, VegasPlots}
-import org.scalatest.{BeforeAndAfterAll, FlatSpec, ShouldMatchers}
+import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 import org.scalatest.selenium.Chrome
 
-class PlotHtml extends FlatSpec with ShouldMatchers with WebMatchers with Chrome with BeforeAndAfterAll {
+class PlotHtml extends FlatSpec with Matchers with WebMatchers with Chrome with BeforeAndAfterAll {
 
   val scheme = "file://"
 

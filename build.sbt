@@ -1,5 +1,8 @@
 import ReleaseTransformations._
 
+import scala.language.postfixOps
+import scala.sys.process._
+
 // ---------
 // Setting / Task Definitions
 // ---------
@@ -34,13 +37,18 @@ updateVegaDeps := {
 addCommandAlias("look", "vegas/test:runMain vegas.util.Look")
 
 lazy val mkVegaModel = taskKey[Unit]("Compiles and copies the vega-lite model and codec to the Vegas project")
+
 mkVegaModel := {
-  val src = file("spec/target/scala-2.11/Spec.scala")
+  val src = (scalaBinaryVersion.value match {
+    case "2.11" => file("spec/target/scala-2.11/Spec.scala")
+    case "2.12" => file("spec/target/scala-2.12/Spec.scala")
+  })
   val dest = file("core/src/main/scala/vegas/spec/Spec.scala")
   IO.write(dest, "package vegas.spec\n\n")
   IO.append(dest, IO.readBytes(src))
 }
-mkVegaModel <<= mkVegaModel
+
+mkVegaModel := mkVegaModel
   .dependsOn(compile in vegaLiteSpec in Compile)
 
 lazy val lastReleaseVersion = taskKey[String]("Gets (using git tag) the version number of the last release")
@@ -69,6 +77,7 @@ lazy val circeVersion = "0.7.0"
 lazy val commonSettings = Seq(
   description := "The missing matplotlib for Scala and Spark",
   organization := "org.vegas-viz",
+  crossScalaVersions := Seq("2.11.8", "2.12.4"),
   scalaVersion := "2.11.8",
   vegaLiteVersion := "1.2.0",
   scalacOptions += "-target:jvm-1.7",
@@ -122,10 +131,12 @@ lazy val commonSettings = Seq(
     releaseStepInputTask(mkNotebooks),
     commitReleaseVersion,
     tagRelease,
-    ReleaseStep(action = Command.process("publishSigned", _)),
+//    ReleaseStep(action = Command.process("publishSigned", _)),
+    ReleaseStep(action = st => st.copy(remainingCommands = Exec("publishSigned", None) +: st.remainingCommands)),
     setNextVersion,
     commitNextVersion,
-    ReleaseStep(action = Command.process("sonatypeReleaseAll", _)),
+//    ReleaseStep(action = Command.process("sonatypeReleaseAll", _)),
+    ReleaseStep(action = st => st.copy(remainingCommands = Exec("sonatypeReleaseAll", None) +: st.remainingCommands)),
     pushChanges
   )
 )
@@ -136,6 +147,7 @@ lazy val noPublishSettings = Seq(
   publishArtifact := false
 )
 
+
 lazy val macros = project.
   settings(moduleName := "vegas-macros").
   settings(commonSettings: _*).
@@ -144,9 +156,13 @@ lazy val macros = project.
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
       "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided",
       "org.typelevel" %% "macro-compat" % "1.1.1",
-      "com.github.julien-truffaut" %% "monocle-core" % "1.1.0"
+      "com.github.julien-truffaut" %% "monocle-core" % (scalaBinaryVersion.value match {
+        case "2.11" => "1.1.0"
+        case "2.12" => "1.3.2"
+      })
     )
   )
+
 
 // This project exists just to generate the Vega-Lite Json model + codecs
 lazy val vegaLiteSpec = project.in(file("spec")).
@@ -158,8 +174,8 @@ lazy val vegaLiteSpec = project.in(file("spec")).
       "io.circe" %% "circe-generic" % circeVersion,
       "io.circe" %% "circe-parser" % circeVersion,
       "com.github.aishfenton" %% "argus" % "0.2.7",
-      "org.scalactic" %% "scalactic" % "2.2.6" % "test",
-      "org.scalatest" %% "scalatest" % "2.2.6" % "test"
+      "org.scalactic" %% "scalactic" % "3.0.5" % "test",
+      "org.scalatest" %% "scalatest" % "3.0.5" % "test"
     )
   )
 //  settings(sourceGenerators in Compile <+= (sourceManaged in Compile) map genCode)
@@ -173,20 +189,29 @@ lazy val vegas = project.in(file("core")).
       "io.circe" %% "circe-core" % circeVersion,
       "io.circe" %% "circe-generic" % circeVersion,
       "io.circe" %% "circe-parser" % circeVersion,
-      "com.github.julien-truffaut" %% "monocle-macro" % "1.1.0",
-      "com.github.julien-truffaut" %% "monocle-core" % "1.1.0",
-      "org.scalafx" %% "scalafx" % "8.0.92-R10",
+      "com.github.julien-truffaut" %% "monocle-macro" % (scalaBinaryVersion.value match {
+        case "2.11" => "1.1.0"
+        case "2.12" => "1.3.2"
+      }),
+      "com.github.julien-truffaut" %% "monocle-core" % (scalaBinaryVersion.value match {
+        case "2.11" => "1.1.0"
+        case "2.12" => "1.3.2"
+      }),
+      "org.scalafx" %% "scalafx" % "8.0.102-R11",
+      "org.scala-lang.modules" %% "scala-xml" % "1.0.6",
 
       // JS deps. Also used to generate "webjars.csv" file for CDN loading.
       "org.webjars.bower" % "vega-lite" % vegaLiteVersion.value,
 
       // Test deps
       "com.github.aishfenton" %% "argus" % "0.2.7" % "test",
-      "org.scalactic" %% "scalactic" % "2.2.6" % "test",
-      "org.scalatest" %% "scalatest" % "2.2.6" % "test",
+      "org.scalactic" %% "scalactic" % "3.0.5" % "test",
+      "org.scalatest" %% "scalatest" % "3.0.5" % "test",
       "org.seleniumhq.selenium" % "selenium-java" % "3.0.0-beta2" % "test"
     )
   )
+
+// https://stackoverflow.com/questions/48653876/aggregate-different-modules-based-on-scala-binary-version
 
 lazy val spark = project.
   settings(moduleName := "vegas-spark").
@@ -196,7 +221,15 @@ lazy val spark = project.
     libraryDependencies ++= Seq(
       "org.apache.spark" %% "spark-sql" % "[2.0,)" % "provided"
     )
+  ).
+  // remove spark dep and skip compile if version is 2.12
+  settings(
+    libraryDependencies := (if (scalaBinaryVersion.value == "2.12") Seq.empty
+      else libraryDependencies.value),
+    skip in compile := scalaBinaryVersion.value == "2.12",
+    skip in publish := scalaBinaryVersion.value == "2.12"
   )
+
 
 lazy val flink = project.
   settings(moduleName := "vegas-flink").
@@ -207,13 +240,19 @@ lazy val flink = project.
       "org.apache.flink" %% "flink-scala" % "[1.1.1,)" % "provided",
       "org.apache.flink" %% "flink-clients" % "[1.1.1,)" % "provided"
     )
+  ).
+  settings(
+    libraryDependencies := (if (scalaBinaryVersion.value == "2.12") Seq.empty
+      else libraryDependencies.value),
+    skip in compile := scalaBinaryVersion.value == "2.12",
+    skip in publish := scalaBinaryVersion.value == "2.12"
   )
-
 
 lazy val root = (project in file(".")).
   aggregate(vegas, spark, flink, macros).
   settings(commonSettings: _*).
   settings(noPublishSettings: _*)
+
 
 // Clears screen between refreshes in continuous mode
 maxErrors := 5
