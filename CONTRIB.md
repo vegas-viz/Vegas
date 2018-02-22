@@ -15,9 +15,9 @@ The tests make use of ChromeDriver. First, you obviously need Chrome installed.
 Next you need to install ChromeDriver, which you can do on mac with the 
 following:
 
-    ```bash
-    brew install chromedriver
-    ```
+```bash
+brew install chromedriver
+```
 
 This also places chromeddriver on the shell path, which should be all you need.
 
