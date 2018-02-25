@@ -3,12 +3,24 @@ package vegas.DSL
 import java.io.File
 
 import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.Inspectors.forAll
 import vegas.JsonMatchers
-import vegas.fixtures.BasicPlots
 
 import scala.io.Source
 
 class AllDSLSpec extends FlatSpec with Matchers with JsonMatchers {
+  import AllDSLSpec._
+
+  behavior of "BasicPlots"
+  for((fileName, plot) <- testCases) {
+    it should s"produce the correct json as ${fileName}" in {
+      plot.asCirceJson should beSameJsonAs(examples(fileName))
+    }
+  }
+}
+
+object AllDSLSpec {
+  import vegas.fixtures.BasicPlots._
 
   val examples = new File("core/src/test/resources/example-specs")
     .listFiles.toList
@@ -22,26 +34,19 @@ class AllDSLSpec extends FlatSpec with Matchers with JsonMatchers {
     }
     .toMap
 
-  "BasicPlots" should "produce their corresponding Json" in {
-    import BasicPlots._
-
-    // NB: Please maintain the sorting based on the json filename. That will help to identify what files have been
-    // covered.
-
-    SimpleBarChart.asCirceJson should beSameJsonAs(examples("bar"))
-    AggregateBarChart.asCirceJson should beSameJsonAs(examples("bar_aggregate"))
-    GroupedBarChart.asCirceJson should beSameJsonAs(examples("bar_grouped"))
-    AreaChart.asCirceJson should beSameJsonAs(examples("area"))
-    NormalizedStackedBarChart.asCirceJson should beSameJsonAs(examples("stacked_bar_normalize"))
-    ScatterBinnedPlot.asCirceJson should beSameJsonAs(examples("scatter_binned"))
-    ScatterColorPlot.asCirceJson should beSameJsonAs(examples("scatter_color"))
-    ScatterBinnedColorPlot.asCirceJson should beSameJsonAs(examples("scatter_binned_color"))
-    StackedAreaBinnedPlot.asCirceJson should beSameJsonAs(examples("stacked_area_binned"))
-    SortColorPlot.asCirceJson should beSameJsonAs(examples("trellis_barley"))
-    BinnedChart.asCirceJson should beSameJsonAs(examples("trellis_scatter_binned_row"))
-    CustomShapePlot.asCirceJson should beSameJsonAs(examples("scatter_shape_custom"))
-    LineDetail.asCirceJson should beSameJsonAs(examples("line_detail"))
-
-  }
-
+  val testCases = List(
+    "bar" -> SimpleBarChart,
+    "bar_aggregate" -> AggregateBarChart,
+    "bar_grouped" -> GroupedBarChart,
+    "area" -> AreaChart,
+    "stacked_bar_normalize" -> NormalizedStackedBarChart,
+    "scatter_binned" -> ScatterBinnedPlot,
+    "scatter_color" -> ScatterColorPlot,
+    "scatter_binned_color" -> ScatterBinnedColorPlot,
+    "stacked_area_binned" -> StackedAreaBinnedPlot,
+    "trellis_barley" -> SortColorPlot,
+    "trellis_scatter_binned_row" -> BinnedChart,
+    "scatter_shape_custom" -> CustomShapePlot,
+    "line_detail" -> LineDetail
+  ).sortBy(_._1)
 }
