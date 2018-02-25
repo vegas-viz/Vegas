@@ -47,6 +47,13 @@ object AllDSLSpec {
     "trellis_barley" -> SortColorPlot,
     "trellis_scatter_binned_row" -> BinnedChart,
     "scatter_shape_custom" -> CustomShapePlot,
-    "line_detail" -> LineDetail
+    "line_detail" -> LineDetail,
+    "github_punchcard" -> GithubPunchCard,
+    "trellis_anscombe" -> AnscombesQuartet,
+    "stacked_area" -> StackedAreaChart,
+    "stacked_area_normalize" -> NormalizedStackedAreaChart,
+    "stacked_area_stream" -> Streamgraph,
+    "stacked_bar_weather" -> StackedBarChart,
+    "tick_strip" -> StripPlot
   ).sortBy(_._1)
 }
