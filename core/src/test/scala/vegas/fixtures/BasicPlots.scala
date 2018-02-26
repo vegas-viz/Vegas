@@ -132,9 +132,86 @@ object BasicPlots {
       encodeY("price", Quant).
       encodeDetailFields(Field(field="symbol", dataType=Nominal))
 
+  val GithubPunchCard =
+    Vegas().
+      withURL(Github, formatType = DataFormat.Csv).
+      mark(Circle).
+      encodeX("time", Temporal, timeUnit = TimeUnit.Hours).
+      encodeY("time", Temporal, timeUnit = TimeUnit.Day).
+      encodeSize("count", Quantitative, aggregate = AggOps.Sum)
+
+  val AnscombesQuartet =
+    Vegas("Anscombe's Quartet").
+      withURL(Anscombe).
+      mark(Circle).
+      encodeX("X", Quantitative, scale = Scale(zero = false)).
+      encodeY("Y", Quantitative, scale = Scale(zero = false)).
+      encodeColumn("Series", Nominal).
+      configMark(opacity = 1)
+
+  val StackedAreaChart =
+    Vegas("Area chart showing weight of cars over time.").
+      withURL(Unemployment).
+      mark(Area).
+      encodeX(
+        "date", Temporal, timeUnit = TimeUnit.Yearmonth,
+        axis = Axis(axisWidth = 0, format = "%Y", labelAngle = 0),
+        scale = Scale(nice = spec.Spec.NiceTimeEnums.Month)
+      ).
+      encodeY("count", Quantitative, aggregate = AggOps.Sum).
+      encodeColor("series", Nominal, scale = Scale(rangePreset = Category20b)).
+      configCell(width = 300, height = 200)
+
+  val NormalizedStackedAreaChart =
+    Vegas().
+      withURL(Unemployment).
+      mark(Area).
+      encodeX(
+        "date", Temporal, timeUnit = TimeUnit.Yearmonth,
+        axis = Axis(axisWidth=0, format="%Y", labelAngle=0),
+        scale = Scale(nice = spec.Spec.NiceTimeEnums.Month)
+      ).
+      encodeY("count", Quantitative, aggregate = AggOps.Sum, hideAxis = Some(true)).
+      encodeColor("series", Nominal, scale = Scale(rangePreset = Category20b)).
+      configCell(width = 300, height = 200).
+      configMark(stacked = StackOffset.Normalize)
+
+  val Streamgraph =
+    Vegas().
+      withURL(Unemployment).
+      mark(Area).
+      encodeX(
+        "date", Temporal, timeUnit = TimeUnit.Yearmonth,
+        axis = Axis(axisWidth = 0, format = "%Y", labelAngle = 0, tickSize = Some(0.0)),
+        scale = Scale(nice = spec.Spec.NiceTimeEnums.Month)
+      ).
+      encodeY("count", Quantitative, aggregate = AggOps.Sum, hideAxis = Some(true)).
+      encodeColor("series", Nominal, scale = Scale(rangePreset = Category20b)).
+      configCell(width = 300, height = 200).
+      configMark(stacked = StackOffset.Center)
+
+  val StackedBarChart =
+    Vegas().
+      withURL(SeattleWeather, formatType = DataFormat.Csv).
+      mark(Bar).
+      encodeX("date", Temporal, timeUnit = TimeUnit.Month, axis = Axis(title = "Month of the year")).
+      encodeY("*", Quantitative, aggregate = AggOps.Count).
+      encodeColor("weather", Nominal, scale = Scale(
+        domainNominals = List("sun", "fog", "drizzle", "rain", "snow"),
+        rangeNominals = List("#e7ba52", "#c7c7c7", "#aec7e8", "#1f77b4", "#9467bd")),
+        legend = Legend(title = "Weather type"))
+
+  val StripPlot =
+    Vegas("Shows the relationship between horsepower and the numbver of cylinders using tick marks.").
+      withURL(Cars).
+      mark(Tick).
+      encodeX("Horsepower", Quantitative).
+      encodeY("Cylinders", Ordinal)
+
   val plots: List[SpecBuilder] = SimpleBarChart :: AggregateBarChart :: GroupedBarChart :: AreaChart ::
     NormalizedStackedBarChart :: BinnedChart :: ScatterBinnedPlot :: ScatterColorPlot :: ScatterBinnedColorPlot ::
     StackedAreaBinnedPlot :: SortColorPlot :: CustomShapePlot :: ScatterAggregateDetail :: LineDetail ::
-    Nil
+    GithubPunchCard :: AnscombesQuartet :: StackedAreaChart :: NormalizedStackedAreaChart :: Streamgraph ::
+    StackedBarChart :: StripPlot :: Nil
 
 }
