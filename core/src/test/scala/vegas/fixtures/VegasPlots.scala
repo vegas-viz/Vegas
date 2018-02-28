@@ -63,7 +63,14 @@ object VegasPlots {
     encodeColor(field="Origin", dataType= Nominal).
     encodeText(field="OriginInitial", dataType= Nominal)
 
-  val plots: List[SpecBuilder] = ValuePlot :: IQRPlot :: LegendPlot :: BinnedPlot :: BinnedPlotWithSort :: ColoredTextScatterPlot ::Nil
+  val plotsWithNames: List[(String, SpecBuilder)] = List(
+    "value_plot" -> ValuePlot,
+    "iqr_plot" -> IQRPlot,
+    "legend_plot" -> LegendPlot,
+    "binned plot" -> BinnedPlot,
+    "binned_plot_with_sort" -> BinnedPlotWithSort,
+    "colored_txt_scatter_plot" -> ColoredTextScatterPlot
+  ).sortBy(_._1)
 
+  val plots: List[SpecBuilder] = plotsWithNames.map(_._2)
 }
-

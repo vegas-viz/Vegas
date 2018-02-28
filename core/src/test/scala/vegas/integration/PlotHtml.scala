@@ -10,19 +10,18 @@ class PlotHtml extends FlatSpec with Matchers with WebMatchers with Chrome with 
 
   val scheme = "file://"
 
-  "Basic plots" should "render HTML without error" in {
-
-    BasicPlots.plots.foreach { plot =>
+  behavior of "Basic plots"
+  BasicPlots.plotsWithNames.foreach { case (name, plot) =>
+    it should s"render HTML without error ${name}" in {
       go to (scheme + mkPage(plot))
       find(tagName("canvas"))
       hasNoJsErrors()
     }
-
   }
 
-  "Vegas plots" should "render HTML without error" in {
-
-    VegasPlots.plots.foreach { plot =>
+  behavior of "Vegas plots"
+  VegasPlots.plotsWithNames.foreach { case (name, plot) =>
+    it should s"render HTML without error ${name}" in {
       go to (scheme + mkPage(plot))
       find(tagName("canvas"))
       hasNoJsErrors()
