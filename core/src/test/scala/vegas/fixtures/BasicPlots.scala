@@ -208,10 +208,30 @@ object BasicPlots {
       encodeX("Horsepower", Quantitative).
       encodeY("Cylinders", Ordinal)
 
-  val plots: List[SpecBuilder] = SimpleBarChart :: AggregateBarChart :: GroupedBarChart :: AreaChart ::
-    NormalizedStackedBarChart :: BinnedChart :: ScatterBinnedPlot :: ScatterColorPlot :: ScatterBinnedColorPlot ::
-    StackedAreaBinnedPlot :: SortColorPlot :: CustomShapePlot :: ScatterAggregateDetail :: LineDetail ::
-    GithubPunchCard :: AnscombesQuartet :: StackedAreaChart :: NormalizedStackedAreaChart :: Streamgraph ::
-    StackedBarChart :: StripPlot :: Nil
+  // Names (ex. bar, bar_aggregate, etc.) are corresponding to filenames
+  //  of `/core/src/test/resources/example-specs/*.vl.json`
+  val plotsWithNames: List[(String, SpecBuilder)] = List(
+    "bar" -> SimpleBarChart,
+    "bar_aggregate" -> AggregateBarChart,
+    "bar_grouped" -> GroupedBarChart,
+    "area" -> AreaChart,
+    "stacked_bar_normalize" -> NormalizedStackedBarChart,
+    "scatter_binned" -> ScatterBinnedPlot,
+    "scatter_color" -> ScatterColorPlot,
+    "scatter_binned_color" -> ScatterBinnedColorPlot,
+    "stacked_area_binned" -> StackedAreaBinnedPlot,
+    "trellis_barley" -> SortColorPlot,
+    "trellis_scatter_binned_row" -> BinnedChart,
+    "scatter_shape_custom" -> CustomShapePlot,
+    "line_detail" -> LineDetail,
+    "github_punchcard" -> GithubPunchCard,
+    "trellis_anscombe" -> AnscombesQuartet,
+    "stacked_area" -> StackedAreaChart,
+    "stacked_area_normalize" -> NormalizedStackedAreaChart,
+    "stacked_area_stream" -> Streamgraph,
+    "stacked_bar_weather" -> StackedBarChart,
+    "tick_strip" -> StripPlot
+  ).sortBy(_._1)
 
+  val plots: List[SpecBuilder] = plotsWithNames.map(_._2)
 }
