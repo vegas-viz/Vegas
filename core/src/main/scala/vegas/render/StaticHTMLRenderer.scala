@@ -18,7 +18,7 @@ case class StaticHTMLRenderer(specJson: String) extends BaseHTMLRenderer {
        |  <head>
        |    ${ importsHTML(additionalImports:_*) }
        |  </head>
-       |  <body>
+       |  <body style="margin: 0px;">
     """.stripMargin
 
   def plotHTML(name: String = this.defaultName) =
