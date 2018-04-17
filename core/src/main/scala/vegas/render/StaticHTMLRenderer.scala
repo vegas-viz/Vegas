@@ -27,6 +27,7 @@ case class StaticHTMLRenderer(specJson: String) extends BaseHTMLRenderer {
   def plotHTML(name: String = this.defaultName) =
     s"""
        | <div id='$name'></div>
+       | <style>{".vega-actions{ display: none; }"}</style>
        | <script>
        |   var embedSpec = {
        |     mode: "vega-lite",
