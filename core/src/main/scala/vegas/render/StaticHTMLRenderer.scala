@@ -18,6 +18,9 @@ case class StaticHTMLRenderer(specJson: String) extends BaseHTMLRenderer {
        |  <head>
        |    ${ importsHTML(additionalImports:_*) }
        |  </head>
+       |  <style>
+       |    .vega-actions{ display: none; }
+       |  </style>
        |  <body style="margin: 0px;">
     """.stripMargin
 
