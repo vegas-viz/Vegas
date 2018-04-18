@@ -1076,24 +1076,30 @@ object Spec {
       "data".->(cc.data.asJson),
       "transform".->(cc.transform.asJson),
       "config".->(cc.config.asJson))));
-    implicit val SpecExtendedUnitSpecDecoder: Decoder[Spec.ExtendedUnitSpec] = Decoder.instance(((c: HCursor) => c.downField("width").as[Option[Double]]
-      .flatMap(((width) => c.downField("height").as[Option[Double]]
-        .flatMap(((height) => c.downField("mark").as[Mark]
-          .flatMap(((mark) => c.downField("encoding").as[Option[Encoding]]
-            .flatMap(((encoding) => c.downField("name").as[Option[String]]
-              .flatMap(((name) => c.downField("description").as[Option[String]]
-                .flatMap(((description) => c.downField("data").as[Option[Data]]
-                  .flatMap(((data) => c.downField("transform").as[Option[Transform]]
-                    .flatMap(((transform) => c.downField("config").as[Option[Config]].map(((config) => Spec.ExtendedUnitSpec(
-                      width,
-                      height,
-                      mark,
-                      encoding,
-                      name,
-                      description,
-                      data,
-                      transform,
-                      config)))))))))))))))))))));
+    implicit val SpecExtendedUnitSpecDecoder: Decoder[Spec.ExtendedUnitSpec] = Decoder.instance { (c: HCursor) =>
+      for {
+        width <- c.downField("width").as[Option[Double]]
+        height <- c.downField("height").as[Option[Double]]
+        mark <- c.downField("mark").as[Mark]
+        encoding <- c.downField("encoding").as[Option[Encoding]]
+        name <- c.downField("name").as[Option[String]]
+        description <- c.downField("description").as[Option[String]]
+        data <- c.downField("data").as[Option[Data]]
+        transform <- c.downField("transform").as[Option[Transform]]
+        config <- c.downField("config").as[Option[Config]]
+      } yield {
+        Spec.ExtendedUnitSpec(
+          width,
+          height,
+          mark,
+          encoding,
+          name,
+          description,
+          data,
+          transform,
+          config)
+      }
+    }
     implicit val SpecMarkEncoder: Encoder[Spec.Mark] = Encoder.instance(((e: Spec.Mark) => parser.parse(e.json).toOption.get));
     implicit val SpecMarkDecoder: Decoder[Spec.Mark] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
@@ -1127,36 +1133,42 @@ object Spec {
       "label".->(cc.label.asJson),
       "path".->(cc.path.asJson),
       "order".->(cc.order.asJson))));
-    implicit val SpecEncodingDecoder: Decoder[Spec.Encoding] = Decoder.instance(((c: HCursor) => c.downField("row").as[Option[PositionChannelDef]]
-      .flatMap(((row) => c.downField("column").as[Option[PositionChannelDef]]
-        .flatMap(((column) => c.downField("x").as[Option[PositionChannelDef]]
-          .flatMap(((x) => c.downField("y").as[Option[PositionChannelDef]]
-            .flatMap(((y) => c.downField("x2").as[Option[FieldDef]]
-              .flatMap(((x2) => c.downField("y2").as[Option[FieldDef]]
-                .flatMap(((y2) => c.downField("color").as[Option[ChannelDefWithLegend]]
-                  .flatMap(((color) => c.downField("opacity").as[Option[ChannelDefWithLegend]]
-                    .flatMap(((opacity) => c.downField("size").as[Option[ChannelDefWithLegend]]
-                      .flatMap(((size) => c.downField("shape").as[Option[ChannelDefWithLegend]]
-                        .flatMap(((shape) => c.downField("detail").as[Option[Encoding.DetailUnion]]
-                          .flatMap(((detail) => c.downField("text").as[Option[FieldDef]]
-                            .flatMap(((text) => c.downField("label").as[Option[FieldDef]]
-                              .flatMap(((label) => c.downField("path").as[Option[Encoding.PathUnion]]
-                                .flatMap(((path) => c.downField("order").as[Option[Encoding.OrderUnion]].map(((order) => Spec.Encoding(
-                                  row,
-                                  column,
-                                  x,
-                                  y,
-                                  x2,
-                                  y2,
-                                  color,
-                                  opacity,
-                                  size,
-                                  shape,
-                                  detail,
-                                  text,
-                                  label,
-                                  path,
-                                  order)))))))))))))))))))))))))))))))));
+    implicit val SpecEncodingDecoder: Decoder[Spec.Encoding] = Decoder.instance { (c: HCursor) =>
+      for {
+        row <- c.downField("row").as[Option[PositionChannelDef]]
+        column <- c.downField("column").as[Option[PositionChannelDef]]
+        x <- c.downField("x").as[Option[PositionChannelDef]]
+        y <- c.downField("y").as[Option[PositionChannelDef]]
+        x2 <- c.downField("x2").as[Option[FieldDef]]
+        y2 <- c.downField("y2").as[Option[FieldDef]]
+        color <- c.downField("color").as[Option[ChannelDefWithLegend]]
+        opacity <- c.downField("opacity").as[Option[ChannelDefWithLegend]]
+        size <- c.downField("size").as[Option[ChannelDefWithLegend]]
+        shape <- c.downField("shape").as[Option[ChannelDefWithLegend]]
+        detail <- c.downField("detail").as[Option[Encoding.DetailUnion]]
+        text <- c.downField("text").as[Option[FieldDef]]
+        label <- c.downField("label").as[Option[FieldDef]]
+        path <- c.downField("path").as[Option[Encoding.PathUnion]]
+        order <- c.downField("order").as[Option[Encoding.OrderUnion]]
+      } yield {
+        Spec.Encoding(
+          row,
+          column,
+          x,
+          y,
+          x2,
+          y2,
+          color,
+          opacity,
+          size,
+          shape,
+          detail,
+          text,
+          label,
+          path,
+          order)
+      }
+    }
     implicit val SpecEncodingDetailUnionEncoder: Encoder[Spec.Encoding.DetailUnion] = Encoder.instance({
       case (ut @ ((_): Spec.Encoding.DetailFieldDef)) => ut.x.asJson
       case (ut @ ((_): Spec.Encoding.DetailListFieldDef)) => ut.x.asJson
@@ -1183,26 +1195,32 @@ object Spec {
       "bin".->(cc.bin.asJson),
       "aggregate".->(cc.aggregate.asJson),
       "title".->(cc.title.asJson))));
-    implicit val SpecPositionChannelDefDecoder: Decoder[Spec.PositionChannelDef] = Decoder.instance(((c: HCursor) => c.downField("axis").as[Option[PositionChannelDef.AxisUnion]]
-      .flatMap(((axis) => c.downField("scale").as[Option[Scale]]
-        .flatMap(((scale) => c.downField("sort").as[Option[PositionChannelDef.SortUnion]]
-          .flatMap(((sort) => c.downField("field").as[Option[String]]
-            .flatMap(((field) => c.downField("type").as[Option[Type]]
-              .flatMap(((`type`) => c.downField("value").as[Option[PositionChannelDef.ValueUnion]]
-                .flatMap(((value) => c.downField("timeUnit").as[Option[TimeUnit]]
-                  .flatMap(((timeUnit) => c.downField("bin").as[Option[PositionChannelDef.BinUnion]]
-                    .flatMap(((bin) => c.downField("aggregate").as[Option[AggregateOp]]
-                      .flatMap(((aggregate) => c.downField("title").as[Option[String]].map(((title) => Spec.PositionChannelDef(
-                        axis,
-                        scale,
-                        sort,
-                        field,
-                        `type`,
-                        value,
-                        timeUnit,
-                        bin,
-                        aggregate,
-                        title)))))))))))))))))))))));
+    implicit val SpecPositionChannelDefDecoder: Decoder[Spec.PositionChannelDef] = Decoder.instance { (c: HCursor) =>
+      for {
+        axis <- c.downField("axis").as[Option[PositionChannelDef.AxisUnion]]
+        scale <- c.downField("scale").as[Option[Scale]]
+        sort <- c.downField("sort").as[Option[PositionChannelDef.SortUnion]]
+        field <- c.downField("field").as[Option[String]]
+        `type` <- c.downField("type").as[Option[Type]]
+        value <- c.downField("value").as[Option[PositionChannelDef.ValueUnion]]
+        timeUnit <- c.downField("timeUnit").as[Option[TimeUnit]]
+        bin <- c.downField("bin").as[Option[PositionChannelDef.BinUnion]]
+        aggregate <- c.downField("aggregate").as[Option[AggregateOp]]
+        title <- c.downField("title").as[Option[String]]
+      } yield {
+        Spec.PositionChannelDef(
+          axis,
+          scale,
+          sort,
+          field,
+          `type`,
+          value,
+          timeUnit,
+          bin,
+          aggregate,
+          title)
+      }
+    }
     implicit val SpecPositionChannelDefAxisUnionEncoder: Encoder[Spec.PositionChannelDef.AxisUnion] = Encoder.instance({
       case (ut @ ((_): Spec.PositionChannelDef.AxisBoolean)) => ut.x.asJson
       case (ut @ ((_): Spec.PositionChannelDef.AxisAxis)) => ut.x.asJson
@@ -1224,124 +1242,133 @@ object Spec {
       case (ut @ ((_): Spec.PositionChannelDef.BinBin)) => ut.x.asJson
     });
     implicit val SpecPositionChannelDefBinUnionDecoder: Decoder[Spec.PositionChannelDef.BinUnion] = Decoder.instance(((c: HCursor) => c.as[Boolean].map(((x) => Spec.PositionChannelDef.BinBoolean(x))).orElse(c.as[Bin].map(((x) => Spec.PositionChannelDef.BinBin(x))))));
-    implicit val SpecAxisEncoder: Encoder[Spec.Axis] = Encoder.instance(((cc: Spec.Axis) => Json.obj(
-      "labelAngle".->(cc.labelAngle.asJson),
-      "format".->(cc.format.asJson),
-      "orient".->(cc.orient.asJson),
-      "title".->(cc.title.asJson),
-      "values".->(cc.values.asJson),
-      "axisWidth".->(cc.axisWidth.asJson),
-      "layer".->(cc.layer.asJson),
-      "offset".->(cc.offset.asJson),
-      "axisColor".->(cc.axisColor.asJson),
-      "grid".->(cc.grid.asJson),
-      "gridColor".->(cc.gridColor.asJson),
-      "gridDash".->(cc.gridDash.asJson),
-      "gridOpacity".->(cc.gridOpacity.asJson),
-      "gridWidth".->(cc.gridWidth.asJson),
-      "labels".->(cc.labels.asJson),
-      "labelAlign".->(cc.labelAlign.asJson),
-      "labelBaseline".->(cc.labelBaseline.asJson),
-      "labelMaxLength".->(cc.labelMaxLength.asJson),
-      "shortTimeLabels".->(cc.shortTimeLabels.asJson),
-      "subdivide".->(cc.subdivide.asJson),
-      "ticks".->(cc.ticks.asJson),
-      "tickColor".->(cc.tickColor.asJson),
-      "tickLabelColor".->(cc.tickLabelColor.asJson),
-      "tickLabelFont".->(cc.tickLabelFont.asJson),
-      "tickLabelFontSize".->(cc.tickLabelFontSize.asJson),
-      "tickPadding".->(cc.tickPadding.asJson),
-      "tickSize".->(cc.tickSize.asJson),
-      "tickSizeMajor".->(cc.tickSizeMajor.asJson),
-      "tickSizeMinor".->(cc.tickSizeMinor.asJson),
-      "tickSizeEnd".->(cc.tickSizeEnd.asJson),
-      "tickWidth".->(cc.tickWidth.asJson),
-      "titleColor".->(cc.titleColor.asJson),
-      "titleFont".->(cc.titleFont.asJson),
-      "titleFontSize".->(cc.titleFontSize.asJson),
-      "titleFontWeight".->(cc.titleFontWeight.asJson),
-      "titleOffset".->(cc.titleOffset.asJson),
-      "titleMaxLength".->(cc.titleMaxLength.asJson),
-      "characterWidth".->(cc.characterWidth.asJson),
-      "properties".->(cc.properties.asJson))));
-    implicit val SpecAxisDecoder: Decoder[Spec.Axis] = Decoder.instance(((c: HCursor) => c.downField("labelAngle").as[Option[Double]]
-      .flatMap(((labelAngle) => c.downField("format").as[Option[String]]
-        .flatMap(((format) => c.downField("orient").as[Option[AxisOrient]]
-          .flatMap(((orient) => c.downField("title").as[Option[String]]
-            .flatMap(((title) => c.downField("values").as[Option[List[Double]]]
-              .flatMap(((values) => c.downField("axisWidth").as[Option[Double]]
-                .flatMap(((axisWidth) => c.downField("layer").as[Option[String]]
-                  .flatMap(((layer) => c.downField("offset").as[Option[Double]]
-                    .flatMap(((offset) => c.downField("axisColor").as[Option[String]]
-                      .flatMap(((axisColor) => c.downField("grid").as[Option[Boolean]]
-                        .flatMap(((grid) => c.downField("gridColor").as[Option[String]]
-                          .flatMap(((gridColor) => c.downField("gridDash").as[Option[List[Double]]]
-                            .flatMap(((gridDash) => c.downField("gridOpacity").as[Option[Double]]
-                              .flatMap(((gridOpacity) => c.downField("gridWidth").as[Option[Double]]
-                                .flatMap(((gridWidth) => c.downField("labels").as[Option[Boolean]]
-                                  .flatMap(((labels) => c.downField("labelAlign").as[Option[String]]
-                                    .flatMap(((labelAlign) => c.downField("labelBaseline").as[Option[String]]
-                                      .flatMap(((labelBaseline) => c.downField("labelMaxLength").as[Option[Double]]
-                                        .flatMap(((labelMaxLength) => c.downField("shortTimeLabels").as[Option[Boolean]]
-                                          .flatMap(((shortTimeLabels) => c.downField("subdivide").as[Option[Double]]
-                                            .flatMap(((subdivide) => c.downField("ticks").as[Option[Double]]
-                                              .flatMap(((ticks) => c.downField("tickColor").as[Option[String]]
-                                                .flatMap(((tickColor) => c.downField("tickLabelColor").as[Option[String]]
-                                                  .flatMap(((tickLabelColor) => c.downField("tickLabelFont").as[Option[String]]
-                                                    .flatMap(((tickLabelFont) => c.downField("tickLabelFontSize").as[Option[Double]]
-                                                      .flatMap(((tickLabelFontSize) => c.downField("tickPadding").as[Option[Double]]
-                                                        .flatMap(((tickPadding) => c.downField("tickSize").as[Option[Double]]
-                                                          .flatMap(((tickSize) => c.downField("tickSizeMajor").as[Option[Double]]
-                                                            .flatMap(((tickSizeMajor) => c.downField("tickSizeMinor").as[Option[Double]]
-                                                              .flatMap(((tickSizeMinor) => c.downField("tickSizeEnd").as[Option[Double]]
-                                                                .flatMap(((tickSizeEnd) => c.downField("tickWidth").as[Option[Double]]
-                                                                  .flatMap(((tickWidth) => c.downField("titleColor").as[Option[String]]
-                                                                    .flatMap(((titleColor) => c.downField("titleFont").as[Option[String]]
-                                                                      .flatMap(((titleFont) => c.downField("titleFontSize").as[Option[Double]]
-                                                                        .flatMap(((titleFontSize) => c.downField("titleFontWeight").as[Option[String]]
-                                                                          .flatMap(((titleFontWeight) => c.downField("titleOffset").as[Option[Double]]
-                                                                            .flatMap(((titleOffset) => c.downField("titleMaxLength").as[Option[Double]]
-                                                                              .flatMap(((titleMaxLength) => c.downField("characterWidth").as[Option[Double]]
-                                                                                .flatMap(((characterWidth) => c.downField("properties").as[Option[Axis.Properties]].map(((properties) => Spec.Axis(
-                                                                                  labelAngle,
-                                                                                  format,
-                                                                                  orient,
-                                                                                  title,
-                                                                                  values,
-                                                                                  axisWidth,
-                                                                                  layer,
-                                                                                  offset,
-                                                                                  axisColor,
-                                                                                  grid,
-                                                                                  gridColor,
-                                                                                  gridDash,
-                                                                                  gridOpacity,
-                                                                                  gridWidth,
-                                                                                  labels,
-                                                                                  labelAlign,
-                                                                                  labelBaseline,
-                                                                                  labelMaxLength,
-                                                                                  shortTimeLabels,
-                                                                                  subdivide,
-                                                                                  ticks,
-                                                                                  tickColor,
-                                                                                  tickLabelColor,
-                                                                                  tickLabelFont,
-                                                                                  tickLabelFontSize,
-                                                                                  tickPadding,
-                                                                                  tickSize,
-                                                                                  tickSizeMajor,
-                                                                                  tickSizeMinor,
-                                                                                  tickSizeEnd,
-                                                                                  tickWidth,
-                                                                                  titleColor,
-                                                                                  titleFont,
-                                                                                  titleFontSize,
-                                                                                  titleFontWeight,
-                                                                                  titleOffset,
-                                                                                  titleMaxLength,
-                                                                                  characterWidth,
-                                                                                  properties)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))));
+    implicit val SpecAxisEncoder: Encoder[Spec.Axis] = Encoder.instance { (cc: Spec.Axis) =>
+      Json.obj(
+        "labelAngle".->(cc.labelAngle.asJson),
+        "format".->(cc.format.asJson),
+        "orient".->(cc.orient.asJson),
+        "title".->(cc.title.asJson),
+        "values".->(cc.values.asJson),
+        "axisWidth".->(cc.axisWidth.asJson),
+        "layer".->(cc.layer.asJson),
+        "offset".->(cc.offset.asJson),
+        "axisColor".->(cc.axisColor.asJson),
+        "grid".->(cc.grid.asJson),
+        "gridColor".->(cc.gridColor.asJson),
+        "gridDash".->(cc.gridDash.asJson),
+        "gridOpacity".->(cc.gridOpacity.asJson),
+        "gridWidth".->(cc.gridWidth.asJson),
+        "labels".->(cc.labels.asJson),
+        "labelAlign".->(cc.labelAlign.asJson),
+        "labelBaseline".->(cc.labelBaseline.asJson),
+        "labelMaxLength".->(cc.labelMaxLength.asJson),
+        "shortTimeLabels".->(cc.shortTimeLabels.asJson),
+        "subdivide".->(cc.subdivide.asJson),
+        "ticks".->(cc.ticks.asJson),
+        "tickColor".->(cc.tickColor.asJson),
+        "tickLabelColor".->(cc.tickLabelColor.asJson),
+        "tickLabelFont".->(cc.tickLabelFont.asJson),
+        "tickLabelFontSize".->(cc.tickLabelFontSize.asJson),
+        "tickPadding".->(cc.tickPadding.asJson),
+        "tickSize".->(cc.tickSize.asJson),
+        "tickSizeMajor".->(cc.tickSizeMajor.asJson),
+        "tickSizeMinor".->(cc.tickSizeMinor.asJson),
+        "tickSizeEnd".->(cc.tickSizeEnd.asJson),
+        "tickWidth".->(cc.tickWidth.asJson),
+        "titleColor".->(cc.titleColor.asJson),
+        "titleFont".->(cc.titleFont.asJson),
+        "titleFontSize".->(cc.titleFontSize.asJson),
+        "titleFontWeight".->(cc.titleFontWeight.asJson),
+        "titleOffset".->(cc.titleOffset.asJson),
+        "titleMaxLength".->(cc.titleMaxLength.asJson),
+        "characterWidth".->(cc.characterWidth.asJson),
+        "properties".->(cc.properties.asJson))
+    }
+    implicit val SpecAxisDecoder: Decoder[Spec.Axis] = Decoder.instance { (c: HCursor) =>
+      for {
+        labelAngle <- c.downField("labelAngle").as[Option[Double]]
+        format <- c.downField("format").as[Option[String]]
+        orient <- c.downField("orient").as[Option[AxisOrient]]
+        title <- c.downField("title").as[Option[String]]
+        values <- c.downField("values").as[Option[List[Double]]]
+        axisWidth <- c.downField("axisWidth").as[Option[Double]]
+        layer <- c.downField("layer").as[Option[String]]
+        offset <- c.downField("offset").as[Option[Double]]
+        axisColor <- c.downField("axisColor").as[Option[String]]
+        grid <- c.downField("grid").as[Option[Boolean]]
+        gridColor <- c.downField("gridColor").as[Option[String]]
+        gridDash <- c.downField("gridDash").as[Option[List[Double]]]
+        gridOpacity <- c.downField("gridOpacity").as[Option[Double]]
+        gridWidth <- c.downField("gridWidth").as[Option[Double]]
+        labels <- c.downField("labels").as[Option[Boolean]]
+        labelAlign <- c.downField("labelAlign").as[Option[String]]
+        labelBaseline <- c.downField("labelBaseline").as[Option[String]]
+        labelMaxLength <- c.downField("labelMaxLength").as[Option[Double]]
+        shortTimeLabels <- c.downField("shortTimeLabels").as[Option[Boolean]]
+        subdivide <- c.downField("subdivide").as[Option[Double]]
+        ticks <- c.downField("ticks").as[Option[Double]]
+        tickColor <- c.downField("tickColor").as[Option[String]]
+        tickLabelColor <- c.downField("tickLabelColor").as[Option[String]]
+        tickLabelFont <- c.downField("tickLabelFont").as[Option[String]]
+        tickLabelFontSize <- c.downField("tickLabelFontSize").as[Option[Double]]
+        tickPadding <- c.downField("tickPadding").as[Option[Double]]
+        tickSize <- c.downField("tickSize").as[Option[Double]]
+        tickSizeMajor <- c.downField("tickSizeMajor").as[Option[Double]]
+        tickSizeMinor <- c.downField("tickSizeMinor").as[Option[Double]]
+        tickSizeEnd <- c.downField("tickSizeEnd").as[Option[Double]]
+        tickWidth <- c.downField("tickWidth").as[Option[Double]]
+        titleColor <- c.downField("titleColor").as[Option[String]]
+        titleFont <- c.downField("titleFont").as[Option[String]]
+        titleFontSize <- c.downField("titleFontSize").as[Option[Double]]
+        titleFontWeight <- c.downField("titleFontWeight").as[Option[String]]
+        titleOffset <- c.downField("titleOffset").as[Option[Double]]
+        titleMaxLength <- c.downField("titleMaxLength").as[Option[Double]]
+        characterWidth <- c.downField("characterWidth").as[Option[Double]]
+        properties <- c.downField("properties").as[Option[Axis.Properties]]
+      } yield {
+        Spec.Axis(
+          labelAngle,
+          format,
+          orient,
+          title,
+          values,
+          axisWidth,
+          layer,
+          offset,
+          axisColor,
+          grid,
+          gridColor,
+          gridDash,
+          gridOpacity,
+          gridWidth,
+          labels,
+          labelAlign,
+          labelBaseline,
+          labelMaxLength,
+          shortTimeLabels,
+          subdivide,
+          ticks,
+          tickColor,
+          tickLabelColor,
+          tickLabelFont,
+          tickLabelFontSize,
+          tickPadding,
+          tickSize,
+          tickSizeMajor,
+          tickSizeMinor,
+          tickSizeEnd,
+          tickWidth,
+          titleColor,
+          titleFont,
+          titleFontSize,
+          titleFontWeight,
+          titleOffset,
+          titleMaxLength,
+          characterWidth,
+          properties)
+      }
+    }
+
     implicit val SpecAxisPropertiesEncoder: Encoder[Spec.Axis.Properties] = Encoder.instance(((wrapper: Spec.Axis.Properties) => wrapper.x.asJson(anyEncoder)));
     implicit val SpecAxisPropertiesDecoder: Decoder[Spec.Axis.Properties] = Decoder.instance(((h: HCursor) => h.as[Any](anyDecoder).map(((x$1) => Spec.Axis.Properties(x$1)))));
     implicit val SpecAxisOrientEncoder: Encoder[Spec.AxisOrient] = Encoder.instance(((e: Spec.AxisOrient) => parser.parse(e.json).toOption.get));
@@ -1367,28 +1394,34 @@ object Spec {
       "exponent".->(cc.exponent.asJson),
       "zero".->(cc.zero.asJson),
       "useRawDomain".->(cc.useRawDomain.asJson))));
-    implicit val SpecScaleDecoder: Decoder[Spec.Scale] = Decoder.instance(((c: HCursor) => c.downField("type").as[Option[ScaleType]]
-      .flatMap(((`type`) => c.downField("domain").as[Option[Scale.DomainUnion]]
-        .flatMap(((domain) => c.downField("range").as[Option[Scale.RangeUnion]]
-          .flatMap(((range) => c.downField("round").as[Option[Boolean]]
-            .flatMap(((round) => c.downField("bandSize").as[Option[Scale.BandSizeUnion]]
-              .flatMap(((bandSize) => c.downField("padding").as[Option[Double]]
-                .flatMap(((padding) => c.downField("clamp").as[Option[Boolean]]
-                  .flatMap(((clamp) => c.downField("nice").as[Option[Scale.NiceUnion]]
-                    .flatMap(((nice) => c.downField("exponent").as[Option[Double]]
-                      .flatMap(((exponent) => c.downField("zero").as[Option[Boolean]]
-                        .flatMap(((zero) => c.downField("useRawDomain").as[Option[Boolean]].map(((useRawDomain) => Spec.Scale(
-                          `type`,
-                          domain,
-                          range,
-                          round,
-                          bandSize,
-                          padding,
-                          clamp,
-                          nice,
-                          exponent,
-                          zero,
-                          useRawDomain)))))))))))))))))))))))));
+    implicit val SpecScaleDecoder: Decoder[Spec.Scale] = Decoder.instance { (c: HCursor) =>
+      for {
+        `type` <- c.downField("type").as[Option[ScaleType]]
+        domain <- c.downField("domain").as[Option[Scale.DomainUnion]]
+        range <- c.downField("range").as[Option[Scale.RangeUnion]]
+        round <- c.downField("round").as[Option[Boolean]]
+        bandSize <- c.downField("bandSize").as[Option[Scale.BandSizeUnion]]
+        padding <- c.downField("padding").as[Option[Double]]
+        clamp <- c.downField("clamp").as[Option[Boolean]]
+        nice <- c.downField("nice").as[Option[Scale.NiceUnion]]
+        exponent <- c.downField("exponent").as[Option[Double]]
+        zero <- c.downField("zero").as[Option[Boolean]]
+        useRawDomain <- c.downField("useRawDomain").as[Option[Boolean]]
+      } yield {
+        Spec.Scale(
+          `type`,
+          domain,
+          range,
+          round,
+          bandSize,
+          padding,
+          clamp,
+          nice,
+          exponent,
+          zero,
+          useRawDomain)
+      }
+    }
     implicit val SpecScaleDomainUnionEncoder: Encoder[Spec.Scale.DomainUnion] = Encoder.instance({
       case (ut @ ((_): Spec.Scale.DomainListDouble)) => ut.x.asJson
       case (ut @ ((_): Spec.Scale.DomainListString)) => ut.x.asJson
@@ -1452,12 +1485,18 @@ object Spec {
       "field".->(cc.field.asJson),
       "op".->(cc.op.asJson),
       "order".->(cc.order.asJson))));
-    implicit val SpecSortFieldDecoder: Decoder[Spec.SortField] = Decoder.instance(((c: HCursor) => c.downField("field").as[String]
-      .flatMap(((field) => c.downField("op").as[AggregateOp]
-        .flatMap(((op) => c.downField("order").as[Option[SortOrder]].map(((order) => Spec.SortField(
+    implicit val SpecSortFieldDecoder: Decoder[Spec.SortField] = Decoder.instance { (c: HCursor) =>
+      for {
+        field <- c.downField("field").as[String]
+        op <- c.downField("op").as[AggregateOp]
+        order <- c.downField("order").as[Option[SortOrder]]
+      } yield {
+        Spec.SortField(
           field,
           op,
-          order)))))))));
+          order)
+      }
+    }
     implicit val SpecAggregateOpEncoder: Encoder[Spec.AggregateOp] = Encoder.instance(((e: Spec.AggregateOp) => parser.parse(e.json).toOption.get));
     implicit val SpecAggregateOpDecoder: Decoder[Spec.AggregateOp] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
@@ -1543,22 +1582,28 @@ object Spec {
       "minstep".->(cc.minstep.asJson),
       "div".->(cc.div.asJson),
       "maxbins".->(cc.maxbins.asJson))));
-    implicit val SpecBinDecoder: Decoder[Spec.Bin] = Decoder.instance(((c: HCursor) => c.downField("min").as[Option[Double]]
-      .flatMap(((min) => c.downField("max").as[Option[Double]]
-        .flatMap(((max) => c.downField("base").as[Option[Double]]
-          .flatMap(((base) => c.downField("step").as[Option[Double]]
-            .flatMap(((step) => c.downField("steps").as[Option[List[Double]]]
-              .flatMap(((steps) => c.downField("minstep").as[Option[Double]]
-                .flatMap(((minstep) => c.downField("div").as[Option[List[Double]]]
-                  .flatMap(((div) => c.downField("maxbins").as[Option[Double]].map(((maxbins) => Spec.Bin(
-                    min,
-                    max,
-                    base,
-                    step,
-                    steps,
-                    minstep,
-                    div,
-                    maxbins)))))))))))))))))));
+    implicit val SpecBinDecoder: Decoder[Spec.Bin] = Decoder.instance { (c: HCursor) =>
+      for {
+        min <- c.downField("min").as[Option[Double]]
+        max <- c.downField("max").as[Option[Double]]
+        base <- c.downField("base").as[Option[Double]]
+        step <- c.downField("step").as[Option[Double]]
+        steps <- c.downField("steps").as[Option[List[Double]]]
+        minstep <- c.downField("minstep").as[Option[Double]]
+        div <- c.downField("div").as[Option[List[Double]]]
+        maxbins <- c.downField("maxbins").as[Option[Double]]
+      } yield {
+        Spec.Bin(
+          min,
+          max,
+          base,
+          step,
+          steps,
+          minstep,
+          div,
+          maxbins)
+      }
+    }
     implicit val SpecFieldDefEncoder: Encoder[Spec.FieldDef] = Encoder.instance(((cc: Spec.FieldDef) => Json.obj(
       "field".->(cc.field.asJson),
       "type".->(cc.`type`.asJson),
@@ -1567,20 +1612,27 @@ object Spec {
       "bin".->(cc.bin.asJson),
       "aggregate".->(cc.aggregate.asJson),
       "title".->(cc.title.asJson))));
-    implicit val SpecFieldDefDecoder: Decoder[Spec.FieldDef] = Decoder.instance(((c: HCursor) => c.downField("field").as[Option[String]]
-      .flatMap(((field) => c.downField("type").as[Option[Type]]
-        .flatMap(((`type`) => c.downField("value").as[Option[FieldDef.ValueUnion]]
-          .flatMap(((value) => c.downField("timeUnit").as[Option[TimeUnit]]
-            .flatMap(((timeUnit) => c.downField("bin").as[Option[FieldDef.BinUnion]]
-              .flatMap(((bin) => c.downField("aggregate").as[Option[AggregateOp]]
-                .flatMap(((aggregate) => c.downField("title").as[Option[String]].map(((title) => Spec.FieldDef(
-                  field,
-                  `type`,
-                  value,
-                  timeUnit,
-                  bin,
-                  aggregate,
-                  title)))))))))))))))));
+    implicit val SpecFieldDefDecoder: Decoder[Spec.FieldDef] = Decoder.instance { (c: HCursor) =>
+      for {
+        field <- c.downField("field").as[Option[String]]
+        `type` <- c.downField("type").as[Option[Type]]
+        value <- c.downField("value").as[Option[FieldDef.ValueUnion]]
+        timeUnit <- c.downField("timeUnit").as[Option[TimeUnit]]
+        bin <- c.downField("bin").as[Option[FieldDef.BinUnion]]
+        aggregate <- c.downField("aggregate").as[Option[AggregateOp]]
+        title <- c.downField("title").as[Option[String]]
+      } yield {
+        Spec.FieldDef(
+          field,
+          `type`,
+          value,
+          timeUnit,
+          bin,
+          aggregate,
+          title)
+      }
+    }
+
     implicit val SpecFieldDefValueUnionEncoder: Encoder[Spec.FieldDef.ValueUnion] = Encoder.instance({
       case (ut @ ((_): Spec.FieldDef.ValueDouble)) => ut.x.asJson
       case (ut @ ((_): Spec.FieldDef.ValueString)) => ut.x.asJson
@@ -1603,26 +1655,32 @@ object Spec {
       "bin".->(cc.bin.asJson),
       "aggregate".->(cc.aggregate.asJson),
       "title".->(cc.title.asJson))));
-    implicit val SpecChannelDefWithLegendDecoder: Decoder[Spec.ChannelDefWithLegend] = Decoder.instance(((c: HCursor) => c.downField("legend").as[Option[Legend]]
-      .flatMap(((legend) => c.downField("scale").as[Option[Scale]]
-        .flatMap(((scale) => c.downField("sort").as[Option[ChannelDefWithLegend.SortUnion]]
-          .flatMap(((sort) => c.downField("field").as[Option[String]]
-            .flatMap(((field) => c.downField("type").as[Option[Type]]
-              .flatMap(((`type`) => c.downField("value").as[Option[ChannelDefWithLegend.ValueUnion]]
-                .flatMap(((value) => c.downField("timeUnit").as[Option[TimeUnit]]
-                  .flatMap(((timeUnit) => c.downField("bin").as[Option[ChannelDefWithLegend.BinUnion]]
-                    .flatMap(((bin) => c.downField("aggregate").as[Option[AggregateOp]]
-                      .flatMap(((aggregate) => c.downField("title").as[Option[String]].map(((title) => Spec.ChannelDefWithLegend(
-                        legend,
-                        scale,
-                        sort,
-                        field,
-                        `type`,
-                        value,
-                        timeUnit,
-                        bin,
-                        aggregate,
-                        title)))))))))))))))))))))));
+    implicit val SpecChannelDefWithLegendDecoder: Decoder[Spec.ChannelDefWithLegend] = Decoder.instance { (c: HCursor) =>
+      for {
+        legend <- c.downField("legend").as[Option[Legend]]
+        scale <- c.downField("scale").as[Option[Scale]]
+        sort <- c.downField("sort").as[Option[ChannelDefWithLegend.SortUnion]]
+        field <- c.downField("field").as[Option[String]]
+        type_ <- c.downField("type").as[Option[Type]]
+        value <- c.downField("value").as[Option[ChannelDefWithLegend.ValueUnion]]
+        timeUnit <- c.downField("timeUnit").as[Option[TimeUnit]]
+        bin <- c.downField("bin").as[Option[ChannelDefWithLegend.BinUnion]]
+        aggregate <- c.downField("aggregate").as[Option[AggregateOp]]
+        title <- c.downField("title").as[Option[String]]
+      } yield {
+        Spec.ChannelDefWithLegend(
+          legend,
+          scale,
+          sort,
+          field,
+          type_,
+          value,
+          timeUnit,
+          bin,
+          aggregate,
+          title)
+      }
+    }
     implicit val SpecChannelDefWithLegendSortUnionEncoder: Encoder[Spec.ChannelDefWithLegend.SortUnion] = Encoder.instance({
       case (ut @ ((_): Spec.ChannelDefWithLegend.SortSortField)) => ut.x.asJson
       case (ut @ ((_): Spec.ChannelDefWithLegend.SortSortOrder)) => ut.x.asJson
@@ -1667,60 +1725,66 @@ object Spec {
       "titleFontSize".->(cc.titleFontSize.asJson),
       "titleFontWeight".->(cc.titleFontWeight.asJson),
       "properties".->(cc.properties.asJson))));
-    implicit val SpecLegendDecoder: Decoder[Spec.Legend] = Decoder.instance(((c: HCursor) => c.downField("format").as[Option[String]]
-      .flatMap(((format) => c.downField("title").as[Option[String]]
-        .flatMap(((title) => c.downField("values").as[Option[List[Legend.Values]]]
-          .flatMap(((values) => c.downField("orient").as[Option[String]]
-            .flatMap(((orient) => c.downField("offset").as[Option[Double]]
-              .flatMap(((offset) => c.downField("padding").as[Option[Double]]
-                .flatMap(((padding) => c.downField("margin").as[Option[Double]]
-                  .flatMap(((margin) => c.downField("gradientStrokeColor").as[Option[String]]
-                    .flatMap(((gradientStrokeColor) => c.downField("gradientStrokeWidth").as[Option[Double]]
-                      .flatMap(((gradientStrokeWidth) => c.downField("gradientHeight").as[Option[Double]]
-                        .flatMap(((gradientHeight) => c.downField("gradientWidth").as[Option[Double]]
-                          .flatMap(((gradientWidth) => c.downField("labelAlign").as[Option[String]]
-                            .flatMap(((labelAlign) => c.downField("labelBaseline").as[Option[String]]
-                              .flatMap(((labelBaseline) => c.downField("labelColor").as[Option[String]]
-                                .flatMap(((labelColor) => c.downField("labelFont").as[Option[String]]
-                                  .flatMap(((labelFont) => c.downField("labelFontSize").as[Option[Double]]
-                                    .flatMap(((labelFontSize) => c.downField("labelOffset").as[Option[Double]]
-                                      .flatMap(((labelOffset) => c.downField("shortTimeLabels").as[Option[Boolean]]
-                                        .flatMap(((shortTimeLabels) => c.downField("symbolColor").as[Option[String]]
-                                          .flatMap(((symbolColor) => c.downField("symbolShape").as[Option[String]]
-                                            .flatMap(((symbolShape) => c.downField("symbolSize").as[Option[Double]]
-                                              .flatMap(((symbolSize) => c.downField("symbolStrokeWidth").as[Option[Double]]
-                                                .flatMap(((symbolStrokeWidth) => c.downField("titleColor").as[Option[String]]
-                                                  .flatMap(((titleColor) => c.downField("titleFont").as[Option[String]]
-                                                    .flatMap(((titleFont) => c.downField("titleFontSize").as[Option[Double]]
-                                                      .flatMap(((titleFontSize) => c.downField("titleFontWeight").as[Option[String]]
-                                                        .flatMap(((titleFontWeight) => c.downField("properties").as[Option[Legend.Properties]].map(((properties) => Spec.Legend(
-                                                          format,
-                                                          title,
-                                                          values,
-                                                          orient,
-                                                          offset,
-                                                          padding,
-                                                          margin,
-                                                          gradientStrokeColor,
-                                                          gradientStrokeWidth,
-                                                          gradientHeight,
-                                                          gradientWidth,
-                                                          labelAlign,
-                                                          labelBaseline,
-                                                          labelColor,
-                                                          labelFont,
-                                                          labelFontSize,
-                                                          labelOffset,
-                                                          shortTimeLabels,
-                                                          symbolColor,
-                                                          symbolShape,
-                                                          symbolSize,
-                                                          symbolStrokeWidth,
-                                                          titleColor,
-                                                          titleFont,
-                                                          titleFontSize,
-                                                          titleFontWeight,
-                                                          properties)))))))))))))))))))))))))))))))))))))))))))))))))))))))));
+    implicit val SpecLegendDecoder: Decoder[Spec.Legend] = Decoder.instance { (c: HCursor) =>
+      for {
+        format <- c.downField("format").as[Option[String]]
+        title <- c.downField("title").as[Option[String]]
+        values <- c.downField("values").as[Option[List[Legend.Values]]]
+        orient <- c.downField("orient").as[Option[String]]
+        offset <- c.downField("offset").as[Option[Double]]
+        padding <- c.downField("padding").as[Option[Double]]
+        margin <- c.downField("margin").as[Option[Double]]
+        gradientStrokeColor <- c.downField("gradientStrokeColor").as[Option[String]]
+        gradientStrokeWidth <- c.downField("gradientStrokeWidth").as[Option[Double]]
+        gradientHeight <- c.downField("gradientHeight").as[Option[Double]]
+        gradientWidth <- c.downField("gradientWidth").as[Option[Double]]
+        labelAlign <- c.downField("labelAlign").as[Option[String]]
+        labelBaseline <- c.downField("labelBaseline").as[Option[String]]
+        labelColor <- c.downField("labelColor").as[Option[String]]
+        labelFont <- c.downField("labelFont").as[Option[String]]
+        labelFontSize <- c.downField("labelFontSize").as[Option[Double]]
+        labelOffset <- c.downField("labelOffset").as[Option[Double]]
+        shortTimeLabels <- c.downField("shortTimeLabels").as[Option[Boolean]]
+        symbolColor <- c.downField("symbolColor").as[Option[String]]
+        symbolShape <- c.downField("symbolShape").as[Option[String]]
+        symbolSize <- c.downField("symbolSize").as[Option[Double]]
+        symbolStrokeWidth <- c.downField("symbolStrokeWidth").as[Option[Double]]
+        titleColor <- c.downField("titleColor").as[Option[String]]
+        titleFont <- c.downField("titleFont").as[Option[String]]
+        titleFontSize <- c.downField("titleFontSize").as[Option[Double]]
+        titleFontWeight <- c.downField("titleFontWeight").as[Option[String]]
+        properties <- c.downField("properties").as[Option[Legend.Properties]]
+      } yield {
+        Spec.Legend(
+          format,
+          title,
+          values,
+          orient,
+          offset,
+          padding,
+          margin,
+          gradientStrokeColor,
+          gradientStrokeWidth,
+          gradientHeight,
+          gradientWidth,
+          labelAlign,
+          labelBaseline,
+          labelColor,
+          labelFont,
+          labelFontSize,
+          labelOffset,
+          shortTimeLabels,
+          symbolColor,
+          symbolShape,
+          symbolSize,
+          symbolStrokeWidth,
+          titleColor,
+          titleFont,
+          titleFontSize,
+          titleFontWeight,
+          properties)
+      }
+    }
     implicit val SpecLegendValuesEncoder: Encoder[Spec.Legend.Values] = Encoder.instance(((wrapper: Spec.Legend.Values) => wrapper.x.asJson(anyEncoder)));
     implicit val SpecLegendValuesDecoder: Decoder[Spec.Legend.Values] = Decoder.instance(((h: HCursor) => h.as[Any](anyDecoder).map(((x$2) => Spec.Legend.Values(x$2)))));
     implicit val SpecLegendPropertiesEncoder: Encoder[Spec.Legend.Properties] = Encoder.instance(((wrapper: Spec.Legend.Properties) => wrapper.x.asJson(anyEncoder)));
@@ -1734,22 +1798,28 @@ object Spec {
       "bin".->(cc.bin.asJson),
       "aggregate".->(cc.aggregate.asJson),
       "title".->(cc.title.asJson))));
-    implicit val SpecOrderChannelDefDecoder: Decoder[Spec.OrderChannelDef] = Decoder.instance(((c: HCursor) => c.downField("sort").as[Option[SortOrder]]
-      .flatMap(((sort) => c.downField("field").as[Option[String]]
-        .flatMap(((field) => c.downField("type").as[Option[Type]]
-          .flatMap(((`type`) => c.downField("value").as[Option[OrderChannelDef.ValueUnion]]
-            .flatMap(((value) => c.downField("timeUnit").as[Option[TimeUnit]]
-              .flatMap(((timeUnit) => c.downField("bin").as[Option[OrderChannelDef.BinUnion]]
-                .flatMap(((bin) => c.downField("aggregate").as[Option[AggregateOp]]
-                  .flatMap(((aggregate) => c.downField("title").as[Option[String]].map(((title) => Spec.OrderChannelDef(
-                    sort,
-                    field,
-                    `type`,
-                    value,
-                    timeUnit,
-                    bin,
-                    aggregate,
-                    title)))))))))))))))))));
+    implicit val SpecOrderChannelDefDecoder: Decoder[Spec.OrderChannelDef] = Decoder.instance { (c: HCursor) =>
+      for {
+        sort <- c.downField("sort").as[Option[SortOrder]]
+        field <- c.downField("field").as[Option[String]]
+        `type` <- c.downField("type").as[Option[Type]]
+        value <- c.downField("value").as[Option[OrderChannelDef.ValueUnion]]
+        timeUnit <- c.downField("timeUnit").as[Option[TimeUnit]]
+        bin <- c.downField("bin").as[Option[OrderChannelDef.BinUnion]]
+        aggregate <- c.downField("aggregate").as[Option[AggregateOp]]
+        title <- c.downField("title").as[Option[String]]
+      } yield {
+        Spec.OrderChannelDef(
+          sort,
+          field,
+          `type`,
+          value,
+          timeUnit,
+          bin,
+          aggregate,
+          title)
+      }
+    }
     implicit val SpecOrderChannelDefValueUnionEncoder: Encoder[Spec.OrderChannelDef.ValueUnion] = Encoder.instance({
       case (ut @ ((_): Spec.OrderChannelDef.ValueDouble)) => ut.x.asJson
       case (ut @ ((_): Spec.OrderChannelDef.ValueString)) => ut.x.asJson
@@ -1801,12 +1871,18 @@ object Spec {
       "filter".->(cc.filter.asJson),
       "filterInvalid".->(cc.filterInvalid.asJson),
       "calculate".->(cc.calculate.asJson))));
-    implicit val SpecTransformDecoder: Decoder[Spec.Transform] = Decoder.instance(((c: HCursor) => c.downField("filter").as[Option[Transform.FilterUnion]]
-      .flatMap(((filter) => c.downField("filterInvalid").as[Option[Boolean]]
-        .flatMap(((filterInvalid) => c.downField("calculate").as[Option[List[Formula]]].map(((calculate) => Spec.Transform(
+    implicit val SpecTransformDecoder: Decoder[Spec.Transform] = Decoder.instance { (c: HCursor) =>
+      for {
+        filter <- c.downField("filter").as[Option[Transform.FilterUnion]]
+        filterInvalid <- c.downField("filterInvalid").as[Option[Boolean]]
+        calculate <- c.downField("calculate").as[Option[List[Formula]]]
+      } yield {
+        Spec.Transform(
           filter,
           filterInvalid,
-          calculate)))))))));
+          calculate)
+      }
+    }
     implicit val SpecTransformFilterUnionEncoder: Encoder[Spec.Transform.FilterUnion] = Encoder.instance({
       case (ut @ ((_): Spec.Transform.FilterString)) => ut.x.asJson
       case (ut @ ((_): Spec.Transform.FilterEqualFilter)) => ut.x.asJson
@@ -1826,12 +1902,18 @@ object Spec {
       "timeUnit".->(cc.timeUnit.asJson),
       "field".->(cc.field.asJson),
       "equal".->(cc.equal.asJson))));
-    implicit val SpecEqualFilterDecoder: Decoder[Spec.EqualFilter] = Decoder.instance(((c: HCursor) => c.downField("timeUnit").as[Option[TimeUnit]]
-      .flatMap(((timeUnit) => c.downField("field").as[String]
-        .flatMap(((field) => c.downField("equal").as[EqualFilter.EqualUnion].map(((equal) => Spec.EqualFilter(
+    implicit val SpecEqualFilterDecoder: Decoder[Spec.EqualFilter] = Decoder.instance { (c: HCursor) =>
+      for {
+        timeUnit <- c.downField("timeUnit").as[Option[TimeUnit]]
+        field <- c.downField("field").as[String]
+        equal <- c.downField("equal").as[EqualFilter.EqualUnion]
+      } yield {
+        Spec.EqualFilter(
           timeUnit,
           field,
-          equal)))))))));
+          equal)
+      }
+    }
     implicit val SpecEqualFilterEqualUnionEncoder: Encoder[Spec.EqualFilter.EqualUnion] = Encoder.instance({
       case (ut @ ((_): Spec.EqualFilter.EqualString)) => ut.x.asJson
       case (ut @ ((_): Spec.EqualFilter.EqualDouble)) => ut.x.asJson
@@ -1849,24 +1931,30 @@ object Spec {
       "minutes".->(cc.minutes.asJson),
       "seconds".->(cc.seconds.asJson),
       "milliseconds".->(cc.milliseconds.asJson))));
-    implicit val SpecDateTimeDecoder: Decoder[Spec.DateTime] = Decoder.instance(((c: HCursor) => c.downField("year").as[Option[Double]]
-      .flatMap(((year) => c.downField("quarter").as[Option[Double]]
-        .flatMap(((quarter) => c.downField("month").as[Option[DateTime.MonthUnion]]
-          .flatMap(((month) => c.downField("date").as[Option[Double]]
-            .flatMap(((date) => c.downField("day").as[Option[DateTime.DayUnion]]
-              .flatMap(((day) => c.downField("hours").as[Option[Double]]
-                .flatMap(((hours) => c.downField("minutes").as[Option[Double]]
-                  .flatMap(((minutes) => c.downField("seconds").as[Option[Double]]
-                    .flatMap(((seconds) => c.downField("milliseconds").as[Option[Double]].map(((milliseconds) => Spec.DateTime(
-                      year,
-                      quarter,
-                      month,
-                      date,
-                      day,
-                      hours,
-                      minutes,
-                      seconds,
-                      milliseconds)))))))))))))))))))));
+    implicit val SpecDateTimeDecoder: Decoder[Spec.DateTime] = Decoder.instance { (c: HCursor) =>
+      for {
+        year <- c.downField("year").as[Option[Double]]
+        quarter <- c.downField("quarter").as[Option[Double]]
+        month <- c.downField("month").as[Option[DateTime.MonthUnion]]
+        date <- c.downField("date").as[Option[Double]]
+        day <- c.downField("day").as[Option[DateTime.DayUnion]]
+        hours <- c.downField("hours").as[Option[Double]]
+        minutes <- c.downField("minutes").as[Option[Double]]
+        seconds <- c.downField("seconds").as[Option[Double]]
+        milliseconds <- c.downField("milliseconds").as[Option[Double]]
+      } yield {
+        Spec.DateTime(
+          year,
+          quarter,
+          month,
+          date,
+          day,
+          hours,
+          minutes,
+          seconds,
+          milliseconds)
+      }
+    }
     implicit val SpecDateTimeMonthUnionEncoder: Encoder[Spec.DateTime.MonthUnion] = Encoder.instance({
       case (ut @ ((_): Spec.DateTime.MonthDouble)) => ut.x.asJson
       case (ut @ ((_): Spec.DateTime.MonthString)) => ut.x.asJson
@@ -1881,12 +1969,18 @@ object Spec {
       "timeUnit".->(cc.timeUnit.asJson),
       "field".->(cc.field.asJson),
       "range".->(cc.range.asJson))));
-    implicit val SpecRangeFilterDecoder: Decoder[Spec.RangeFilter] = Decoder.instance(((c: HCursor) => c.downField("timeUnit").as[Option[TimeUnit]]
-      .flatMap(((timeUnit) => c.downField("field").as[String]
-        .flatMap(((field) => c.downField("range").as[List[RangeFilter.RangeUnion]].map(((range) => Spec.RangeFilter(
+    implicit val SpecRangeFilterDecoder: Decoder[Spec.RangeFilter] = Decoder.instance { (c: HCursor) =>
+      for {
+        timeUnit <- c.downField("timeUnit").as[Option[TimeUnit]]
+        field <- c.downField("field").as[String]
+        range <- c.downField("range").as[List[RangeFilter.RangeUnion]]
+      } yield {
+        Spec.RangeFilter(
           timeUnit,
           field,
-          range)))))))));
+          range)
+      }
+    }
     implicit val SpecRangeFilterRangeUnionEncoder: Encoder[Spec.RangeFilter.RangeUnion] = Encoder.instance({
       case (ut @ ((_): Spec.RangeFilter.RangeDouble)) => ut.x.asJson
       case (ut @ ((_): Spec.RangeFilter.RangeDateTime)) => ut.x.asJson
@@ -1903,7 +1997,7 @@ object Spec {
           field,
           oneOf)))))))));
     implicit val SpecOneOfFilterOneOfUnionEncoder: Encoder[Spec.OneOfFilter.OneOfUnion] = Encoder.instance({
-      case (ut @ ((_): Spec.OneOfFilter.OneOfString)) => ut.x.asJson
+      case (ut: Spec.OneOfFilter.OneOfString) => ut.x.asJson
       case (ut @ ((_): Spec.OneOfFilter.OneOfDouble)) => ut.x.asJson
       case (ut @ ((_): Spec.OneOfFilter.OneOfBoolean)) => ut.x.asJson
       case (ut @ ((_): Spec.OneOfFilter.OneOfDateTime)) => ut.x.asJson
@@ -1929,30 +2023,36 @@ object Spec {
       "axis".->(cc.axis.asJson),
       "legend".->(cc.legend.asJson),
       "facet".->(cc.facet.asJson))));
-    implicit val SpecConfigDecoder: Decoder[Spec.Config] = Decoder.instance(((c: HCursor) => c.downField("viewport").as[Option[Double]]
-      .flatMap(((viewport) => c.downField("background").as[Option[String]]
-        .flatMap(((background) => c.downField("numberFormat").as[Option[String]]
-          .flatMap(((numberFormat) => c.downField("timeFormat").as[Option[String]]
-            .flatMap(((timeFormat) => c.downField("countTitle").as[Option[String]]
-              .flatMap(((countTitle) => c.downField("cell").as[Option[CellConfig]]
-                .flatMap(((cell) => c.downField("mark").as[Option[MarkConfig]]
-                  .flatMap(((mark) => c.downField("overlay").as[Option[OverlayConfig]]
-                    .flatMap(((overlay) => c.downField("scale").as[Option[ScaleConfig]]
-                      .flatMap(((scale) => c.downField("axis").as[Option[AxisConfig]]
-                        .flatMap(((axis) => c.downField("legend").as[Option[LegendConfig]]
-                          .flatMap(((legend) => c.downField("facet").as[Option[FacetConfig]].map(((facet) => Spec.Config(
-                            viewport,
-                            background,
-                            numberFormat,
-                            timeFormat,
-                            countTitle,
-                            cell,
-                            mark,
-                            overlay,
-                            scale,
-                            axis,
-                            legend,
-                            facet)))))))))))))))))))))))))));
+    implicit val SpecConfigDecoder: Decoder[Spec.Config] = Decoder.instance { (c: HCursor) =>
+      for {
+        viewport <- c.downField("viewport").as[Option[Double]]
+        background <- c.downField("background").as[Option[String]]
+        numberFormat <- c.downField("numberFormat").as[Option[String]]
+        timeFormat <- c.downField("timeFormat").as[Option[String]]
+        countTitle <- c.downField("countTitle").as[Option[String]]
+        cell <- c.downField("cell").as[Option[CellConfig]]
+        mark <- c.downField("mark").as[Option[MarkConfig]]
+        overlay <- c.downField("overlay").as[Option[OverlayConfig]]
+        scale <- c.downField("scale").as[Option[ScaleConfig]]
+        axis <- c.downField("axis").as[Option[AxisConfig]]
+        legend <- c.downField("legend").as[Option[LegendConfig]]
+        facet <- c.downField("facet").as[Option[FacetConfig]]
+      } yield {
+        Spec.Config(
+          viewport,
+          background,
+          numberFormat,
+          timeFormat,
+          countTitle,
+          cell,
+          mark,
+          overlay,
+          scale,
+          axis,
+          legend,
+          facet)
+      }
+    }
     implicit val SpecCellConfigEncoder: Encoder[Spec.CellConfig] = Encoder.instance(((cc: Spec.CellConfig) => Json.obj(
       "width".->(cc.width.asJson),
       "height".->(cc.height.asJson),
@@ -1964,26 +2064,33 @@ object Spec {
       "strokeWidth".->(cc.strokeWidth.asJson),
       "strokeDash".->(cc.strokeDash.asJson),
       "strokeDashOffset".->(cc.strokeDashOffset.asJson))));
-    implicit val SpecCellConfigDecoder: Decoder[Spec.CellConfig] = Decoder.instance(((c: HCursor) => c.downField("width").as[Option[Double]]
-      .flatMap(((width) => c.downField("height").as[Option[Double]]
-        .flatMap(((height) => c.downField("clip").as[Option[Boolean]]
-          .flatMap(((clip) => c.downField("fill").as[Option[String]]
-            .flatMap(((fill) => c.downField("fillOpacity").as[Option[Double]]
-              .flatMap(((fillOpacity) => c.downField("stroke").as[Option[String]]
-                .flatMap(((stroke) => c.downField("strokeOpacity").as[Option[Double]]
-                  .flatMap(((strokeOpacity) => c.downField("strokeWidth").as[Option[Double]]
-                    .flatMap(((strokeWidth) => c.downField("strokeDash").as[Option[List[Double]]]
-                      .flatMap(((strokeDash) => c.downField("strokeDashOffset").as[Option[Double]].map(((strokeDashOffset) => Spec.CellConfig(
-                        width,
-                        height,
-                        clip,
-                        fill,
-                        fillOpacity,
-                        stroke,
-                        strokeOpacity,
-                        strokeWidth,
-                        strokeDash,
-                        strokeDashOffset)))))))))))))))))))))));
+    implicit val SpecCellConfigDecoder: Decoder[Spec.CellConfig] = Decoder.instance { (c: HCursor) =>
+      for {
+        width <- c.downField("width").as[Option[Double]]
+        height <- c.downField("height").as[Option[Double]]
+        clip <- c.downField("clip").as[Option[Boolean]]
+        fill <- c.downField("fill").as[Option[String]]
+        fillOpacity <- c.downField("fillOpacity").as[Option[Double]]
+        stroke <- c.downField("stroke").as[Option[String]]
+        strokeOpacity <- c.downField("strokeOpacity").as[Option[Double]]
+        strokeWidth <- c.downField("strokeWidth").as[Option[Double]]
+        strokeDash <- c.downField("strokeDash").as[Option[List[Double]]]
+        strokeDashOffset <- c.downField("strokeDashOffset").as[Option[Double]]
+      } yield {
+
+        Spec.CellConfig(
+          width,
+          height,
+          clip,
+          fill,
+          fillOpacity,
+          stroke,
+          strokeOpacity,
+          strokeWidth,
+          strokeDash,
+          strokeDashOffset)
+      }
+    }
     implicit val SpecMarkConfigEncoder: Encoder[Spec.MarkConfig] = Encoder.instance(((cc: Spec.MarkConfig) => Json.obj(
       "filled".->(cc.filled.asJson),
       "color".->(cc.color.asJson),
@@ -2021,81 +2128,88 @@ object Spec {
       "format".->(cc.format.asJson),
       "shortTimeLabels".->(cc.shortTimeLabels.asJson),
       "text".->(cc.text.asJson),
-      "applyColorToBackground".->(cc.applyColorToBackground.asJson))));
-    implicit val SpecMarkConfigDecoder: Decoder[Spec.MarkConfig] = Decoder.instance(((c: HCursor) => c.downField("filled").as[Option[Boolean]]
-      .flatMap(((filled) => c.downField("color").as[Option[String]]
-        .flatMap(((color) => c.downField("fill").as[Option[String]]
-          .flatMap(((fill) => c.downField("stroke").as[Option[String]]
-            .flatMap(((stroke) => c.downField("opacity").as[Option[Double]]
-              .flatMap(((opacity) => c.downField("fillOpacity").as[Option[Double]]
-                .flatMap(((fillOpacity) => c.downField("strokeOpacity").as[Option[Double]]
-                  .flatMap(((strokeOpacity) => c.downField("strokeWidth").as[Option[Double]]
-                    .flatMap(((strokeWidth) => c.downField("strokeDash").as[Option[List[Double]]]
-                      .flatMap(((strokeDash) => c.downField("strokeDashOffset").as[Option[Double]]
-                        .flatMap(((strokeDashOffset) => c.downField("stacked").as[Option[StackOffset]]
-                          .flatMap(((stacked) => c.downField("orient").as[Option[Orient]]
-                            .flatMap(((orient) => c.downField("interpolate").as[Option[Interpolate]]
-                              .flatMap(((interpolate) => c.downField("tension").as[Option[Double]]
-                                .flatMap(((tension) => c.downField("lineSize").as[Option[Double]]
-                                  .flatMap(((lineSize) => c.downField("ruleSize").as[Option[Double]]
-                                    .flatMap(((ruleSize) => c.downField("barSize").as[Option[Double]]
-                                      .flatMap(((barSize) => c.downField("barThinSize").as[Option[Double]]
-                                        .flatMap(((barThinSize) => c.downField("shape").as[Option[MarkConfig.ShapeUnion]]
-                                          .flatMap(((shape) => c.downField("size").as[Option[Double]]
-                                            .flatMap(((size) => c.downField("tickSize").as[Option[Double]]
-                                              .flatMap(((tickSize) => c.downField("tickThickness").as[Option[Double]]
-                                                .flatMap(((tickThickness) => c.downField("align").as[Option[HorizontalAlign]]
-                                                  .flatMap(((align) => c.downField("angle").as[Option[Double]]
-                                                    .flatMap(((angle) => c.downField("baseline").as[Option[VerticalAlign]]
-                                                      .flatMap(((baseline) => c.downField("dx").as[Option[Double]]
-                                                        .flatMap(((dx) => c.downField("dy").as[Option[Double]]
-                                                          .flatMap(((dy) => c.downField("radius").as[Option[Double]]
-                                                            .flatMap(((radius) => c.downField("theta").as[Option[Double]]
-                                                              .flatMap(((theta) => c.downField("font").as[Option[String]]
-                                                                .flatMap(((font) => c.downField("fontSize").as[Option[Double]]
-                                                                  .flatMap(((fontSize) => c.downField("fontStyle").as[Option[FontStyle]]
-                                                                    .flatMap(((fontStyle) => c.downField("fontWeight").as[Option[FontWeight]]
-                                                                      .flatMap(((fontWeight) => c.downField("format").as[Option[String]]
-                                                                        .flatMap(((format) => c.downField("shortTimeLabels").as[Option[Boolean]]
-                                                                          .flatMap(((shortTimeLabels) => c.downField("text").as[Option[String]]
-                                                                            .flatMap(((text) => c.downField("applyColorToBackground").as[Option[Boolean]].map(((applyColorToBackground) => Spec.MarkConfig(
-                                                                              filled,
-                                                                              color,
-                                                                              fill,
-                                                                              stroke,
-                                                                              opacity,
-                                                                              fillOpacity,
-                                                                              strokeOpacity,
-                                                                              strokeWidth,
-                                                                              strokeDash,
-                                                                              strokeDashOffset,
-                                                                              stacked,
-                                                                              orient,
-                                                                              interpolate,
-                                                                              tension,
-                                                                              lineSize,
-                                                                              ruleSize,
-                                                                              barSize,
-                                                                              barThinSize,
-                                                                              shape,
-                                                                              size,
-                                                                              tickSize,
-                                                                              tickThickness,
-                                                                              align,
-                                                                              angle,
-                                                                              baseline,
-                                                                              dx,
-                                                                              dy,
-                                                                              radius,
-                                                                              theta,
-                                                                              font,
-                                                                              fontSize,
-                                                                              fontStyle,
-                                                                              fontWeight,
-                                                                              format,
-                                                                              shortTimeLabels,
-                                                                              text,
-                                                                              applyColorToBackground)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))));
+      "applyColorToBackground".->(cc.applyColorToBackground.asJson))))
+
+    implicit val SpecMarkConfigDecoder: Decoder[Spec.MarkConfig] = Decoder.instance { (c: HCursor) =>
+      for {
+        filled <- c.downField("filled").as[Option[Boolean]]
+        color <- c.downField("color").as[Option[String]]
+        fill <- c.downField("fill").as[Option[String]]
+        stroke <- c.downField("stroke").as[Option[String]]
+        opacity <- c.downField("opacity").as[Option[Double]]
+        fillOpacity <- c.downField("fillOpacity").as[Option[Double]]
+        strokeOpacity <- c.downField("strokeOpacity").as[Option[Double]]
+        strokeWidth <- c.downField("strokeWidth").as[Option[Double]]
+        strokeDash <- c.downField("strokeDash").as[Option[List[Double]]]
+        strokeDashOffset <- c.downField("strokeDashOffset").as[Option[Double]]
+        stacked <- c.downField("stacked").as[Option[StackOffset]]
+        orient <- c.downField("orient").as[Option[Orient]]
+        interpolate <- c.downField("interpolate").as[Option[Interpolate]]
+        tension <- c.downField("tension").as[Option[Double]]
+        lineSize <- c.downField("lineSize").as[Option[Double]]
+        ruleSize <- c.downField("ruleSize").as[Option[Double]]
+        barSize <- c.downField("barSize").as[Option[Double]]
+        barThinSize <- c.downField("barThinSize").as[Option[Double]]
+        shape <- c.downField("shape").as[Option[MarkConfig.ShapeUnion]]
+        size <- c.downField("size").as[Option[Double]]
+        tickSize <- c.downField("tickSize").as[Option[Double]]
+        tickThickness <- c.downField("tickThickness").as[Option[Double]]
+        align <- c.downField("align").as[Option[HorizontalAlign]]
+        angle <- c.downField("angle").as[Option[Double]]
+        baseline <- c.downField("baseline").as[Option[VerticalAlign]]
+        dx <- c.downField("dx").as[Option[Double]]
+        dy <- c.downField("dy").as[Option[Double]]
+        radius <- c.downField("radius").as[Option[Double]]
+        theta <- c.downField("theta").as[Option[Double]]
+        font <- c.downField("font").as[Option[String]]
+        fontSize <- c.downField("fontSize").as[Option[Double]]
+        fontStyle <- c.downField("fontStyle").as[Option[FontStyle]]
+        fontWeight <- c.downField("fontWeight").as[Option[FontWeight]]
+        format <- c.downField("format").as[Option[String]]
+        shortTimeLabels <- c.downField("shortTimeLabels").as[Option[Boolean]]
+        text <- c.downField("text").as[Option[String]]
+        applyColorToBackground <- c.downField("applyColorToBackground").as[Option[Boolean]]
+      } yield {
+        Spec.MarkConfig(
+          filled,
+          color,
+          fill,
+          stroke,
+          opacity,
+          fillOpacity,
+          strokeOpacity,
+          strokeWidth,
+          strokeDash,
+          strokeDashOffset,
+          stacked,
+          orient,
+          interpolate,
+          tension,
+          lineSize,
+          ruleSize,
+          barSize,
+          barThinSize,
+          shape,
+          size,
+          tickSize,
+          tickThickness,
+          align,
+          angle,
+          baseline,
+          dx,
+          dy,
+          radius,
+          theta,
+          font,
+          fontSize,
+          fontStyle,
+          fontWeight,
+          format,
+          shortTimeLabels,
+          text,
+          applyColorToBackground)
+      }
+    }
     implicit val SpecMarkConfigShapeUnionEncoder: Encoder[Spec.MarkConfig.ShapeUnion] = Encoder.instance({
       case (ut @ ((_): Spec.MarkConfig.ShapeShape)) => ut.x.asJson
       case (ut @ ((_): Spec.MarkConfig.ShapeString)) => ut.x.asJson
@@ -2197,14 +2311,20 @@ object Spec {
       "area".->(cc.area.asJson),
       "pointStyle".->(cc.pointStyle.asJson),
       "lineStyle".->(cc.lineStyle.asJson))));
-    implicit val SpecOverlayConfigDecoder: Decoder[Spec.OverlayConfig] = Decoder.instance(((c: HCursor) => c.downField("line").as[Option[Boolean]]
-      .flatMap(((line) => c.downField("area").as[Option[AreaOverlay]]
-        .flatMap(((area) => c.downField("pointStyle").as[Option[MarkConfig]]
-          .flatMap(((pointStyle) => c.downField("lineStyle").as[Option[MarkConfig]].map(((lineStyle) => Spec.OverlayConfig(
-            line,
-            area,
-            pointStyle,
-            lineStyle)))))))))));
+    implicit val SpecOverlayConfigDecoder: Decoder[Spec.OverlayConfig] = Decoder.instance { (c: HCursor) =>
+      for {
+        line <- c.downField("line").as[Option[Boolean]]
+        area <- c.downField("area").as[Option[AreaOverlay]]
+        pointStyle <- c.downField("pointStyle").as[Option[MarkConfig]]
+        lineStyle <- c.downField("lineStyle").as[Option[MarkConfig]]
+      } yield {
+        Spec.OverlayConfig(
+          line,
+          area,
+          pointStyle,
+          lineStyle)
+      }
+    }
     implicit val SpecAreaOverlayEncoder: Encoder[Spec.AreaOverlay] = Encoder.instance(((e: Spec.AreaOverlay) => parser.parse(e.json).toOption.get));
     implicit val SpecAreaOverlayDecoder: Decoder[Spec.AreaOverlay] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
@@ -2230,34 +2350,40 @@ object Spec {
       "ruleSizeRange".->(cc.ruleSizeRange.asJson),
       "tickSizeRange".->(cc.tickSizeRange.asJson),
       "pointSizeRange".->(cc.pointSizeRange.asJson))));
-    implicit val SpecScaleConfigDecoder: Decoder[Spec.ScaleConfig] = Decoder.instance(((c: HCursor) => c.downField("round").as[Option[Boolean]]
-      .flatMap(((round) => c.downField("textBandWidth").as[Option[Double]]
-        .flatMap(((textBandWidth) => c.downField("bandSize").as[Option[ScaleConfig.BandSizeUnion]]
-          .flatMap(((bandSize) => c.downField("opacity").as[Option[List[Double]]]
-            .flatMap(((opacity) => c.downField("padding").as[Option[Double]]
-              .flatMap(((padding) => c.downField("useRawDomain").as[Option[Boolean]]
-                .flatMap(((useRawDomain) => c.downField("nominalColorRange").as[Option[ScaleConfig.NominalColorRangeUnion]]
-                  .flatMap(((nominalColorRange) => c.downField("sequentialColorRange").as[Option[ScaleConfig.SequentialColorRangeUnion]]
-                    .flatMap(((sequentialColorRange) => c.downField("shapeRange").as[Option[ScaleConfig.ShapeRangeUnion]]
-                      .flatMap(((shapeRange) => c.downField("barSizeRange").as[Option[List[Double]]]
-                        .flatMap(((barSizeRange) => c.downField("fontSizeRange").as[Option[List[Double]]]
-                          .flatMap(((fontSizeRange) => c.downField("ruleSizeRange").as[Option[List[Double]]]
-                            .flatMap(((ruleSizeRange) => c.downField("tickSizeRange").as[Option[List[Double]]]
-                              .flatMap(((tickSizeRange) => c.downField("pointSizeRange").as[Option[List[Double]]].map(((pointSizeRange) => Spec.ScaleConfig(
-                                round,
-                                textBandWidth,
-                                bandSize,
-                                opacity,
-                                padding,
-                                useRawDomain,
-                                nominalColorRange,
-                                sequentialColorRange,
-                                shapeRange,
-                                barSizeRange,
-                                fontSizeRange,
-                                ruleSizeRange,
-                                tickSizeRange,
-                                pointSizeRange)))))))))))))))))))))))))))))));
+    implicit val SpecScaleConfigDecoder: Decoder[Spec.ScaleConfig] = Decoder.instance { (c: HCursor) =>
+      for {
+        round <- c.downField("round").as[Option[Boolean]]
+        textBandWidth <- c.downField("textBandWidth").as[Option[Double]]
+        bandSize <- c.downField("bandSize").as[Option[ScaleConfig.BandSizeUnion]]
+        opacity <- c.downField("opacity").as[Option[List[Double]]]
+        padding <- c.downField("padding").as[Option[Double]]
+        useRawDomain <- c.downField("useRawDomain").as[Option[Boolean]]
+        nominalColorRange <- c.downField("nominalColorRange").as[Option[ScaleConfig.NominalColorRangeUnion]]
+        sequentialColorRange <- c.downField("sequentialColorRange").as[Option[ScaleConfig.SequentialColorRangeUnion]]
+        shapeRange <- c.downField("shapeRange").as[Option[ScaleConfig.ShapeRangeUnion]]
+        barSizeRange <- c.downField("barSizeRange").as[Option[List[Double]]]
+        fontSizeRange <- c.downField("fontSizeRange").as[Option[List[Double]]]
+        ruleSizeRange <- c.downField("ruleSizeRange").as[Option[List[Double]]]
+        tickSizeRange <- c.downField("tickSizeRange").as[Option[List[Double]]]
+        pointSizeRange <- c.downField("pointSizeRange").as[Option[List[Double]]]
+      } yield {
+        Spec.ScaleConfig(
+          round,
+          textBandWidth,
+          bandSize,
+          opacity,
+          padding,
+          useRawDomain,
+          nominalColorRange,
+          sequentialColorRange,
+          shapeRange,
+          barSizeRange,
+          fontSizeRange,
+          ruleSizeRange,
+          tickSizeRange,
+          pointSizeRange)
+      }
+    }
     implicit val SpecScaleConfigBandSizeUnionEncoder: Encoder[Spec.ScaleConfig.BandSizeUnion] = Encoder.instance({
       case (ut @ ((_): Spec.ScaleConfig.BandSizeDouble)) => ut.x.asJson
       case (ut @ ((_): Spec.ScaleConfig.BandSizeBandSize)) => ut.x.asJson
@@ -2314,78 +2440,90 @@ object Spec {
       "titleMaxLength".->(cc.titleMaxLength.asJson),
       "characterWidth".->(cc.characterWidth.asJson),
       "properties".->(cc.properties.asJson))));
-    implicit val SpecAxisConfigDecoder: Decoder[Spec.AxisConfig] = Decoder.instance(((c: HCursor) => c.downField("axisWidth").as[Option[Double]]
-      .flatMap(((axisWidth) => c.downField("layer").as[Option[String]]
-        .flatMap(((layer) => c.downField("offset").as[Option[Double]]
-          .flatMap(((offset) => c.downField("axisColor").as[Option[String]]
-            .flatMap(((axisColor) => c.downField("grid").as[Option[Boolean]]
-              .flatMap(((grid) => c.downField("gridColor").as[Option[String]]
-                .flatMap(((gridColor) => c.downField("gridDash").as[Option[List[Double]]]
-                  .flatMap(((gridDash) => c.downField("gridOpacity").as[Option[Double]]
-                    .flatMap(((gridOpacity) => c.downField("gridWidth").as[Option[Double]]
-                      .flatMap(((gridWidth) => c.downField("labels").as[Option[Boolean]]
-                        .flatMap(((labels) => c.downField("labelAngle").as[Option[Double]]
-                          .flatMap(((labelAngle) => c.downField("labelAlign").as[Option[String]]
-                            .flatMap(((labelAlign) => c.downField("labelBaseline").as[Option[String]]
-                              .flatMap(((labelBaseline) => c.downField("labelMaxLength").as[Option[Double]]
-                                .flatMap(((labelMaxLength) => c.downField("shortTimeLabels").as[Option[Boolean]]
-                                  .flatMap(((shortTimeLabels) => c.downField("subdivide").as[Option[Double]]
-                                    .flatMap(((subdivide) => c.downField("ticks").as[Option[Double]]
-                                      .flatMap(((ticks) => c.downField("tickColor").as[Option[String]]
-                                        .flatMap(((tickColor) => c.downField("tickLabelColor").as[Option[String]]
-                                          .flatMap(((tickLabelColor) => c.downField("tickLabelFont").as[Option[String]]
-                                            .flatMap(((tickLabelFont) => c.downField("tickLabelFontSize").as[Option[Double]]
-                                              .flatMap(((tickLabelFontSize) => c.downField("tickPadding").as[Option[Double]]
-                                                .flatMap(((tickPadding) => c.downField("tickSize").as[Option[Double]]
-                                                  .flatMap(((tickSize) => c.downField("tickSizeMajor").as[Option[Double]]
-                                                    .flatMap(((tickSizeMajor) => c.downField("tickSizeMinor").as[Option[Double]]
-                                                      .flatMap(((tickSizeMinor) => c.downField("tickSizeEnd").as[Option[Double]]
-                                                        .flatMap(((tickSizeEnd) => c.downField("tickWidth").as[Option[Double]]
-                                                          .flatMap(((tickWidth) => c.downField("titleColor").as[Option[String]]
-                                                            .flatMap(((titleColor) => c.downField("titleFont").as[Option[String]]
-                                                              .flatMap(((titleFont) => c.downField("titleFontSize").as[Option[Double]]
-                                                                .flatMap(((titleFontSize) => c.downField("titleFontWeight").as[Option[String]]
-                                                                  .flatMap(((titleFontWeight) => c.downField("titleOffset").as[Option[Double]]
-                                                                    .flatMap(((titleOffset) => c.downField("titleMaxLength").as[Option[Double]]
-                                                                      .flatMap(((titleMaxLength) => c.downField("characterWidth").as[Option[Double]]
-                                                                        .flatMap(((characterWidth) => c.downField("properties").as[Option[AxisConfig.Properties]].map(((properties) => Spec.AxisConfig(
-                                                                          axisWidth,
-                                                                          layer,
-                                                                          offset,
-                                                                          axisColor,
-                                                                          grid,
-                                                                          gridColor,
-                                                                          gridDash,
-                                                                          gridOpacity,
-                                                                          gridWidth,
-                                                                          labels,
-                                                                          labelAngle,
-                                                                          labelAlign,
-                                                                          labelBaseline,
-                                                                          labelMaxLength,
-                                                                          shortTimeLabels,
-                                                                          subdivide,
-                                                                          ticks,
-                                                                          tickColor,
-                                                                          tickLabelColor,
-                                                                          tickLabelFont,
-                                                                          tickLabelFontSize,
-                                                                          tickPadding,
-                                                                          tickSize,
-                                                                          tickSizeMajor,
-                                                                          tickSizeMinor,
-                                                                          tickSizeEnd,
-                                                                          tickWidth,
-                                                                          titleColor,
-                                                                          titleFont,
-                                                                          titleFontSize,
-                                                                          titleFontWeight,
-                                                                          titleOffset,
-                                                                          titleMaxLength,
-                                                                          characterWidth,
-                                                                          properties)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))));
+    implicit val SpecAxisConfigDecoder: Decoder[Spec.AxisConfig] = Decoder.instance { (c: HCursor) =>
+      for {
+        labelAngle <- c.downField("labelAngle").as[Option[Double]]
+        format <- c.downField("format").as[Option[String]]
+        orient <- c.downField("orient").as[Option[AxisOrient]]
+        title <- c.downField("title").as[Option[String]]
+        values <- c.downField("values").as[Option[List[Double]]]
+        axisWidth <- c.downField("axisWidth").as[Option[Double]]
+        layer <- c.downField("layer").as[Option[String]]
+        offset <- c.downField("offset").as[Option[Double]]
+        axisColor <- c.downField("axisColor").as[Option[String]]
+        grid <- c.downField("grid").as[Option[Boolean]]
+        gridColor <- c.downField("gridColor").as[Option[String]]
+        gridDash <- c.downField("gridDash").as[Option[List[Double]]]
+        gridOpacity <- c.downField("gridOpacity").as[Option[Double]]
+        gridWidth <- c.downField("gridWidth").as[Option[Double]]
+        labels <- c.downField("labels").as[Option[Boolean]]
+        labelAlign <- c.downField("labelAlign").as[Option[String]]
+        labelBaseline <- c.downField("labelBaseline").as[Option[String]]
+        labelMaxLength <- c.downField("labelMaxLength").as[Option[Double]]
+        shortTimeLabels <- c.downField("shortTimeLabels").as[Option[Boolean]]
+        subdivide <- c.downField("subdivide").as[Option[Double]]
+        ticks <- c.downField("ticks").as[Option[Double]]
+        tickColor <- c.downField("tickColor").as[Option[String]]
+        tickLabelColor <- c.downField("tickLabelColor").as[Option[String]]
+        tickLabelFont <- c.downField("tickLabelFont").as[Option[String]]
+        tickLabelFontSize <- c.downField("tickLabelFontSize").as[Option[Double]]
+        tickPadding <- c.downField("tickPadding").as[Option[Double]]
+        tickSize <- c.downField("tickSize").as[Option[Double]]
+        tickSizeMajor <- c.downField("tickSizeMajor").as[Option[Double]]
+        tickSizeMinor <- c.downField("tickSizeMinor").as[Option[Double]]
+        tickSizeEnd <- c.downField("tickSizeEnd").as[Option[Double]]
+        tickWidth <- c.downField("tickWidth").as[Option[Double]]
+        titleColor <- c.downField("titleColor").as[Option[String]]
+        titleFont <- c.downField("titleFont").as[Option[String]]
+        titleFontSize <- c.downField("titleFontSize").as[Option[Double]]
+        titleFontWeight <- c.downField("titleFontWeight").as[Option[String]]
+        titleOffset <- c.downField("titleOffset").as[Option[Double]]
+        titleMaxLength <- c.downField("titleMaxLength").as[Option[Double]]
+        characterWidth <- c.downField("characterWidth").as[Option[Double]]
+        properties <- c.downField("properties").as[Option[AxisConfig.Properties]]
+      } yield {
+        Spec.AxisConfig(
+          axisWidth,
+          layer,
+          offset,
+          axisColor,
+          grid,
+          gridColor,
+          gridDash,
+          gridOpacity,
+          gridWidth,
+          labels,
+          labelAngle,
+          labelAlign,
+          labelBaseline,
+          labelMaxLength,
+          shortTimeLabels,
+          subdivide,
+          ticks,
+          tickColor,
+          tickLabelColor,
+          tickLabelFont,
+          tickLabelFontSize,
+          tickPadding,
+          tickSize,
+          tickSizeMajor,
+          tickSizeMinor,
+          tickSizeEnd,
+          tickWidth,
+          titleColor,
+          titleFont,
+          titleFontSize,
+          titleFontWeight,
+          titleOffset,
+          titleMaxLength,
+          characterWidth,
+          properties)
+      }
+    }
+
     implicit val SpecAxisConfigPropertiesEncoder: Encoder[Spec.AxisConfig.Properties] = Encoder.instance(((wrapper: Spec.AxisConfig.Properties) => wrapper.x.asJson(anyEncoder)));
     implicit val SpecAxisConfigPropertiesDecoder: Decoder[Spec.AxisConfig.Properties] = Decoder.instance(((h: HCursor) => h.as[Any](anyDecoder).map(((x$5) => Spec.AxisConfig.Properties(x$5)))));
+
     implicit val SpecLegendConfigEncoder: Encoder[Spec.LegendConfig] = Encoder.instance(((cc: Spec.LegendConfig) => Json.obj(
       "orient".->(cc.orient.asJson),
       "offset".->(cc.offset.asJson),
@@ -2411,54 +2549,61 @@ object Spec {
       "titleFontSize".->(cc.titleFontSize.asJson),
       "titleFontWeight".->(cc.titleFontWeight.asJson),
       "properties".->(cc.properties.asJson))));
-    implicit val SpecLegendConfigDecoder: Decoder[Spec.LegendConfig] = Decoder.instance(((c: HCursor) => c.downField("orient").as[Option[String]]
-      .flatMap(((orient) => c.downField("offset").as[Option[Double]]
-        .flatMap(((offset) => c.downField("padding").as[Option[Double]]
-          .flatMap(((padding) => c.downField("margin").as[Option[Double]]
-            .flatMap(((margin) => c.downField("gradientStrokeColor").as[Option[String]]
-              .flatMap(((gradientStrokeColor) => c.downField("gradientStrokeWidth").as[Option[Double]]
-                .flatMap(((gradientStrokeWidth) => c.downField("gradientHeight").as[Option[Double]]
-                  .flatMap(((gradientHeight) => c.downField("gradientWidth").as[Option[Double]]
-                    .flatMap(((gradientWidth) => c.downField("labelAlign").as[Option[String]]
-                      .flatMap(((labelAlign) => c.downField("labelBaseline").as[Option[String]]
-                        .flatMap(((labelBaseline) => c.downField("labelColor").as[Option[String]]
-                          .flatMap(((labelColor) => c.downField("labelFont").as[Option[String]]
-                            .flatMap(((labelFont) => c.downField("labelFontSize").as[Option[Double]]
-                              .flatMap(((labelFontSize) => c.downField("labelOffset").as[Option[Double]]
-                                .flatMap(((labelOffset) => c.downField("shortTimeLabels").as[Option[Boolean]]
-                                  .flatMap(((shortTimeLabels) => c.downField("symbolColor").as[Option[String]]
-                                    .flatMap(((symbolColor) => c.downField("symbolShape").as[Option[String]]
-                                      .flatMap(((symbolShape) => c.downField("symbolSize").as[Option[Double]]
-                                        .flatMap(((symbolSize) => c.downField("symbolStrokeWidth").as[Option[Double]]
-                                          .flatMap(((symbolStrokeWidth) => c.downField("titleColor").as[Option[String]]
-                                            .flatMap(((titleColor) => c.downField("titleFont").as[Option[String]]
-                                              .flatMap(((titleFont) => c.downField("titleFontSize").as[Option[Double]]
-                                                .flatMap(((titleFontSize) => c.downField("titleFontWeight").as[Option[String]]
-                                                  .flatMap(((titleFontWeight) => c.downField("properties").as[Option[LegendConfig.Properties]].map(((properties) => Spec.LegendConfig(
-                                                    orient,
-                                                    offset,
-                                                    padding,
-                                                    margin,
-                                                    gradientStrokeColor,
-                                                    gradientStrokeWidth,
-                                                    gradientHeight,
-                                                    gradientWidth,
-                                                    labelAlign,
-                                                    labelBaseline,
-                                                    labelColor,
-                                                    labelFont,
-                                                    labelFontSize,
-                                                    labelOffset,
-                                                    shortTimeLabels,
-                                                    symbolColor,
-                                                    symbolShape,
-                                                    symbolSize,
-                                                    symbolStrokeWidth,
-                                                    titleColor,
-                                                    titleFont,
-                                                    titleFontSize,
-                                                    titleFontWeight,
-                                                    properties)))))))))))))))))))))))))))))))))))))))))))))))))));
+
+    implicit val SpecLegendConfigDecoder: Decoder[Spec.LegendConfig] = Decoder.instance { (c: HCursor) =>
+      for {
+        orient <- c.downField("orient").as[Option[String]]
+        offset <- c.downField("offset").as[Option[Double]]
+        padding <- c.downField("padding").as[Option[Double]]
+        margin <- c.downField("margin").as[Option[Double]]
+        gradientStrokeColor <- c.downField("gradientStrokeColor").as[Option[String]]
+        gradientStrokeWidth <- c.downField("gradientStrokeWidth").as[Option[Double]]
+        gradientHeight <- c.downField("gradientHeight").as[Option[Double]]
+        gradientWidth <- c.downField("gradientWidth").as[Option[Double]]
+        labelAlign <- c.downField("labelAlign").as[Option[String]]
+        labelBaseline <- c.downField("labelBaseline").as[Option[String]]
+        labelColor <- c.downField("labelColor").as[Option[String]]
+        labelFont <- c.downField("labelFont").as[Option[String]]
+        labelFontSize <- c.downField("labelFontSize").as[Option[Double]]
+        labelOffset <- c.downField("labelOffset").as[Option[Double]]
+        shortTimeLabels <- c.downField("shortTimeLabels").as[Option[Boolean]]
+        symbolColor <- c.downField("symbolColor").as[Option[String]]
+        symbolShape <- c.downField("symbolShape").as[Option[String]]
+        symbolSize <- c.downField("symbolSize").as[Option[Double]]
+        symbolStrokeWidth <- c.downField("symbolStrokeWidth").as[Option[Double]]
+        titleColor <- c.downField("titleColor").as[Option[String]]
+        titleFont <- c.downField("titleFont").as[Option[String]]
+        titleFontSize <- c.downField("titleFontSize").as[Option[Double]]
+        titleFontWeight <- c.downField("titleFontWeight").as[Option[String]]
+        properties <- c.downField("properties").as[Option[LegendConfig.Properties]]
+      } yield {
+        Spec.LegendConfig(
+          orient,
+          offset,
+          padding,
+          margin,
+          gradientStrokeColor,
+          gradientStrokeWidth,
+          gradientHeight,
+          gradientWidth,
+          labelAlign,
+          labelBaseline,
+          labelColor,
+          labelFont,
+          labelFontSize,
+          labelOffset,
+          shortTimeLabels,
+          symbolColor,
+          symbolShape,
+          symbolSize,
+          symbolStrokeWidth,
+          titleColor,
+          titleFont,
+          titleFontSize,
+          titleFontWeight,
+          properties)
+      }
+    }
     implicit val SpecLegendConfigPropertiesEncoder: Encoder[Spec.LegendConfig.Properties] = Encoder.instance(((wrapper: Spec.LegendConfig.Properties) => wrapper.x.asJson(anyEncoder)));
     implicit val SpecLegendConfigPropertiesDecoder: Decoder[Spec.LegendConfig.Properties] = Decoder.instance(((h: HCursor) => h.as[Any](anyDecoder).map(((x$6) => Spec.LegendConfig.Properties(x$6)))));
     implicit val SpecFacetConfigEncoder: Encoder[Spec.FacetConfig] = Encoder.instance(((cc: Spec.FacetConfig) => Json.obj(
@@ -2466,31 +2611,49 @@ object Spec {
       "axis".->(cc.axis.asJson),
       "grid".->(cc.grid.asJson),
       "cell".->(cc.cell.asJson))));
-    implicit val SpecFacetConfigDecoder: Decoder[Spec.FacetConfig] = Decoder.instance(((c: HCursor) => c.downField("scale").as[Option[FacetScaleConfig]]
-      .flatMap(((scale) => c.downField("axis").as[Option[AxisConfig]]
-        .flatMap(((axis) => c.downField("grid").as[Option[FacetGridConfig]]
-          .flatMap(((grid) => c.downField("cell").as[Option[CellConfig]].map(((cell) => Spec.FacetConfig(
-            scale,
-            axis,
-            grid,
-            cell)))))))))));
+    implicit val SpecFacetConfigDecoder: Decoder[Spec.FacetConfig] = Decoder.instance { (c: HCursor) =>
+      for {
+        scale <- c.downField("scale").as[Option[FacetScaleConfig]]
+        axis <- c.downField("axis").as[Option[AxisConfig]]
+        grid <- c.downField("grid").as[Option[FacetGridConfig]]
+        cell <- c.downField("cell").as[Option[CellConfig]]
+      } yield {
+        Spec.FacetConfig(
+          scale,
+          axis,
+          grid,
+          cell)
+      }
+    }
     implicit val SpecFacetScaleConfigEncoder: Encoder[Spec.FacetScaleConfig] = Encoder.instance(((cc: Spec.FacetScaleConfig) => Json.obj(
       "round".->(cc.round.asJson),
       "padding".->(cc.padding.asJson))));
-    implicit val SpecFacetScaleConfigDecoder: Decoder[Spec.FacetScaleConfig] = Decoder.instance(((c: HCursor) => c.downField("round").as[Option[Boolean]]
-      .flatMap(((round) => c.downField("padding").as[Option[Double]].map(((padding) => Spec.FacetScaleConfig(
-        round,
-        padding)))))));
+    implicit val SpecFacetScaleConfigDecoder: Decoder[Spec.FacetScaleConfig] = Decoder.instance { (c: HCursor) =>
+      for {
+        round <- c.downField("round").as[Option[Boolean]]
+        padding <- c.downField("padding").as[Option[Double]]
+      } yield {
+        Spec.FacetScaleConfig(
+          round,
+          padding)
+      }
+    }
     implicit val SpecFacetGridConfigEncoder: Encoder[Spec.FacetGridConfig] = Encoder.instance(((cc: Spec.FacetGridConfig) => Json.obj(
       "color".->(cc.color.asJson),
       "opacity".->(cc.opacity.asJson),
       "offset".->(cc.offset.asJson))));
-    implicit val SpecFacetGridConfigDecoder: Decoder[Spec.FacetGridConfig] = Decoder.instance(((c: HCursor) => c.downField("color").as[Option[String]]
-      .flatMap(((color) => c.downField("opacity").as[Option[Double]]
-        .flatMap(((opacity) => c.downField("offset").as[Option[Double]].map(((offset) => Spec.FacetGridConfig(
+    implicit val SpecFacetGridConfigDecoder: Decoder[Spec.FacetGridConfig] = Decoder.instance { (c: HCursor) =>
+      for {
+        color <- c.downField("color").as[Option[String]]
+        opacity <- c.downField("opacity").as[Option[Double]]
+        offset <- c.downField("offset").as[Option[Double]]
+      } yield {
+        Spec.FacetGridConfig(
           color,
           opacity,
-          offset)))))))));
+          offset)
+      }
+    }
     implicit val SpecFacetSpecEncoder: Encoder[Spec.FacetSpec] = Encoder.instance(((cc: Spec.FacetSpec) => Json.obj(
       "facet".->(cc.facet.asJson),
       "spec".->(cc.spec.asJson),
@@ -2499,20 +2662,27 @@ object Spec {
       "data".->(cc.data.asJson),
       "transform".->(cc.transform.asJson),
       "config".->(cc.config.asJson))));
-    implicit val SpecFacetSpecDecoder: Decoder[Spec.FacetSpec] = Decoder.instance(((c: HCursor) => c.downField("facet").as[Facet]
-      .flatMap(((facet) => c.downField("spec").as[FacetSpec.SpecUnion]
-        .flatMap(((spec) => c.downField("name").as[Option[String]]
-          .flatMap(((name) => c.downField("description").as[Option[String]]
-            .flatMap(((description) => c.downField("data").as[Option[Data]]
-              .flatMap(((data) => c.downField("transform").as[Option[Transform]]
-                .flatMap(((transform) => c.downField("config").as[Option[Config]].map(((config) => Spec.FacetSpec(
-                  facet,
-                  spec,
-                  name,
-                  description,
-                  data,
-                  transform,
-                  config)))))))))))))))));
+    implicit val SpecFacetSpecDecoder: Decoder[Spec.FacetSpec] = Decoder.instance { (c: HCursor) =>
+      for {
+        facet <- c.downField("facet").as[Facet]
+        spec <- c.downField("spec").as[FacetSpec.SpecUnion]
+        name <- c.downField("name").as[Option[String]]
+        description <- c.downField("description").as[Option[String]]
+        data <- c.downField("data").as[Option[Data]]
+        transform <- c.downField("transform").as[Option[Transform]]
+        config <- c.downField("config").as[Option[Config]]
+      } yield {
+
+        Spec.FacetSpec(
+          facet,
+          spec,
+          name,
+          description,
+          data,
+          transform,
+          config)
+      }
+    }
     implicit val SpecFacetSpecSpecUnionEncoder: Encoder[Spec.FacetSpec.SpecUnion] = Encoder.instance({
       case (ut @ ((_): Spec.FacetSpec.SpecLayerSpec)) => ut.x.asJson
       case (ut @ ((_): Spec.FacetSpec.SpecUnitSpec)) => ut.x.asJson
@@ -2521,10 +2691,16 @@ object Spec {
     implicit val SpecFacetEncoder: Encoder[Spec.Facet] = Encoder.instance(((cc: Spec.Facet) => Json.obj(
       "row".->(cc.row.asJson),
       "column".->(cc.column.asJson))));
-    implicit val SpecFacetDecoder: Decoder[Spec.Facet] = Decoder.instance(((c: HCursor) => c.downField("row").as[Option[PositionChannelDef]]
-      .flatMap(((row) => c.downField("column").as[Option[PositionChannelDef]].map(((column) => Spec.Facet(
-        row,
-        column)))))));
+    implicit val SpecFacetDecoder: Decoder[Spec.Facet] = Decoder.instance { (c: HCursor) =>
+      for {
+        row <- c.downField("row").as[Option[PositionChannelDef]]
+        column <- c.downField("column").as[Option[PositionChannelDef]]
+      } yield {
+        Spec.Facet(
+          row,
+          column)
+      }
+    }
     implicit val SpecLayerSpecEncoder: Encoder[Spec.LayerSpec] = Encoder.instance(((cc: Spec.LayerSpec) => Json.obj(
       "width".->(cc.width.asJson),
       "height".->(cc.height.asJson),
@@ -2534,22 +2710,29 @@ object Spec {
       "data".->(cc.data.asJson),
       "transform".->(cc.transform.asJson),
       "config".->(cc.config.asJson))));
-    implicit val SpecLayerSpecDecoder: Decoder[Spec.LayerSpec] = Decoder.instance(((c: HCursor) => c.downField("width").as[Option[Double]]
-      .flatMap(((width) => c.downField("height").as[Option[Double]]
-        .flatMap(((height) => c.downField("layers").as[List[UnitSpec]]
-          .flatMap(((layers) => c.downField("name").as[Option[String]]
-            .flatMap(((name) => c.downField("description").as[Option[String]]
-              .flatMap(((description) => c.downField("data").as[Option[Data]]
-                .flatMap(((data) => c.downField("transform").as[Option[Transform]]
-                  .flatMap(((transform) => c.downField("config").as[Option[Config]].map(((config) => Spec.LayerSpec(
-                    width,
-                    height,
-                    layers,
-                    name,
-                    description,
-                    data,
-                    transform,
-                    config)))))))))))))))))));
+    implicit val SpecLayerSpecDecoder: Decoder[Spec.LayerSpec] = Decoder.instance { (c: HCursor) =>
+      for {
+        width <- c.downField("width").as[Option[Double]]
+        height <- c.downField("height").as[Option[Double]]
+        layers <- c.downField("layers").as[List[UnitSpec]]
+        name <- c.downField("name").as[Option[String]]
+        description <- c.downField("description").as[Option[String]]
+        data <- c.downField("data").as[Option[Data]]
+        transform <- c.downField("transform").as[Option[Transform]]
+        config <- c.downField("config").as[Option[Config]]
+      } yield {
+        Spec.LayerSpec(
+          width,
+          height,
+          layers,
+          name,
+          description,
+          data,
+          transform,
+          config)
+      }
+    }
+
     implicit val SpecUnitSpecEncoder: Encoder[Spec.UnitSpec] = Encoder.instance(((cc: Spec.UnitSpec) => Json.obj(
       "width".->(cc.width.asJson),
       "height".->(cc.height.asJson),
@@ -2560,64 +2743,82 @@ object Spec {
       "data".->(cc.data.asJson),
       "transform".->(cc.transform.asJson),
       "config".->(cc.config.asJson))));
-    implicit val SpecUnitSpecDecoder: Decoder[Spec.UnitSpec] = Decoder.instance(((c: HCursor) => c.downField("width").as[Option[Double]]
-      .flatMap(((width) => c.downField("height").as[Option[Double]]
-        .flatMap(((height) => c.downField("mark").as[Mark]
-          .flatMap(((mark) => c.downField("encoding").as[Option[UnitEncoding]]
-            .flatMap(((encoding) => c.downField("name").as[Option[String]]
-              .flatMap(((name) => c.downField("description").as[Option[String]]
-                .flatMap(((description) => c.downField("data").as[Option[Data]]
-                  .flatMap(((data) => c.downField("transform").as[Option[Transform]]
-                    .flatMap(((transform) => c.downField("config").as[Option[Config]].map(((config) => Spec.UnitSpec(
-                      width,
-                      height,
-                      mark,
-                      encoding,
-                      name,
-                      description,
-                      data,
-                      transform,
-                      config)))))))))))))))))))));
-    implicit val SpecUnitEncodingEncoder: Encoder[Spec.UnitEncoding] = Encoder.instance(((cc: Spec.UnitEncoding) => Json.obj(
-      "x".->(cc.x.asJson),
-      "y".->(cc.y.asJson),
-      "x2".->(cc.x2.asJson),
-      "y2".->(cc.y2.asJson),
-      "color".->(cc.color.asJson),
-      "opacity".->(cc.opacity.asJson),
-      "size".->(cc.size.asJson),
-      "shape".->(cc.shape.asJson),
-      "detail".->(cc.detail.asJson),
-      "text".->(cc.text.asJson),
-      "label".->(cc.label.asJson),
-      "path".->(cc.path.asJson),
-      "order".->(cc.order.asJson))));
-    implicit val SpecUnitEncodingDecoder: Decoder[Spec.UnitEncoding] = Decoder.instance(((c: HCursor) => c.downField("x").as[Option[PositionChannelDef]]
-      .flatMap(((x) => c.downField("y").as[Option[PositionChannelDef]]
-        .flatMap(((y) => c.downField("x2").as[Option[FieldDef]]
-          .flatMap(((x2) => c.downField("y2").as[Option[FieldDef]]
-            .flatMap(((y2) => c.downField("color").as[Option[ChannelDefWithLegend]]
-              .flatMap(((color) => c.downField("opacity").as[Option[ChannelDefWithLegend]]
-                .flatMap(((opacity) => c.downField("size").as[Option[ChannelDefWithLegend]]
-                  .flatMap(((size) => c.downField("shape").as[Option[ChannelDefWithLegend]]
-                    .flatMap(((shape) => c.downField("detail").as[Option[UnitEncoding.DetailUnion]]
-                      .flatMap(((detail) => c.downField("text").as[Option[FieldDef]]
-                        .flatMap(((text) => c.downField("label").as[Option[FieldDef]]
-                          .flatMap(((label) => c.downField("path").as[Option[UnitEncoding.PathUnion]]
-                            .flatMap(((path) => c.downField("order").as[Option[UnitEncoding.OrderUnion]].map(((order) => Spec.UnitEncoding(
-                              x,
-                              y,
-                              x2,
-                              y2,
-                              color,
-                              opacity,
-                              size,
-                              shape,
-                              detail,
-                              text,
-                              label,
-                              path,
-                              order)))))))))))))))))))))))))))));
+    implicit val SpecUnitSpecDecoder: Decoder[Spec.UnitSpec] = Decoder.instance { (c: HCursor) =>
+      for {
+        width <- c.downField("width").as[Option[Double]]
+        height <- c.downField("height").as[Option[Double]]
+        mark <- c.downField("mark").as[Mark]
+        encoding <- c.downField("encoding").as[Option[UnitEncoding]]
+        name <- c.downField("name").as[Option[String]]
+        description <- c.downField("description").as[Option[String]]
+        data <- c.downField("data").as[Option[Data]]
+        transform <- c.downField("transform").as[Option[Transform]]
+        config <- c.downField("config").as[Option[Config]]
+      } yield {
+        Spec.UnitSpec(
+          width,
+          height,
+          mark,
+          encoding,
+          name,
+          description,
+          data,
+          transform,
+          config)
+      }
+    }
+
+    implicit val SpecUnitEncodingEncoder: Encoder[Spec.UnitEncoding] = Encoder.instance {
+      (cc: Spec.UnitEncoding) =>
+        Json.obj(
+          "x".->(cc.x.asJson),
+          "y".->(cc.y.asJson),
+          "x2".->(cc.x2.asJson),
+          "y2".->(cc.y2.asJson),
+          "color".->(cc.color.asJson),
+          "opacity".->(cc.opacity.asJson),
+          "size".->(cc.size.asJson),
+          "shape".->(cc.shape.asJson),
+          "detail".->(cc.detail.asJson),
+          "text".->(cc.text.asJson),
+          "label".->(cc.label.asJson),
+          "path".->(cc.path.asJson),
+          "order".->(cc.order.asJson))
+    }
+
+    implicit val SpecUnitEncodingDecoder: Decoder[Spec.UnitEncoding] = Decoder.instance { (c: HCursor) =>
+      for {
+        x <- c.downField("x").as[Option[PositionChannelDef]]
+        y <- c.downField("y").as[Option[PositionChannelDef]]
+        x2 <- c.downField("x2").as[Option[FieldDef]]
+        y2 <- c.downField("y2").as[Option[FieldDef]]
+        color <- c.downField("color").as[Option[ChannelDefWithLegend]]
+        opacity <- c.downField("opacity").as[Option[ChannelDefWithLegend]]
+        size <- c.downField("size").as[Option[ChannelDefWithLegend]]
+        shape <- c.downField("shape").as[Option[ChannelDefWithLegend]]
+        detail <- c.downField("detail").as[Option[UnitEncoding.DetailUnion]]
+        text <- c.downField("text").as[Option[FieldDef]]
+        label <- c.downField("label").as[Option[FieldDef]]
+        path <- c.downField("path").as[Option[UnitEncoding.PathUnion]]
+        order <- c.downField("order").as[Option[UnitEncoding.OrderUnion]]
+      } yield {
+        Spec.UnitEncoding(
+          x,
+          y,
+          x2,
+          y2,
+          color,
+          opacity,
+          size,
+          shape,
+          detail,
+          text,
+          label,
+          path,
+          order)
+      }
+    }
+
     implicit val SpecUnitEncodingDetailUnionEncoder: Encoder[Spec.UnitEncoding.DetailUnion] = Encoder.instance({
       case (ut @ ((_): Spec.UnitEncoding.DetailFieldDef)) => ut.x.asJson
       case (ut @ ((_): Spec.UnitEncoding.DetailListFieldDef)) => ut.x.asJson
