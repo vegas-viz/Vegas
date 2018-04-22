@@ -27,12 +27,10 @@ case class StaticHTMLRenderer(specJson: String) extends BaseHTMLRenderer {
   def plotHTML(name: String = this.defaultName) =
     s"""
        | <div id='$name'></div>
-       | <script>
-       |   var embedSpec = {
-       |     mode: "vega-lite",
-       |     spec: $specJson
-       |   }
-       |   vg.embed("#$name", embedSpec, function(error, result) {});
+       | <script type="text/javascript">
+       |   var embedSpec = $specJson;
+       |   embedSpec["$$schema"] = "https://vega.github.io/schema/vega-lite/v${WebJars("vega-lite")}.json"
+       |   vegaEmbed("#$name", embedSpec);
        | </script>
 
     """.stripMargin
