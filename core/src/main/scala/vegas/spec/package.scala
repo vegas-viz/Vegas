@@ -11,7 +11,18 @@ package object spec {
   val DropNullJsonPrinter = Printer.spaces2.copy(dropNullKeys = true)
 
   def toJson[T : Encoder](spec: T) = {
-    spec.asJson.pretty(DropNullJsonPrinter)
+    asJson(spec)
+      .pretty(DropNullJsonPrinter)
+  }
+
+  def asJson[T : Encoder](spec: T) = {
+    spec
+      .asJson
+      .deepMerge(
+        Json.obj(
+          ("$schema", Json.fromString("https://vega.github.io/schema/vega-lite/v2.json"))
+        )
+      )
   }
 
 }

@@ -53,7 +53,7 @@ case class ExtendedUnitSpecBuilder(spec: ExtendedUnitSpec) extends SpecBuilder w
   import vegas.spec.Spec.Implicits._
 
   def toJson = vegas.spec.toJson(spec)
-  def asCirceJson = spec.asJson
+  def asCirceJson = vegas.spec.asJson(spec)
 }
 
 /**
@@ -63,7 +63,7 @@ case class LayerSpecBuilder(spec: LayerSpec) extends SpecBuilder with LayerSpecD
   import vegas.spec.Spec.Implicits._
 
   def toJson = vegas.spec.toJson(spec)
-  def asCirceJson = spec.asJson
+  def asCirceJson = vegas.spec.asJson(spec)
 }
 
 /**
@@ -73,7 +73,7 @@ case class UnitSpecBuilder(spec: UnitSpec) extends SpecBuilder with UnitSpecDSL 
   import vegas.spec.Spec.Implicits._
 
   def toJson = vegas.spec.toJson(spec)
-  def asCirceJson = spec.asJson
+  def asCirceJson = vegas.spec.asJson(spec)
 }
 
 
@@ -159,4 +159,3 @@ trait UnitSpecDSL extends UnitEncoderDSL[UnitSpecBuilder] with DataDSL[UnitSpecB
   }
 
 }
-

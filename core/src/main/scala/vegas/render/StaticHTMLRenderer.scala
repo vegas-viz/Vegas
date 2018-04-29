@@ -29,7 +29,6 @@ case class StaticHTMLRenderer(specJson: String) extends BaseHTMLRenderer {
        | <div id='$name'></div>
        | <script type="text/javascript">
        |   var embedSpec = $specJson;
-       |   embedSpec["$$schema"] = "https://vega.github.io/schema/vega-lite/v${WebJars("vega-lite")}.json"
        |   vegaEmbed("#$name", embedSpec);
        | </script>
 

@@ -6,7 +6,7 @@ import scala.io.Source
 
 trait BaseHTMLRenderer {
 
-  protected val WebJars = Source.fromInputStream(getClass.getResourceAsStream("/webjars.csv"))
+  private val WebJars = Source.fromInputStream(getClass.getResourceAsStream("/webjars.csv"))
     .getLines
     .map { l => val row = l.split(","); (row(0), row(1)) }
     .toMap
