@@ -101,7 +101,7 @@ object BasicPlots {
         scale=Scale(rangeStep=12.0)).
       encodeColor(field="year", dataType=Nominal)
 
-  val CustomShapePlot =
+  val PointShapeCustom =
     Vegas("A scatterplot with custom star shapes.").
       withURL(Cars).
       mark(Point).
@@ -109,7 +109,7 @@ object BasicPlots {
       encodeY("Miles_per_Gallon", Quant).
       encodeColor("Cylinders", Nom).
       encodeSize("Weight_in_lbs", Quant).
-      configMark(customShape="M0,0.2L0.2351,0.3236 0.1902,0.0618 0.3804,-0.1236 0.1175,-0.1618 0,-0.4 -0.1175,-0.1618 -0.3804,-0.1236 -0.1902,0.0618 -0.2351,0.3236 0,0.2Z")
+      encodeShape(value="M0,0.2L0.2351,0.3236 0.1902,0.0618 0.3804,-0.1236 0.1175,-0.1618 0,-0.4 -0.1175,-0.1618 -0.3804,-0.1236 -0.1902,0.0618 -0.2351,0.3236 0,0.2Z")
 
   val ScatterAggregateDetail =
     Vegas("A scatterplot showing average horsepower and displacement for cars from different origins.").
@@ -216,7 +216,7 @@ object BasicPlots {
     "scatter_binned_color" -> ScatterBinnedColorPlot,
     "trellis_barley" -> SortColorPlot,
     "trellis_scatter_binned_row" -> BinnedChart,
-    "scatter_shape_custom" -> CustomShapePlot,
+    "point_shape_custom" -> PointShapeCustom,
     "line_detail" -> LineDetail,
     "github_punchcard" -> GithubPunchCard,
     "trellis_anscombe" -> TrellisAnscombe,
