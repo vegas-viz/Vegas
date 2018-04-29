@@ -193,12 +193,12 @@ object BasicPlots {
       configCell(width = 300, height = 200).
       configMark(stacked = StackOffset.Center)
 
-  val StackedBarChart =
+  val StackedBarWeather =
     Vegas().
-      withURL(SeattleWeather, formatType = DataFormat.Csv).
+      withURL(SeattleWeather).
       mark(Bar).
-      encodeX("date", Temporal, timeUnit = TimeUnit.Month, axis = Axis(title = "Month of the year")).
-      encodeY("*", Quantitative, aggregate = AggOps.Count).
+      encodeX("date", Ordinal, timeUnit = TimeUnit.Month, axis = Axis(title = "Month of the year")).
+      encodeY(dataType = Quantitative, aggregate = AggOps.Count).
       encodeColor("weather", Nominal, scale = Scale(
         domainNominals = List("sun", "fog", "drizzle", "rain", "snow"),
         rangeNominals = List("#e7ba52", "#c7c7c7", "#aec7e8", "#1f77b4", "#9467bd")),
@@ -232,7 +232,7 @@ object BasicPlots {
     "stacked_area" -> StackedAreaChart,
     "stacked_area_normalize" -> NormalizedStackedAreaChart,
     "stacked_area_stream" -> Streamgraph,
-    "stacked_bar_weather" -> StackedBarChart,
+    "stacked_bar_weather" -> StackedBarWeather,
     "tick_strip" -> StripPlot
   ).sortBy(_._1)
 
