@@ -98,12 +98,15 @@ object BasicPlots {
       encodeColor(field="Cylinders", dataType=Nominal)
 
   val SortColorPlot =
-    Vegas("The Trellis display by Becker et al. helped establish small multiples as a “powerful mechanism for understanding interactions in studies of how a response depends on explanatory variables”. Here we reproduce a trellis of Barley yields from the 1930s, complete with main-effects ordering to facilitate comparison.").
+    Vegas(name="trellis_barley", description="The Trellis display by Becker et al. helped establish small multiples as a “powerful mechanism for understanding interactions in studies of how a response depends on explanatory variables”. Here we reproduce a trellis of Barley yields from the 1930s, complete with main-effects ordering to facilitate comparison.").
       withURL(Barley).
       mark(Point).
       encodeRow("site", Ordinal).
-      encodeX("yield", Quantitative, aggregate=AggOps.Mean).
-      encodeY("variety", Ordinal, sortField=Sort("yield", AggOps.Mean), scale=Scale(rangeStep = 12.0)).
+      encodeX("yield", Quantitative, aggregate=AggOps.Median, scale=Scale(zero=false)).
+      encodeY(
+        "variety", Ordinal,
+        sortField=Sort("yield", AggOps.Median, SortOrder.Descending),
+        scale=Scale(rangeStep=12.0)).
       encodeColor(field="year", dataType=Nominal)
 
   val CustomShapePlot =
