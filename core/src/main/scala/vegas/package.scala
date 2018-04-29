@@ -72,7 +72,7 @@ package object vegas {
   val Shape = Spec.ShapeEnums
   val FontStyle = Spec.FontStyleEnums
   val FontWeight = Spec.FontWeightEnums
-  val BandSize = Spec.BandSizeEnums
+  val RangeStep = Spec.RangeStepEnums
 
   val AreaOverlay = Spec.AreaOverlayEnums
 

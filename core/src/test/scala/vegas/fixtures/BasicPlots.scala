@@ -22,7 +22,7 @@ object BasicPlots {
       withURL(Population).
       mark(Bar).
       filter("datum.year == 2000").
-      encodeY("age", Ordinal, scale=Scale(bandSize=17)).
+      encodeY("age", Ordinal, scale=Scale(rangeStep = 17)).
       encodeX("people", Quantitative, aggregate=AggOps.Sum, axis=Axis(title="population"))
 
   val GroupedBarChart =
@@ -33,7 +33,7 @@ object BasicPlots {
       filter("datum.year == 2000").
       encodeColumn("age", Ord, scale=Scale(padding=4.0), axis=Axis(orient=Orient.Bottom, axisWidth=1.0, offset= -8.0)).
       encodeY("people", Quantitative, aggregate=AggOps.Sum, axis=Axis(title="population", grid=false)).
-      encodeX("gender", Nominal, scale=Scale(bandSize = 6.0), hideAxis=true).
+      encodeX("gender", Nominal, scale=Scale(rangeStep = 6.0), hideAxis=true).
       encodeColor("gender", Nominal, scale=Scale(rangeNominals=List("#EA98D2", "#659CCA"))).
       configFacet(cell=CellConfig(strokeWidth = 0))
 
@@ -53,7 +53,7 @@ object BasicPlots {
       addTransform("gender", "datum.sex == 2 ? \"Female\" : \"Male\"").
       mark(Bar).
       encodeY("people", Quant, AggOps.Sum, axis=Axis(title="population")).
-      encodeX("age", Ord, scale=Scale(bandSize= 17)).
+      encodeX("age", Ord, scale=Scale(rangeStep = 17)).
       encodeColor("gender", Nominal, scale=Scale(rangeNominals=List("#EA98D2", "#659CCA"))).
       configMark(stacked=StackOffset.Normalize)
 
@@ -103,7 +103,7 @@ object BasicPlots {
       mark(Point).
       encodeRow("site", Ordinal).
       encodeX("yield", Quantitative, aggregate=AggOps.Mean).
-      encodeY("variety", Ordinal, sortField=Sort("yield", AggOps.Mean), scale=Scale(bandSize = 12.0)).
+      encodeY("variety", Ordinal, sortField=Sort("yield", AggOps.Mean), scale=Scale(rangeStep = 12.0)).
       encodeColor(field="year", dataType=Nominal)
 
   val CustomShapePlot =

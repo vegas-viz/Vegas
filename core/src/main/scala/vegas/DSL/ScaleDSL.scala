@@ -1,7 +1,7 @@
 package vegas.DSL
 
 import vegas.spec.Spec
-import vegas.spec.Spec.{BandSize, Scale, ScaleType}
+import vegas.spec.Spec.{RangeStep, Scale, ScaleType}
 
 object ScaleDSL {
 
@@ -12,8 +12,8 @@ object ScaleDSL {
             rangeNominals: OptArg[List[String]] = NoArg,
             rangePreset: OptArg[String] = NoArg,
             round: OptArg[Boolean] = NoArg,
-            bandSize: OptArg[Double] = NoArg,
-            bandSizePreset: OptArg[BandSize] = NoArg,
+            rangeStep: OptArg[Double] = NoArg,
+            rangeStepPreset: OptArg[RangeStep] = NoArg,
             padding: OptArg[Double] = NoArg,
             clamp: OptArg[Boolean] = NoArg,
             nice: OptArg[Spec.NiceTime] = NoArg,
@@ -29,9 +29,9 @@ object ScaleDSL {
 
     val niceU = (nice.map(Scale.NiceNiceTime(_)) orElse niceEnable.map(Scale.NiceBoolean(_)))
 
-    val bandSizeU = (bandSize.map(Scale.BandSizeDouble(_)) orElse bandSizePreset.map(Scale.BandSizeBandSize(_)))
+    val rangeStepU = (rangeStep.map(Scale.RangeStepDouble(_)) orElse rangeStepPreset.map(Scale.RangeStepRangeStep(_)))
 
-    Spec.Scale(`type`=scaleType, domain=domainU, range=rangeU, round=round, bandSize=bandSizeU, padding=padding,
+    Spec.Scale(`type`=scaleType, domain=domainU, range=rangeU, round=round, rangeStep=rangeStepU, padding=padding,
       clamp=clamp, nice=niceU, exponent=exponent, zero=zero, useRawDomain=useRawDomain)
   }
 

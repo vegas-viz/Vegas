@@ -166,7 +166,7 @@ object Spec {
     domain: Option[Scale.DomainUnion] = None,
     range: Option[Scale.RangeUnion] = None,
     round: Option[Boolean] = None,
-    bandSize: Option[Scale.BandSizeUnion] = None,
+    rangeStep: Option[Scale.RangeStepUnion] = None,
     padding: Option[Double] = None,
     clamp: Option[Boolean] = None,
     nice: Option[Scale.NiceUnion] = None,
@@ -181,9 +181,9 @@ object Spec {
     case class RangeString(x: String) extends RangeUnion;
     case class RangeListDouble(x: List[Double]) extends RangeUnion;
     case class RangeListString(x: List[String]) extends RangeUnion;
-    @union sealed trait BandSizeUnion extends scala.Product with scala.Serializable;
-    case class BandSizeDouble(x: Double) extends BandSizeUnion;
-    case class BandSizeBandSize(x: BandSize) extends BandSizeUnion;
+    @union sealed trait RangeStepUnion extends scala.Product with scala.Serializable;
+    case class RangeStepDouble(x: Double) extends RangeStepUnion;
+    case class RangeStepRangeStep(x: RangeStep) extends RangeStepUnion;
     @union sealed trait NiceUnion extends scala.Product with scala.Serializable;
     case class NiceBoolean(x: Boolean) extends NiceUnion;
     case class NiceNiceTime(x: NiceTime) extends NiceUnion
@@ -220,11 +220,11 @@ object Spec {
       val json: String = "\"utc\""
     }
   };
-  @enum sealed trait BandSize extends scala.Product with scala.Serializable {
+  @enum sealed trait RangeStep extends scala.Product with scala.Serializable {
     def json: String
   };
-  object BandSizeEnums {
-    case object Fit extends BandSize with scala.Product with scala.Serializable {
+  object RangeStepEnums {
+    case object Fit extends RangeStep with scala.Product with scala.Serializable {
       val json: String = "\"fit\""
     }
   };
@@ -853,7 +853,7 @@ object Spec {
   case class ScaleConfig(
     round: Option[Boolean] = None,
     textBandWidth: Option[Double] = None,
-    bandSize: Option[ScaleConfig.BandSizeUnion] = None,
+    rangeStep: Option[ScaleConfig.RangeStepUnion] = None,
     opacity: Option[List[Double]] = None,
     padding: Option[Double] = None,
     useRawDomain: Option[Boolean] = None,
@@ -866,9 +866,9 @@ object Spec {
     tickSizeRange: Option[List[Double]] = None,
     pointSizeRange: Option[List[Double]] = None);
   object ScaleConfig {
-    @union sealed trait BandSizeUnion extends scala.Product with scala.Serializable;
-    case class BandSizeDouble(x: Double) extends BandSizeUnion;
-    case class BandSizeBandSize(x: BandSize) extends BandSizeUnion;
+    @union sealed trait RangeStepUnion extends scala.Product with scala.Serializable;
+    case class RangeStepDouble(x: Double) extends RangeStepUnion;
+    case class RangeStepRangeStep(x: RangeStep) extends RangeStepUnion;
     @union sealed trait NominalColorRangeUnion extends scala.Product with scala.Serializable;
     case class NominalColorRangeString(x: String) extends NominalColorRangeUnion;
     case class NominalColorRangeListString(x: List[String]) extends NominalColorRangeUnion;
@@ -1387,7 +1387,7 @@ object Spec {
       "domain".->(cc.domain.asJson),
       "range".->(cc.range.asJson),
       "round".->(cc.round.asJson),
-      "bandSize".->(cc.bandSize.asJson),
+      "rangeStep".->(cc.rangeStep.asJson),
       "padding".->(cc.padding.asJson),
       "clamp".->(cc.clamp.asJson),
       "nice".->(cc.nice.asJson),
@@ -1400,7 +1400,7 @@ object Spec {
         domain <- c.downField("domain").as[Option[Scale.DomainUnion]]
         range <- c.downField("range").as[Option[Scale.RangeUnion]]
         round <- c.downField("round").as[Option[Boolean]]
-        bandSize <- c.downField("bandSize").as[Option[Scale.BandSizeUnion]]
+        rangeStep <- c.downField("rangeStep").as[Option[Scale.RangeStepUnion]]
         padding <- c.downField("padding").as[Option[Double]]
         clamp <- c.downField("clamp").as[Option[Boolean]]
         nice <- c.downField("nice").as[Option[Scale.NiceUnion]]
@@ -1413,7 +1413,7 @@ object Spec {
           domain,
           range,
           round,
-          bandSize,
+          rangeStep,
           padding,
           clamp,
           nice,
@@ -1433,11 +1433,11 @@ object Spec {
       case (ut @ ((_): Spec.Scale.RangeListString)) => ut.x.asJson
     });
     implicit val SpecScaleRangeUnionDecoder: Decoder[Spec.Scale.RangeUnion] = Decoder.instance(((c: HCursor) => c.as[String].map(((x) => Spec.Scale.RangeString(x))).orElse(c.as[List[Double]].map(((x) => Spec.Scale.RangeListDouble(x)))).orElse(c.as[List[String]].map(((x) => Spec.Scale.RangeListString(x))))));
-    implicit val SpecScaleBandSizeUnionEncoder: Encoder[Spec.Scale.BandSizeUnion] = Encoder.instance({
-      case (ut @ ((_): Spec.Scale.BandSizeDouble)) => ut.x.asJson
-      case (ut @ ((_): Spec.Scale.BandSizeBandSize)) => ut.x.asJson
+    implicit val SpecScaleRangeStepUnionEncoder: Encoder[Spec.Scale.RangeStepUnion] = Encoder.instance({
+      case (ut @ ((_): Spec.Scale.RangeStepDouble)) => ut.x.asJson
+      case (ut @ ((_): Spec.Scale.RangeStepRangeStep)) => ut.x.asJson
     });
-    implicit val SpecScaleBandSizeUnionDecoder: Decoder[Spec.Scale.BandSizeUnion] = Decoder.instance(((c: HCursor) => c.as[Double].map(((x) => Spec.Scale.BandSizeDouble(x))).orElse(c.as[BandSize].map(((x) => Spec.Scale.BandSizeBandSize(x))))));
+    implicit val SpecScaleRangeStepUnionDecoder: Decoder[Spec.Scale.RangeStepUnion] = Decoder.instance(((c: HCursor) => c.as[Double].map(((x) => Spec.Scale.RangeStepDouble(x))).orElse(c.as[RangeStep].map(((x) => Spec.Scale.RangeStepRangeStep(x))))));
     implicit val SpecScaleNiceUnionEncoder: Encoder[Spec.Scale.NiceUnion] = Encoder.instance({
       case (ut @ ((_): Spec.Scale.NiceBoolean)) => ut.x.asJson
       case (ut @ ((_): Spec.Scale.NiceNiceTime)) => ut.x.asJson
@@ -1459,10 +1459,10 @@ object Spec {
           "Couldn\'t find enum:".+(json.toString),
           c.history))
       }).map(((singleton) => singleton))))));
-    implicit val SpecBandSizeEncoder: Encoder[Spec.BandSize] = Encoder.instance(((e: Spec.BandSize) => parser.parse(e.json).toOption.get));
-    implicit val SpecBandSizeDecoder: Decoder[Spec.BandSize] = Decoder.instance(((c: HCursor) => c.as[Json]
+    implicit val SpecRangeStepEncoder: Encoder[Spec.RangeStep] = Encoder.instance(((e: Spec.RangeStep) => parser.parse(e.json).toOption.get));
+    implicit val SpecRangeStepDecoder: Decoder[Spec.RangeStep] = Decoder.instance(((c: HCursor) => c.as[Json]
       .flatMap(((json) => (json match {
-        case (j @ _) if j.==(parser.parse("\"fit\"").toOption.get) => Either.right(Spec.BandSizeEnums.Fit)
+        case (j @ _) if j.==(parser.parse("\"fit\"").toOption.get) => Either.right(Spec.RangeStepEnums.Fit)
         case _ => Either.left(DecodingFailure(
           "Couldn\'t find enum:".+(json.toString),
           c.history))
@@ -2338,7 +2338,7 @@ object Spec {
     implicit val SpecScaleConfigEncoder: Encoder[Spec.ScaleConfig] = Encoder.instance(((cc: Spec.ScaleConfig) => Json.obj(
       "round".->(cc.round.asJson),
       "textBandWidth".->(cc.textBandWidth.asJson),
-      "bandSize".->(cc.bandSize.asJson),
+      "rangeStep".->(cc.rangeStep.asJson),
       "opacity".->(cc.opacity.asJson),
       "padding".->(cc.padding.asJson),
       "useRawDomain".->(cc.useRawDomain.asJson),
@@ -2354,7 +2354,7 @@ object Spec {
       for {
         round <- c.downField("round").as[Option[Boolean]]
         textBandWidth <- c.downField("textBandWidth").as[Option[Double]]
-        bandSize <- c.downField("bandSize").as[Option[ScaleConfig.BandSizeUnion]]
+        rangeStep <- c.downField("rangeStep").as[Option[ScaleConfig.RangeStepUnion]]
         opacity <- c.downField("opacity").as[Option[List[Double]]]
         padding <- c.downField("padding").as[Option[Double]]
         useRawDomain <- c.downField("useRawDomain").as[Option[Boolean]]
@@ -2370,7 +2370,7 @@ object Spec {
         Spec.ScaleConfig(
           round,
           textBandWidth,
-          bandSize,
+          rangeStep,
           opacity,
           padding,
           useRawDomain,
@@ -2384,11 +2384,11 @@ object Spec {
           pointSizeRange)
       }
     }
-    implicit val SpecScaleConfigBandSizeUnionEncoder: Encoder[Spec.ScaleConfig.BandSizeUnion] = Encoder.instance({
-      case (ut @ ((_): Spec.ScaleConfig.BandSizeDouble)) => ut.x.asJson
-      case (ut @ ((_): Spec.ScaleConfig.BandSizeBandSize)) => ut.x.asJson
+    implicit val SpecScaleConfigRangeStepUnionEncoder: Encoder[Spec.ScaleConfig.RangeStepUnion] = Encoder.instance({
+      case (ut @ ((_): Spec.ScaleConfig.RangeStepDouble)) => ut.x.asJson
+      case (ut @ ((_): Spec.ScaleConfig.RangeStepRangeStep)) => ut.x.asJson
     });
-    implicit val SpecScaleConfigBandSizeUnionDecoder: Decoder[Spec.ScaleConfig.BandSizeUnion] = Decoder.instance(((c: HCursor) => c.as[Double].map(((x) => Spec.ScaleConfig.BandSizeDouble(x))).orElse(c.as[BandSize].map(((x) => Spec.ScaleConfig.BandSizeBandSize(x))))));
+    implicit val SpecScaleConfigRangeStepUnionDecoder: Decoder[Spec.ScaleConfig.RangeStepUnion] = Decoder.instance(((c: HCursor) => c.as[Double].map(((x) => Spec.ScaleConfig.RangeStepDouble(x))).orElse(c.as[RangeStep].map(((x) => Spec.ScaleConfig.RangeStepRangeStep(x))))));
     implicit val SpecScaleConfigNominalColorRangeUnionEncoder: Encoder[Spec.ScaleConfig.NominalColorRangeUnion] = Encoder.instance({
       case (ut @ ((_): Spec.ScaleConfig.NominalColorRangeString)) => ut.x.asJson
       case (ut @ ((_): Spec.ScaleConfig.NominalColorRangeListString)) => ut.x.asJson
