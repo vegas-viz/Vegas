@@ -1,12 +1,14 @@
 {
-  "data": {"url": "data/stocks.csv","format": {"type": "csv"}},
-  "layers": [
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+  "description": "Stock prices of 5 Tech Companies over Time with Averages.",
+  "data": {"url": "data/stocks.csv"},
+  "layer": [
     {
       "mark": "line",
       "encoding": {
-        "x": {"field": "date","type": "temporal"},
-        "y": {"field": "price","type": "quantitative"},
-        "color": {"field": "symbol","type": "nominal"}
+        "x": {"field": "date", "type": "temporal"},
+        "y": {"field": "price", "type": "quantitative"},
+        "color": {"field": "symbol", "type": "nominal"}
       }
     },
     {
@@ -18,9 +20,8 @@
           "aggregate": "mean"
         },
         "size": {"value": 2},
-        "color": {"field": "symbol","type": "nominal"}
-      },
-      "config": {"mark": {"opacity": 0.5}}
+        "color": {"field": "symbol", "type": "nominal"}
+      }
     }
   ]
 }

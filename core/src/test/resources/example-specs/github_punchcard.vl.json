@@ -1,8 +1,5 @@
 {
-  "data": {
-    "url": "data/github.csv",
-    "format": { "type": "csv" }
-  },
+  "data": { "url": "data/github.csv"},
   "mark": "circle",
   "encoding": {
     "y": {

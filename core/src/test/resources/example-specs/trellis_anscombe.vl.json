@@ -1,4 +1,5 @@
 {
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
   "description": "Anscombe's Quartet",
   "data": {"url": "data/anscombe.json"},
   "mark": "circle",
@@ -13,7 +14,7 @@
       "field": "Y",
       "type": "quantitative",
       "scale": {"zero": false}
-    }
-  },
-  "config": {"mark": {"opacity": 1}}
+    },
+    "opacity": {"value": 1}
+  }
 }
