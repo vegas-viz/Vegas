@@ -143,14 +143,14 @@ object BasicPlots {
       encodeY("time", Temporal, timeUnit = TimeUnit.Day).
       encodeSize("count", Quantitative, aggregate = AggOps.Sum)
 
-  val AnscombesQuartet =
+  val TrellisAnscombe =
     Vegas("Anscombe's Quartet").
       withURL(Anscombe).
       mark(Circle).
       encodeX("X", Quantitative, scale = Scale(zero = false)).
       encodeY("Y", Quantitative, scale = Scale(zero = false)).
       encodeColumn("Series", Nominal).
-      configMark(opacity = 1)
+      encodeOpacity(value = 1)
 
   val StackedAreaChart =
     Vegas("Area chart showing weight of cars over time.").
@@ -228,7 +228,7 @@ object BasicPlots {
     "scatter_shape_custom" -> CustomShapePlot,
     "line_detail" -> LineDetail,
     "github_punchcard" -> GithubPunchCard,
-    "trellis_anscombe" -> AnscombesQuartet,
+    "trellis_anscombe" -> TrellisAnscombe,
     "stacked_area" -> StackedAreaChart,
     "stacked_area_normalize" -> NormalizedStackedAreaChart,
     "stacked_area_stream" -> Streamgraph,
