@@ -89,14 +89,6 @@ object BasicPlots {
       encodeY("Miles_per_Gallon", Quantitative).
       encodeColor(field="Acceleration", dataType=Quantitative, bin=Bin(maxbins=5.0))
 
-  val StackedAreaBinnedPlot =
-    Vegas().
-      withURL(Cars).
-      mark(Area).
-      encodeX("Acceleration", Quantitative, bin=Bin()).
-      encodeY("Horsepower", Quantitative, AggOps.Mean, enableBin=false).
-      encodeColor(field="Cylinders", dataType=Nominal)
-
   val SortColorPlot =
     Vegas(name="trellis_barley", description="The Trellis display by Becker et al. helped establish small multiples as a “powerful mechanism for understanding interactions in studies of how a response depends on explanatory variables”. Here we reproduce a trellis of Barley yields from the 1930s, complete with main-effects ordering to facilitate comparison.").
       withURL(Barley).
@@ -222,7 +214,6 @@ object BasicPlots {
     "scatter_binned" -> ScatterBinnedPlot,
     "scatter_color" -> ScatterColorPlot,
     "scatter_binned_color" -> ScatterBinnedColorPlot,
-    "stacked_area_binned" -> StackedAreaBinnedPlot,
     "trellis_barley" -> SortColorPlot,
     "trellis_scatter_binned_row" -> BinnedChart,
     "scatter_shape_custom" -> CustomShapePlot,
