@@ -127,10 +127,10 @@ object BasicPlots {
 
   val GithubPunchCard =
     Vegas().
-      withURL(Github, formatType = DataFormat.Csv).
+      withURL(Github).
       mark(Circle).
-      encodeX("time", Temporal, timeUnit = TimeUnit.Hours).
-      encodeY("time", Temporal, timeUnit = TimeUnit.Day).
+      encodeX("time", Ordinal, timeUnit = TimeUnit.Hours).
+      encodeY("time", Ordinal, timeUnit = TimeUnit.Day).
       encodeSize("count", Quantitative, aggregate = AggOps.Sum)
 
   val TrellisAnscombe =
