@@ -85,7 +85,7 @@ object BasicPlots {
       mark(Point).
       encodeX("Horsepower", Quantitative).
       encodeY("Miles_per_Gallon", Quantitative).
-      encodeColor(field="Acceleration", dataType=Quantitative, bin=Bin(maxbins=5.0))
+      encodeColor(field="Acceleration", dataType=Quantitative, enableBin=true)
 
   val SortColorPlot =
     Vegas(name="trellis_barley", description="The Trellis display by Becker et al. helped establish small multiples as a “powerful mechanism for understanding interactions in studies of how a response depends on explanatory variables”. Here we reproduce a trellis of Barley yields from the 1930s, complete with main-effects ordering to facilitate comparison.").
@@ -168,16 +168,14 @@ object BasicPlots {
       configMark(stacked = StackOffset.Normalize)
 
   val Streamgraph =
-    Vegas().
+    Vegas(width = 300, height = 200).
       withURL(Unemployment).
       mark(Area).
       encodeX(
         "date", Temporal, timeUnit = TimeUnit.Yearmonth,
-        axis = Axis(axisWidth = 0, format = "%Y", labelAngle = 0, tickSize = Some(0.0)),
-        scale = Scale(nice = spec.Spec.NiceTimeEnums.Month)
+        axis = Axis(format = "%Y", tickSize = Some(0.0))
       ).
       encodeY("count", Quantitative, aggregate = AggOps.Sum, hideAxis = Some(true)).
-      configCell(width = 300, height = 200).
       encodeColor("series", Nominal, scale = Scale(scheme = Category20b)).
       configMark(stacked = StackOffset.Center)
 
