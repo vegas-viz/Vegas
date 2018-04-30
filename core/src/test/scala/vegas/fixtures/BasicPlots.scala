@@ -63,13 +63,13 @@ object BasicPlots {
       encodeY("Miles_per_Gallon", Quantitative).
       encodeRow("Acceleration", Quantitative, enableBin=true)
 
-  val ScatterBinnedPlot =
+  val CircleBinnedPlot =
     Vegas().
       withURL(Movies).
-      mark(Point).
+      mark(Circle).
       encodeX("IMDB_Rating", Quantitative, bin=Bin(maxbins=10.0)).
       encodeY("Rotten_Tomatoes_Rating", Quantitative, bin=Bin(maxbins=10.0)).
-      encodeSize(aggregate=AggOps.Count, field="*", dataType=Quantitative)
+      encodeSize(aggregate=AggOps.Count, dataType=Quantitative)
 
   val ScatterColorPlot =
     Vegas().
