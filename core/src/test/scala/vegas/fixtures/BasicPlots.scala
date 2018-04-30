@@ -119,9 +119,9 @@ object BasicPlots {
 
   val LineDetail =
     Vegas("Stock prices of 5 Tech Companies Over Time.").
-      withURL(Stocks, formatType = DataFormat.Csv).
+      withURL(Stocks).
       mark(Line).
-      encodeX("date", Temp).
+      encodeX("date", Temp, axis=Axis(format="%Y")).
       encodeY("price", Quant).
       encodeDetailFields(Field(field="symbol", dataType=Nominal))
 
