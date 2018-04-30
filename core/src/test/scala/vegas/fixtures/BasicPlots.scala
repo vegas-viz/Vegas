@@ -143,17 +143,15 @@ object BasicPlots {
       encodeOpacity(value = 1)
 
   val StackedAreaChart =
-    Vegas("Area chart showing weight of cars over time.").
+    Vegas("Area chart showing weight of cars over time.", width = 300, height = 200).
       withURL(Unemployment).
       mark(Area).
       encodeX(
         "date", Temporal, timeUnit = TimeUnit.Yearmonth,
-        axis = Axis(axisWidth = 0, format = "%Y", labelAngle = 0),
-        scale = Scale(nice = spec.Spec.NiceTimeEnums.Month)
+        axis = Axis(format = "%Y")
       ).
       encodeY("count", Quantitative, aggregate = AggOps.Sum).
-      encodeColor("series", Nominal, scale = Scale(rangePreset = Category20b)).
-      configCell(width = 300, height = 200)
+      encodeColor("series", Nominal, scale = Scale(scheme = Category20b))
 
   val NormalizedStackedAreaChart =
     Vegas().
