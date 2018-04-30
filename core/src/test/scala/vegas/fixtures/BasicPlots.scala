@@ -38,13 +38,11 @@ object BasicPlots {
       configFacet(cell=CellConfig(strokeWidth = 0))
 
   val AreaChart =
-    Vegas().
+    Vegas(width=300, height=200).
       withURL(Unemployment).
       mark(Area).
-      encodeX("date", Temp, timeUnit=TimeUnit.Yearmonth, scale=Scale(nice=Nice.Month),
-        axis=Axis(axisWidth=0, format="%Y", labelAngle=0)).
-      encodeY("count", Quantitative, aggregate=AggOps.Sum).
-      configCell(width=300, height=200)
+      encodeX("date", Temp, timeUnit=TimeUnit.Yearmonth, axis=Axis(format="%Y")).
+      encodeY("count", Quantitative, aggregate=AggOps.Sum, axis=Axis(title="count"))
 
   val NormalizedStackedBarChart =
     Vegas().
