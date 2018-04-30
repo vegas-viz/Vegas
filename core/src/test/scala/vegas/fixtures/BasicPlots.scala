@@ -163,7 +163,7 @@ object BasicPlots {
         scale = Scale(nice = spec.Spec.NiceTimeEnums.Month)
       ).
       encodeY("count", Quantitative, aggregate = AggOps.Sum, hideAxis = Some(true)).
-      encodeColor("series", Nominal, scale = Scale(rangePreset = Category20b)).
+      encodeColor("series", Nominal, scale = Scale(scheme = Category20b)).
       configCell(width = 300, height = 200).
       configMark(stacked = StackOffset.Normalize)
 
@@ -177,8 +177,8 @@ object BasicPlots {
         scale = Scale(nice = spec.Spec.NiceTimeEnums.Month)
       ).
       encodeY("count", Quantitative, aggregate = AggOps.Sum, hideAxis = Some(true)).
-      encodeColor("series", Nominal, scale = Scale(rangePreset = Category20b)).
       configCell(width = 300, height = 200).
+      encodeColor("series", Nominal, scale = Scale(scheme = Category20b)).
       configMark(stacked = StackOffset.Center)
 
   val StackedBarWeather =

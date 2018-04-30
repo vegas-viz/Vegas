@@ -20,7 +20,8 @@ object ScaleDSL {
             niceEnable: OptArg[Boolean] = NoArg,
             exponent: OptArg[Double] = NoArg,
             zero: OptArg[Boolean] = NoArg,
-            useRawDomain: OptArg[Boolean] = NoArg) = {
+            useRawDomain: OptArg[Boolean] = NoArg,
+            scheme: OptArg[String] = NoArg) = {
 
     val domainU = (domainValues.map(Scale.DomainListDouble(_)) orElse domainNominals.map(Scale.DomainListString(_)))
 
@@ -32,7 +33,7 @@ object ScaleDSL {
     val rangeStepU = (rangeStep.map(Scale.RangeStepDouble(_)) orElse rangeStepPreset.map(Scale.RangeStepRangeStep(_)))
 
     Spec.Scale(`type`=scaleType, domain=domainU, range=rangeU, round=round, rangeStep=rangeStepU, padding=padding,
-      clamp=clamp, nice=niceU, exponent=exponent, zero=zero, useRawDomain=useRawDomain)
+      clamp=clamp, nice=niceU, exponent=exponent, zero=zero, useRawDomain=useRawDomain, scheme=scheme)
   }
 
 }

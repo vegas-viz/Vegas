@@ -172,7 +172,9 @@ object Spec {
     nice: Option[Scale.NiceUnion] = None,
     exponent: Option[Double] = None,
     zero: Option[Boolean] = None,
-    useRawDomain: Option[Boolean] = None);
+    useRawDomain: Option[Boolean] = None,
+    scheme: Option[String] = None
+  );
   object Scale {
     @union sealed trait DomainUnion extends scala.Product with scala.Serializable;
     case class DomainListDouble(x: List[Double]) extends DomainUnion;
@@ -1393,7 +1395,9 @@ object Spec {
       "nice".->(cc.nice.asJson),
       "exponent".->(cc.exponent.asJson),
       "zero".->(cc.zero.asJson),
-      "useRawDomain".->(cc.useRawDomain.asJson))));
+      "useRawDomain".->(cc.useRawDomain.asJson),
+      "scheme".->(cc.scheme.asJson)
+    )));
     implicit val SpecScaleDecoder: Decoder[Spec.Scale] = Decoder.instance { (c: HCursor) =>
       for {
         `type` <- c.downField("type").as[Option[ScaleType]]
@@ -1407,6 +1411,7 @@ object Spec {
         exponent <- c.downField("exponent").as[Option[Double]]
         zero <- c.downField("zero").as[Option[Boolean]]
         useRawDomain <- c.downField("useRawDomain").as[Option[Boolean]]
+        scheme <- c.downField("scheme").as[Option[String]]
       } yield {
         Spec.Scale(
           `type`,
@@ -1419,7 +1424,9 @@ object Spec {
           nice,
           exponent,
           zero,
-          useRawDomain)
+          useRawDomain,
+          scheme
+        )
       }
     }
     implicit val SpecScaleDomainUnionEncoder: Encoder[Spec.Scale.DomainUnion] = Encoder.instance({
