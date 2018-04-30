@@ -216,7 +216,7 @@ object BasicPlots {
     "trellis_scatter_binned_row" -> BinnedChart,
     "point_shape_custom" -> PointShapeCustom,
     "line_detail" -> LineDetail,
-    "github_punchcard" -> GithubPunchCard,
+    "circle_github_punchcard" -> GithubPunchCard,
     "trellis_anscombe" -> TrellisAnscombe,
     "stacked_area" -> StackedAreaChart,
     "stacked_area_normalize" -> NormalizedStackedAreaChart,

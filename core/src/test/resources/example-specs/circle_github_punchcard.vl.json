@@ -1,15 +1,16 @@
 {
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
   "data": { "url": "data/github.csv"},
   "mark": "circle",
   "encoding": {
     "y": {
       "field": "time",
-      "type": "temporal",
+      "type": "ordinal",
       "timeUnit": "day"
     },
     "x": {
       "field": "time",
-      "type": "temporal",
+      "type": "ordinal",
       "timeUnit": "hours"
     },
     "size": {
