@@ -22,7 +22,7 @@ object BasicPlots {
       withURL(Population).
       mark(Bar).
       filter("datum.year == 2000").
-      encodeY("age", Ordinal, scale=Scale(bandSize=17)).
+      encodeY("age", Ordinal, scale=Scale(rangeStep = 17)).
       encodeX("people", Quantitative, aggregate=AggOps.Sum, axis=Axis(title="population"))
 
   val GroupedBarChart =
@@ -33,18 +33,16 @@ object BasicPlots {
       filter("datum.year == 2000").
       encodeColumn("age", Ord, scale=Scale(padding=4.0), axis=Axis(orient=Orient.Bottom, axisWidth=1.0, offset= -8.0)).
       encodeY("people", Quantitative, aggregate=AggOps.Sum, axis=Axis(title="population", grid=false)).
-      encodeX("gender", Nominal, scale=Scale(bandSize = 6.0), hideAxis=true).
+      encodeX("gender", Nominal, scale=Scale(rangeStep = 6.0), hideAxis=true).
       encodeColor("gender", Nominal, scale=Scale(rangeNominals=List("#EA98D2", "#659CCA"))).
       configFacet(cell=CellConfig(strokeWidth = 0))
 
   val AreaChart =
-    Vegas().
+    Vegas(width=300, height=200).
       withURL(Unemployment).
       mark(Area).
-      encodeX("date", Temp, timeUnit=TimeUnit.Yearmonth, scale=Scale(nice=Nice.Month),
-        axis=Axis(axisWidth=0, format="%Y", labelAngle=0)).
-      encodeY("count", Quantitative, aggregate=AggOps.Sum).
-      configCell(width=300, height=200)
+      encodeX("date", Temp, timeUnit=TimeUnit.Yearmonth, axis=Axis(format="%Y")).
+      encodeY("count", Quantitative, aggregate=AggOps.Sum, axis=Axis(title="count"))
 
   val NormalizedStackedBarChart =
     Vegas().
@@ -53,7 +51,7 @@ object BasicPlots {
       addTransform("gender", "datum.sex == 2 ? \"Female\" : \"Male\"").
       mark(Bar).
       encodeY("people", Quant, AggOps.Sum, axis=Axis(title="population")).
-      encodeX("age", Ord, scale=Scale(bandSize= 17)).
+      encodeX("age", Ord, scale=Scale(rangeStep = 17)).
       encodeColor("gender", Nominal, scale=Scale(rangeNominals=List("#EA98D2", "#659CCA"))).
       configMark(stacked=StackOffset.Normalize)
 
@@ -65,13 +63,13 @@ object BasicPlots {
       encodeY("Miles_per_Gallon", Quantitative).
       encodeRow("Acceleration", Quantitative, enableBin=true)
 
-  val ScatterBinnedPlot =
+  val CircleBinnedPlot =
     Vegas().
       withURL(Movies).
-      mark(Point).
+      mark(Circle).
       encodeX("IMDB_Rating", Quantitative, bin=Bin(maxbins=10.0)).
       encodeY("Rotten_Tomatoes_Rating", Quantitative, bin=Bin(maxbins=10.0)).
-      encodeSize(aggregate=AggOps.Count, field="*", dataType=Quantitative)
+      encodeSize(aggregate=AggOps.Count, dataType=Quantitative)
 
   val ScatterColorPlot =
     Vegas().
@@ -87,26 +85,21 @@ object BasicPlots {
       mark(Point).
       encodeX("Horsepower", Quantitative).
       encodeY("Miles_per_Gallon", Quantitative).
-      encodeColor(field="Acceleration", dataType=Quantitative, bin=Bin(maxbins=5.0))
-
-  val StackedAreaBinnedPlot =
-    Vegas().
-      withURL(Cars).
-      mark(Area).
-      encodeX("Acceleration", Quantitative, bin=Bin()).
-      encodeY("Horsepower", Quantitative, AggOps.Mean, enableBin=false).
-      encodeColor(field="Cylinders", dataType=Nominal)
+      encodeColor(field="Acceleration", dataType=Quantitative, enableBin=true)
 
   val SortColorPlot =
-    Vegas("The Trellis display by Becker et al. helped establish small multiples as a “powerful mechanism for understanding interactions in studies of how a response depends on explanatory variables”. Here we reproduce a trellis of Barley yields from the 1930s, complete with main-effects ordering to facilitate comparison.").
+    Vegas(name="trellis_barley", description="The Trellis display by Becker et al. helped establish small multiples as a “powerful mechanism for understanding interactions in studies of how a response depends on explanatory variables”. Here we reproduce a trellis of Barley yields from the 1930s, complete with main-effects ordering to facilitate comparison.").
       withURL(Barley).
       mark(Point).
       encodeRow("site", Ordinal).
-      encodeX("yield", Quantitative, aggregate=AggOps.Mean).
-      encodeY("variety", Ordinal, sortField=Sort("yield", AggOps.Mean), scale=Scale(bandSize = 12.0)).
+      encodeX("yield", Quantitative, aggregate=AggOps.Median, scale=Scale(zero=false)).
+      encodeY(
+        "variety", Ordinal,
+        sortField=Sort("yield", AggOps.Median, SortOrder.Descending),
+        scale=Scale(rangeStep=12.0)).
       encodeColor(field="year", dataType=Nominal)
 
-  val CustomShapePlot =
+  val PointShapeCustom =
     Vegas("A scatterplot with custom star shapes.").
       withURL(Cars).
       mark(Point).
@@ -114,7 +107,7 @@ object BasicPlots {
       encodeY("Miles_per_Gallon", Quant).
       encodeColor("Cylinders", Nom).
       encodeSize("Weight_in_lbs", Quant).
-      configMark(customShape="M0,0.2L0.2351,0.3236 0.1902,0.0618 0.3804,-0.1236 0.1175,-0.1618 0,-0.4 -0.1175,-0.1618 -0.3804,-0.1236 -0.1902,0.0618 -0.2351,0.3236 0,0.2Z")
+      encodeShape(value="M0,0.2L0.2351,0.3236 0.1902,0.0618 0.3804,-0.1236 0.1175,-0.1618 0,-0.4 -0.1175,-0.1618 -0.3804,-0.1236 -0.1902,0.0618 -0.2351,0.3236 0,0.2Z")
 
   val ScatterAggregateDetail =
     Vegas("A scatterplot showing average horsepower and displacement for cars from different origins.").
@@ -126,41 +119,39 @@ object BasicPlots {
 
   val LineDetail =
     Vegas("Stock prices of 5 Tech Companies Over Time.").
-      withURL(Stocks, formatType = DataFormat.Csv).
+      withURL(Stocks).
       mark(Line).
-      encodeX("date", Temp).
+      encodeX("date", Temp, axis=Axis(format="%Y")).
       encodeY("price", Quant).
       encodeDetailFields(Field(field="symbol", dataType=Nominal))
 
   val GithubPunchCard =
     Vegas().
-      withURL(Github, formatType = DataFormat.Csv).
+      withURL(Github).
       mark(Circle).
-      encodeX("time", Temporal, timeUnit = TimeUnit.Hours).
-      encodeY("time", Temporal, timeUnit = TimeUnit.Day).
+      encodeX("time", Ordinal, timeUnit = TimeUnit.Hours).
+      encodeY("time", Ordinal, timeUnit = TimeUnit.Day).
       encodeSize("count", Quantitative, aggregate = AggOps.Sum)
 
-  val AnscombesQuartet =
+  val TrellisAnscombe =
     Vegas("Anscombe's Quartet").
       withURL(Anscombe).
       mark(Circle).
       encodeX("X", Quantitative, scale = Scale(zero = false)).
       encodeY("Y", Quantitative, scale = Scale(zero = false)).
       encodeColumn("Series", Nominal).
-      configMark(opacity = 1)
+      encodeOpacity(value = 1)
 
   val StackedAreaChart =
-    Vegas("Area chart showing weight of cars over time.").
+    Vegas("Area chart showing weight of cars over time.", width = 300, height = 200).
       withURL(Unemployment).
       mark(Area).
       encodeX(
         "date", Temporal, timeUnit = TimeUnit.Yearmonth,
-        axis = Axis(axisWidth = 0, format = "%Y", labelAngle = 0),
-        scale = Scale(nice = spec.Spec.NiceTimeEnums.Month)
+        axis = Axis(format = "%Y")
       ).
       encodeY("count", Quantitative, aggregate = AggOps.Sum).
-      encodeColor("series", Nominal, scale = Scale(rangePreset = Category20b)).
-      configCell(width = 300, height = 200)
+      encodeColor("series", Nominal, scale = Scale(scheme = Category20b))
 
   val NormalizedStackedAreaChart =
     Vegas().
@@ -172,30 +163,28 @@ object BasicPlots {
         scale = Scale(nice = spec.Spec.NiceTimeEnums.Month)
       ).
       encodeY("count", Quantitative, aggregate = AggOps.Sum, hideAxis = Some(true)).
-      encodeColor("series", Nominal, scale = Scale(rangePreset = Category20b)).
+      encodeColor("series", Nominal, scale = Scale(scheme = Category20b)).
       configCell(width = 300, height = 200).
       configMark(stacked = StackOffset.Normalize)
 
   val Streamgraph =
-    Vegas().
+    Vegas(width = 300, height = 200).
       withURL(Unemployment).
       mark(Area).
       encodeX(
         "date", Temporal, timeUnit = TimeUnit.Yearmonth,
-        axis = Axis(axisWidth = 0, format = "%Y", labelAngle = 0, tickSize = Some(0.0)),
-        scale = Scale(nice = spec.Spec.NiceTimeEnums.Month)
+        axis = Axis(format = "%Y", tickSize = Some(0.0))
       ).
       encodeY("count", Quantitative, aggregate = AggOps.Sum, hideAxis = Some(true)).
-      encodeColor("series", Nominal, scale = Scale(rangePreset = Category20b)).
-      configCell(width = 300, height = 200).
+      encodeColor("series", Nominal, scale = Scale(scheme = Category20b)).
       configMark(stacked = StackOffset.Center)
 
-  val StackedBarChart =
+  val StackedBarWeather =
     Vegas().
-      withURL(SeattleWeather, formatType = DataFormat.Csv).
+      withURL(SeattleWeather).
       mark(Bar).
-      encodeX("date", Temporal, timeUnit = TimeUnit.Month, axis = Axis(title = "Month of the year")).
-      encodeY("*", Quantitative, aggregate = AggOps.Count).
+      encodeX("date", Ordinal, timeUnit = TimeUnit.Month, axis = Axis(title = "Month of the year")).
+      encodeY(dataType = Quantitative, aggregate = AggOps.Count).
       encodeColor("weather", Nominal, scale = Scale(
         domainNominals = List("sun", "fog", "drizzle", "rain", "snow"),
         rangeNominals = List("#e7ba52", "#c7c7c7", "#aec7e8", "#1f77b4", "#9467bd")),
@@ -216,20 +205,19 @@ object BasicPlots {
     "bar_grouped" -> GroupedBarChart,
     "area" -> AreaChart,
     "stacked_bar_normalize" -> NormalizedStackedBarChart,
-    "scatter_binned" -> ScatterBinnedPlot,
-    "scatter_color" -> ScatterColorPlot,
-    "scatter_binned_color" -> ScatterBinnedColorPlot,
-    "stacked_area_binned" -> StackedAreaBinnedPlot,
+    "circle_binned" -> CircleBinnedPlot,
+    "point_color" -> ScatterColorPlot,
+    "point_binned_color" -> ScatterBinnedColorPlot,
     "trellis_barley" -> SortColorPlot,
     "trellis_scatter_binned_row" -> BinnedChart,
-    "scatter_shape_custom" -> CustomShapePlot,
+    "point_shape_custom" -> PointShapeCustom,
     "line_detail" -> LineDetail,
-    "github_punchcard" -> GithubPunchCard,
-    "trellis_anscombe" -> AnscombesQuartet,
+    "circle_github_punchcard" -> GithubPunchCard,
+    "trellis_anscombe" -> TrellisAnscombe,
     "stacked_area" -> StackedAreaChart,
     "stacked_area_normalize" -> NormalizedStackedAreaChart,
     "stacked_area_stream" -> Streamgraph,
-    "stacked_bar_weather" -> StackedBarChart,
+    "stacked_bar_weather" -> StackedBarWeather,
     "tick_strip" -> StripPlot
   ).sortBy(_._1)
 

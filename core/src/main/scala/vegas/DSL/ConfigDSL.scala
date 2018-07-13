@@ -85,7 +85,7 @@ trait ConfigDSL[T] {
 
 
   def configScale(round: OptArg[Boolean] = NoArg, textBandWidth: OptArg[Double] = NoArg,
-                  bandSize: OptArg[Double] = NoArg, bandSizePreset: OptArg[BandSize] = NoArg,
+                  rangeStep: OptArg[Double] = NoArg, rangeStepPreset: OptArg[RangeStep] = NoArg,
                   opacity: OptArg[List[Double]] = NoArg, padding: OptArg[Double] = NoArg, useRawDomain: OptArg[Boolean] = NoArg,
                   nominalColorRange: OptArg[ScaleConfig.NominalColorRangeListString] = NoArg,
                   sequentialColorRange: OptArg[ScaleConfig.SequentialColorRangeListString] = NoArg,
@@ -95,9 +95,9 @@ trait ConfigDSL[T] {
                   pointSizeRange: OptArg[List[Double]] = NoArg) = {
 
 
-    val bandSizeU = (bandSize.map(ScaleConfig.BandSizeDouble(_)) orElse bandSizePreset.map(ScaleConfig.BandSizeBandSize(_)))
+    val rangeStepU = (rangeStep.map(ScaleConfig.RangeStepDouble(_)) orElse rangeStepPreset.map(ScaleConfig.RangeStepRangeStep(_)))
 
-    val scale = ScaleConfig(round=round, textBandWidth=textBandWidth, bandSize=bandSizeU, opacity=opacity, padding=padding,
+    val scale = ScaleConfig(round=round, textBandWidth=textBandWidth, rangeStep=rangeStepU, opacity=opacity, padding=padding,
       useRawDomain=useRawDomain, nominalColorRange=nominalColorRange, sequentialColorRange=sequentialColorRange, shapeRange=shapeRange,
       barSizeRange=barSizeRange, fontSizeRange=fontSizeRange, ruleSizeRange=ruleSizeRange, tickSizeRange=tickSizeRange,
       pointSizeRange=pointSizeRange)
@@ -361,4 +361,3 @@ object CellConfigDSL {
 
   }
 }
-

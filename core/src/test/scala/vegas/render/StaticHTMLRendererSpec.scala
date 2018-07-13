@@ -37,7 +37,7 @@ class StaticHTMLRendererSpec extends FlatSpec with Matchers {
     val name = "myChart"
     val html = specBuilder.html.plotHTML(name)
 
-    html should include ("embed(\"#" + name)
+    html should include ("vegaEmbed(\"#" + name)
     html should include ("id='" + name)
   }
 

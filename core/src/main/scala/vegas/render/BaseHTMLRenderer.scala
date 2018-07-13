@@ -11,14 +11,13 @@ trait BaseHTMLRenderer {
     .map { l => val row = l.split(","); (row(0), row(1)) }
     .toMap
 
-  private def CDN(artifact: String, file: String) = s"https://cdn.jsdelivr.net/webjars/org.webjars.bower/$artifact/${WebJars(artifact)}/$file"
+  private def cdn(artifact: String) = s"https://cdn.jsdelivr.net/npm/$artifact@${WebJars(artifact)}"
 
-  def JSImports = List(
-    CDN("d3", "d3.min.js"),
-    CDN("vega", "vega.min.js"),
-    CDN("vega-lite", "vega-lite.min.js"),
-    "https://vega.github.io/vega-editor/vendor/vega-embed.js"
-  )
+  val JSImports = List(
+    "vega",
+    "vega-lite",
+    "vega-embed"
+  ).map(cdn)
 
   def defaultName = {
     "vegas-" + java.util.UUID.randomUUID.toString
