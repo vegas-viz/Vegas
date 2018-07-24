@@ -206,5 +206,5 @@ TODO
 
 ## Contributing
 
-See [the contributing guide](CONTRIB.md) for more information on contributing bug fixes and features.
+See [the contributing guide](CONTRIBUTING.md) for more information on contributing bug fixes and features.
 
