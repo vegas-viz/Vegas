@@ -6,8 +6,6 @@ import org.scalatest.{FlatSpec, Matchers}
 import vegas.DSL.SpecBuilder
 
 class WindowRendererSpec extends FlatSpec with Matchers {
-  import vegas.render.WindowRenderer._
-
   val specBuilder: SpecBuilder =
     Vegas("Country Pop")
       .withURL(Population)

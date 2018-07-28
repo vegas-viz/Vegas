@@ -4,7 +4,6 @@ import java.io.{File, FileWriter}
 
 import vegas.DSL.SpecBuilder
 import vegas.fixtures._
-import vegas.render._
 
 /**
   * @author Aish Fenton.

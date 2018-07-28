@@ -1,5 +1,4 @@
 import vegas.spec.Spec
-import vegas.spec.Spec.{HorizontalAlignEnums, StackOffsetEnums, VerticalAlignEnums}
 
 /**
   * Use package object to list public API

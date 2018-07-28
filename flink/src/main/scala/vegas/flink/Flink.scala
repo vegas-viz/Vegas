@@ -1,7 +1,7 @@
 package vegas.flink
 
 import org.apache.flink.api.scala._
-import vegas.DSL.{DataDSL, _}
+import vegas.DSL.DataDSL
 
 /**
   * Created by ASRagab on 8/18/16.

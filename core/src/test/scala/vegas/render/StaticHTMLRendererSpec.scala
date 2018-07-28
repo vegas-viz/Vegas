@@ -5,8 +5,6 @@ import vegas.DSL.SpecBuilder
 import vegas._
 
 class StaticHTMLRendererSpec extends FlatSpec with Matchers {
-  import StaticHTMLRenderer._
-
   val data = Seq( Map("population" -> 318000000, "country" -> "USA"), Map("population" -> 64000000, "country" -> "UK") )
 
   val specBuilder: SpecBuilder = Vegas("Country Pop")

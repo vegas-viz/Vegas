@@ -2,8 +2,6 @@ package vegas
 
 import monocle.Prism
 
-import scala.reflect._
-
 /**
   * @author Aish Fenton.
   */

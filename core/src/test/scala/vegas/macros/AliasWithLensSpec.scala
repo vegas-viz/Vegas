@@ -3,7 +3,6 @@ package vegas.macros
 import monocle.Lens
 import monocle.macros.GenLens
 import org.scalatest.{FlatSpec, Matchers}
-import vegas._
 
 import scala.annotation.StaticAnnotation
 

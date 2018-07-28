@@ -1,7 +1,6 @@
 package vegas.DSL
 
 import org.scalatest.{FlatSpec, Matchers}
-import vegas.BaseSpec
 
 /**
   * @author Aish Fenton.

@@ -4,7 +4,7 @@ import scala.reflect.macros.whitebox
 import scala.util.Try
 
 class ShowRenderMacros(val c: whitebox.Context) {
-  import c.universe.{Try => TryTree, _}
+  import c.universe.{Try => _, _}
 
   private def html(tree: Tree) = Try(c.typecheck(tree)).flatMap {
     checked => Try(c.typecheck(q"vegas.render.ShowHTML($checked)"))

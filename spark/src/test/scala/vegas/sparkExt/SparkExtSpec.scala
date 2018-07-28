@@ -1,7 +1,5 @@
 package vegas.sparkExt
 
-import java.sql.Date
-
 import org.apache.spark.sql._
 import org.apache.spark.sql.types.{DoubleType, IntegerType, StructField, StructType}
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
