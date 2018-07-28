@@ -1,7 +1,5 @@
 package vegas.render
 
-import vegas.spec.Spec.ExtendedUnitSpec
-
 import scala.io.Source
 
 trait BaseHTMLRenderer {

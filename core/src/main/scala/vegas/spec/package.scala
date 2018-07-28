@@ -2,7 +2,6 @@ package vegas
 
 import io.circe._
 import io.circe.syntax._
-import vegas.spec.Spec._
 
 /**
   * @author Aish Fenton.

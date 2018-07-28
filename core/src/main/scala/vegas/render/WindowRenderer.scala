@@ -2,20 +2,15 @@ package vegas.render
 
 import java.util.concurrent.{Callable, FutureTask}
 
-import vegas.DSL.SpecBuilder
-
 import scalafx.application.Platform
 import scalafx.scene.Scene
 import scalafx.stage.Stage
-import scalafx.scene.web.{WebEngine, WebView}
+import scalafx.scene.web.WebView
 import javafx.embed.swing.JFXPanel
-import javafx.event.EventHandler
-import javafx.scene.web.WebErrorEvent
 
 import com.sun.javafx.webkit.WebConsoleListener
 
 import scala.collection.mutable
-import scalafx.scene.control.TextArea
 
 class Window {
 

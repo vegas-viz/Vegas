@@ -1,6 +1,5 @@
 package vegas.integration
 
-import org.openqa.selenium.WebDriver
 import vegas.WebMatchers
 import vegas.fixtures.{BasicPlots, VegasPlots}
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}

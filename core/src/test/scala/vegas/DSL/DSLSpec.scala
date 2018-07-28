@@ -2,8 +2,6 @@ package vegas.DSL
 
 import monocle.macros.GenLens
 import org.scalatest.{FlatSpec, Matchers}
-import vegas._
-import vegas.BaseSpec
 
 /**
   * @author Aish Fenton.
