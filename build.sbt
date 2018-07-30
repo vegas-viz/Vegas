@@ -207,7 +207,7 @@ lazy val vegas = project.in(file("core")).
       "com.github.aishfenton" %% "argus" % "0.2.7" % "test",
       "org.scalactic" %% "scalactic" % "3.0.5" % "test",
       "org.scalatest" %% "scalatest" % "3.0.5" % "test",
-      "org.seleniumhq.selenium" % "selenium-java" % "3.0.0-beta2" % "test"
+      "org.seleniumhq.selenium" % "selenium-java" % "3.13.0" % "test"
     )
   )
 
