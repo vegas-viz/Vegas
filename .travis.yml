@@ -26,6 +26,9 @@ before_install:
 scala:
    - 2.11.7
    - 2.11.8
+   - 2.12.2
+   - 2.12.4
+   - 2.12.6
 
 jdk:
   - oraclejdk8
@@ -35,4 +38,3 @@ script:
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-
