@@ -31,7 +31,6 @@ updateVegaDeps := {
     .map { case(_,n,v) => s"$n,$v" }
     .mkString("\n")
   IO.write(coreResources / "webjars.csv", webJars)
-
 }
 
 addCommandAlias("look", "vegas/test:runMain vegas.util.Look")
@@ -50,6 +49,7 @@ mkVegaModel := {
 
 mkVegaModel := mkVegaModel
   .dependsOn(compile in vegaLiteSpec in Compile)
+  .value
 
 lazy val lastReleaseVersion = taskKey[String]("Gets (using git tag) the version number of the last release")
 lastReleaseVersion := {
@@ -257,4 +257,3 @@ lazy val root = (project in file(".")).
 // Clears screen between refreshes in continuous mode
 maxErrors := 5
 triggeredMessage := Watched.clearWhenTriggered
-

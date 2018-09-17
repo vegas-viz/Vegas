@@ -43,7 +43,7 @@ re-generate it run the following. This generates the code (in the vegaLiteSpec
 project) and copies the Spec.scala file into the Vegas src dir.
 
     ```bash
-    sbt mkVegaModel
+    sbt vegaLiteSpec/clean mkVegaModel
     ```
 
 * Updating vega-lite dependency version. If you want to pull in a new version 

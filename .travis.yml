@@ -32,6 +32,7 @@ jdk:
 
 script:
   - sbt clean coverage test coverageReport
+  - sbt vegaLiteSpec/clean vegaLiteSpec/test mkVegaModel
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

@@ -1,6 +1,10 @@
 package vegas.spec
 
-import argus.macros._
+import argus.macros.fromSchemaURL
 
-//@fromSchemaResource("/vega-lite-schema.json", name="Vega", outPath=Some("/Users/afenton/Documents/netflix/src/Vegas/spec/target/scala-2.11/Spec.scala"))
-//object Spec
+@fromSchemaURL(
+  url = "https://vega.github.io/schema/vega-lite/v1.2.0.json",
+  name = "Vega",
+  outPath = Some("spec/target/scala-2.11/Spec.scala")
+)
+object Spec
