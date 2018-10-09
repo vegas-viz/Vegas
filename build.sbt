@@ -31,7 +31,6 @@ updateVegaDeps := {
     .map { case(_,n,v) => s"$n,$v" }
     .mkString("\n")
   IO.write(coreResources / "webjars.csv", webJars)
-
 }
 
 addCommandAlias("look", "vegas/test:runMain vegas.util.Look")
@@ -73,6 +72,7 @@ mkNotebooks := (Def.inputTaskDyn {
 // -------
 
 lazy val circeVersion = "0.7.0"
+lazy val monocleVersion = "1.3.2"
 
 lazy val commonSettings = Seq(
   description := "The missing matplotlib for Scala and Spark",
@@ -156,10 +156,7 @@ lazy val macros = project.
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
       "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided",
       "org.typelevel" %% "macro-compat" % "1.1.1",
-      "com.github.julien-truffaut" %% "monocle-core" % (scalaBinaryVersion.value match {
-        case "2.11" => "1.1.0"
-        case "2.12" => "1.3.2"
-      })
+      "com.github.julien-truffaut" %% "monocle-core" % monocleVersion
     )
   )
 
@@ -189,14 +186,8 @@ lazy val vegas = project.in(file("core")).
       "io.circe" %% "circe-core" % circeVersion,
       "io.circe" %% "circe-generic" % circeVersion,
       "io.circe" %% "circe-parser" % circeVersion,
-      "com.github.julien-truffaut" %% "monocle-macro" % (scalaBinaryVersion.value match {
-        case "2.11" => "1.1.0"
-        case "2.12" => "1.3.2"
-      }),
-      "com.github.julien-truffaut" %% "monocle-core" % (scalaBinaryVersion.value match {
-        case "2.11" => "1.1.0"
-        case "2.12" => "1.3.2"
-      }),
+      "com.github.julien-truffaut" %% "monocle-macro" % monocleVersion,
+      "com.github.julien-truffaut" %% "monocle-core" % monocleVersion,
       "org.scalafx" %% "scalafx" % "8.0.102-R11",
       "org.scala-lang.modules" %% "scala-xml" % "1.0.6",
 
@@ -257,4 +248,3 @@ lazy val root = (project in file(".")).
 // Clears screen between refreshes in continuous mode
 maxErrors := 5
 triggeredMessage := Watched.clearWhenTriggered
-
