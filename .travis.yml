@@ -24,6 +24,7 @@ before_install:
     - sleep 3 # give xvfb some time to start
 
 scala:
+   - 2.11.4
    - 2.11.7
    - 2.11.8
    - 2.11.12
