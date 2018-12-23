@@ -1,0 +1,2 @@
+ignore:
+  - "core/src/main/scala/vegas/spec/Spec.scala"
