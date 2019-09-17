@@ -84,8 +84,8 @@ lazy val circeVersion = "0.7.0"
 lazy val commonSettings = Seq(
   description := "The missing matplotlib for Scala and Spark",
   organization := "org.vegas-viz",
-  crossScalaVersions := Seq("2.11.8", "2.12.4"),
-  scalaVersion := "2.12.4",
+  crossScalaVersions := Seq("2.11.8", "2.12.10"),
+  scalaVersion := "2.12.10",
   vegaLiteVersion := "1.2.0",
   scalacOptions ++= Seq("-target:jvm-1.7", "-Ywarn-unused-import"),
   homepage := Some(url("http://vegas-viz.org")),
@@ -214,7 +214,7 @@ lazy val vegas = project.in(file("core")).
         case "2.11" => "1.1.0"
         case "2.12" => "1.3.2"
       }),
-      "org.scalafx" %% "scalafx" % "11-R16",
+      "org.scalafx" %% "scalafx" % "12.0.2-R18",
       "org.scala-lang.modules" %% "scala-xml" % "1.0.6",
 
       // JS deps. Also used to generate "webjars.csv" file for CDN loading.
