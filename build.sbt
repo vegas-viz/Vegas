@@ -85,7 +85,7 @@ lazy val commonSettings = Seq(
   description := "The missing matplotlib for Scala and Spark",
   organization := "org.vegas-viz",
   crossScalaVersions := Seq("2.11.8", "2.12.4"),
-  scalaVersion := "2.11.8",
+  scalaVersion := "2.12.4",
   vegaLiteVersion := "1.2.0",
   scalacOptions ++= Seq("-target:jvm-1.7", "-Ywarn-unused-import"),
   homepage := Some(url("http://vegas-viz.org")),
@@ -187,6 +187,16 @@ lazy val vegaLiteSpec = project.in(file("spec")).
   )
 //  settings(sourceGenerators in Compile <+= (sourceManaged in Compile) map genCode)
 
+// Determine OS version of JavaFX binaries
+lazy val osName = System.getProperty("os.name") match {
+  case n if n.startsWith("Linux")   => "linux"
+  case n if n.startsWith("Mac")     => "mac"
+  case n if n.startsWith("Windows") => "win"
+  case _ => throw new Exception("Unknown platform!")
+}
+
+lazy val javaFXModules = Seq("base", "controls", "fxml", "graphics", "media", "swing", "web")
+
 lazy val vegas = project.in(file("core")).
   settings(moduleName := "vegas").
   dependsOn(macros).
@@ -204,7 +214,7 @@ lazy val vegas = project.in(file("core")).
         case "2.11" => "1.1.0"
         case "2.12" => "1.3.2"
       }),
-      "org.scalafx" %% "scalafx" % "8.0.102-R11",
+      "org.scalafx" %% "scalafx" % "11-R16",
       "org.scala-lang.modules" %% "scala-xml" % "1.0.6",
 
       // JS deps. Also used to generate "webjars.csv" file for CDN loading.
@@ -215,6 +225,8 @@ lazy val vegas = project.in(file("core")).
       "org.scalactic" %% "scalactic" % "3.0.5" % "test",
       "org.scalatest" %% "scalatest" % "3.0.5" % "test",
       "org.seleniumhq.selenium" % "selenium-java" % "3.13.0" % "test"
+    ) ++ javaFXModules.map( m =>
+      "org.openjfx" % s"javafx-$m" % "11" classifier osName
     )
   )
 
