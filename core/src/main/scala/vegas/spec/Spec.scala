@@ -996,31 +996,29 @@ object Spec {
     import cats.syntax.either._;
     import io.circe._;
     import io.circe.syntax._;
-    def anyEncoder: Encoder[Any] = Encoder.instance(((a: Any) => a match {
-      case null => Json.Null
-      case (b @ ((_): Boolean)) => b.asJson
-      case (b @ ((_): Byte)) => b.asJson
-      case (s @ ((_): Short)) => s.asJson
-      case (i @ ((_): Int)) => i.asJson
-      case (l @ ((_): Long)) => l.asJson
-      case (f @ ((_): Float)) => f.asJson
-      case (d @ ((_): Double)) => d.asJson
-      case (s @ ((_): String)) => s.asJson
-      case (a @ ((_): Array[Boolean] @unchecked)) => a.asJson
-      case (a @ ((_): Array[Byte] @unchecked)) => a.asJson
-      case (a @ ((_): Array[Short] @unchecked)) => a.asJson
-      case (a @ ((_): Array[Int] @unchecked)) => a.asJson
-      case (a @ ((_): Array[Long] @unchecked)) => a.asJson
-      case (a @ ((_): Array[Float] @unchecked)) => a.asJson
-      case (a @ ((_): Array[Double] @unchecked)) => a.asJson
-      case (s @ ((_): Array[Any] @unchecked)) => s.asJson(Encoder.encodeTraversableOnce(anyEncoder,
- implicitly))
-      case (s @ ((_): Seq[Any] @unchecked)) => s.asJson(Encoder.encodeTraversableOnce(anyEncoder,
- implicitly))
-      case (ma @ ((_): Map[String,
- Any] @unchecked)) => ma.asJson(Encoder.encodeMapLike(KeyEncoder.encodeKeyString,
- anyEncoder))
+    def anyEncoder: Encoder[Any] = Encoder.instance(
+      ((a: Any) => a match {
+          case null => Json.Null
+        case (b @ ((_): Boolean)) => b.asJson
+        case (b @ ((_): Byte)) => b.asJson
+        case (s @ ((_): Short)) => s.asJson
+        case (i @ ((_): Int)) => i.asJson
+        case (l @ ((_): Long)) => l.asJson
+        case (f @ ((_): Float)) => f.asJson
+        case (d @ ((_): Double)) => d.asJson
+        case (s @ ((_): String)) => s.asJson
+        case (a @ ((_): Array[Boolean] @unchecked)) => a.asJson
+        case (a @ ((_): Array[Byte] @unchecked)) => a.asJson
+        case (a @ ((_): Array[Short] @unchecked)) => a.asJson
+        case (a @ ((_): Array[Int] @unchecked)) => a.asJson
+        case (a @ ((_): Array[Long] @unchecked)) => a.asJson
+        case (a @ ((_): Array[Float] @unchecked)) => a.asJson
+        case (a @ ((_): Array[Double] @unchecked)) => a.asJson
+        case (s @ ((_): Array[Any] @unchecked)) => s.toSeq.asJson(Encoder.encodeSeq(anyEncoder))
+        case (s @ ((_): Seq[Any] @unchecked)) => s.asJson(Encoder.encodeSeq(anyEncoder))
+        case (ma @ ((_): Map[String, Any] @unchecked)) => ma.asJson(Encoder.encodeMapLike(KeyEncoder.encodeKeyString, anyEncoder, implicitly))
     }));
+
     def anyDecoder: Decoder[Any] = Decoder.instance(((h: HCursor) => h.focus.get match {
       case (n @ _) if n.isNull => null
       case (n @ _) if n.isNumber => n.as[Double]
@@ -1030,8 +1028,7 @@ object Spec {
  Any]](Decoder.decodeMapLike(KeyDecoder.decodeKeyString,
  anyDecoder,
  Map.canBuildFrom))
-      case (a @ _) if a.isArray => a.as[List[Any]](Decoder.decodeCanBuildFrom(anyDecoder,
- List.canBuildFrom[Any]))
+      case (a @ _) if a.isArray => a.as[List[Any]](Decoder.decodeTraversable(anyDecoder, List.canBuildFrom[Any]))
     }));
     implicit val SpecExtendedUnitSpecEncoder: Encoder[Spec.ExtendedUnitSpec] = Encoder.instance(((cc: Spec.ExtendedUnitSpec) => Json.obj("width".->(cc.width.asJson),
  "height".->(cc.height.asJson),
@@ -1042,6 +1039,7 @@ object Spec {
  "data".->(cc.data.asJson),
  "transform".->(cc.transform.asJson),
  "config".->(cc.config.asJson))));
+
     implicit val SpecExtendedUnitSpecDecoder: Decoder[Spec.ExtendedUnitSpec] = Decoder.instance(((c: HCursor) => c.downField("width").as[Option[Double]]
 .flatMap(((width) => c.downField("height").as[Option[Double]]
 .flatMap(((height) => c.downField("mark").as[Mark]
