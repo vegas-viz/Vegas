@@ -22,4 +22,6 @@ jobs:
     - name: Test
       uses: GabrielBB/xvfb-action@v1.6
       with:
-        run: sbt test
+        run: |
+          sbt test
+          sbt vegaLiteSpec/clean vegaLiteSpec/test mkVegaModel
