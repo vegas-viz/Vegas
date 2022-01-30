@@ -20,7 +20,7 @@ jobs:
         distribution: 'temurin'
     - name: Setup Chrome Driver
       run: |
-        wget http://chromedriver.storage.googleapis.com/2.24/chromedriver_linux64.zip
+        wget https://chromedriver.storage.googleapis.com/97.0.4692.71/chromedriver_linux64.zip
         unzip chromedriver_linux64.zip
         sudo chmod u+x chromedriver
         sudo mv chromedriver /usr/bin/
