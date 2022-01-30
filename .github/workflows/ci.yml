@@ -20,9 +20,7 @@ jobs:
         distribution: 'temurin'
     - name: Setup Chromedriver
       uses: nanasess/setup-chromedriver@v1.0.1
-    - name: Config Chromedriver
-      run: |
-        export DISPLAY=:99
-        sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1
-    - name: Run tests
-      run: sbt test
+    - name: Setup xvfb and test
+      uses: GabrielBB/xvfb-action@v1.6
+      with:
+        run: sbt test
