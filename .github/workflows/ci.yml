@@ -18,12 +18,7 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
-    - name: Setup Chrome Driver
-      run: |
-        wget https://chromedriver.storage.googleapis.com/97.0.4692.71/chromedriver_linux64.zip
-        unzip chromedriver_linux64.zip
-        sudo mv chromedriver /usr/bin/
-        sudo chmod u+x /usr/bin/chromedriver
-        export DISPLAY=:99.0
+    - name: Setup Chrome
+      uses: browser-actions/setup-chrome@latest
     - name: Run tests
       run: sbt test
