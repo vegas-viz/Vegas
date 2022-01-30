@@ -1,4 +1,4 @@
-name: Vegas CI
+name: CI
 
 on:
   push:
@@ -8,9 +8,8 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
@@ -18,9 +17,9 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
-    - name: Setup Chromedriver
+    - name: Set up chromedriver
       uses: nanasess/setup-chromedriver@v1.0.1
-    - name: Setup xvfb and test
+    - name: Test
       uses: GabrielBB/xvfb-action@v1.6
       with:
         run: sbt test
