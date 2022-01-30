@@ -22,8 +22,8 @@ jobs:
       run: |
         wget https://chromedriver.storage.googleapis.com/97.0.4692.71/chromedriver_linux64.zip
         unzip chromedriver_linux64.zip
-        sudo chmod u+x chromedriver
         sudo mv chromedriver /usr/bin/
+        sudo chmod u+x /usr/bin/chromedriver
         export DISPLAY=:99.0
     - name: Run tests
       run: sbt clean test
