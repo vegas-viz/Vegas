@@ -18,7 +18,7 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
-    - name: Setup Chrome
-      uses: browser-actions/setup-chrome@latest
+    - name: Setup Chromedriver
+      uses: nanasess/setup-chromedriver@v1.0.1
     - name: Run tests
       run: sbt test
