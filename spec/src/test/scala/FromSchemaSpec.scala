@@ -10,7 +10,7 @@ class FromSchemaAnnotationSpec extends FlatSpec with Matchers {
       @fromSchemaResource(
         path = "/spec/src/main/resources/vega-lite-schema.json",
         name = "Vega",
-        outPath = Some("spec/target/scala-2.11/SpecFromSchemaResource.scala")
+        outPath = Some("spec/target/scala-2.12/SpecFromSchemaResource.scala")
       )
       object SpecFromSchemaResource
     """ should compile
@@ -21,7 +21,7 @@ class FromSchemaAnnotationSpec extends FlatSpec with Matchers {
       @fromSchemaURL(
         url = "https://vega.github.io/schema/vega-lite/v1.2.0.json",
         name = "Vega",
-        outPath = Some("spec/target/scala-2.11/SpecFromSchemaURL.scala")
+        outPath = Some("spec/target/scala-2.12/SpecFromSchemaURL.scala")
       )
       object SpecFromSchemaURL
     """ should compile
