@@ -5,7 +5,7 @@ _Vegas aims to be the missing MatPlotLib for the Scala and Spark world. Vegas wr
 around [Vega-Lite](https://vega.github.io/vega-lite/) but provides syntax more familiar (and type checked) for use
 within Scala._
 
-![Test](https://github.com/pixpack/Vegas/actions/workflows/ci.yml/badge.svg)
+![Test](https://github.com/pixpack/Vegas/actions/workflows/test.yml/badge.svg)
 [![codecov](https://codecov.io/gh/vegas-viz/Vegas/branch/master/graph/badge.svg)](https://codecov.io/gh/vegas-viz/Vegas)
 
 </div>
