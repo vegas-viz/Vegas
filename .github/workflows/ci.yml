@@ -26,4 +26,4 @@ jobs:
         sudo chmod u+x /usr/bin/chromedriver
         export DISPLAY=:99.0
     - name: Run tests
-      run: sbt clean test
+      run: sbt test
